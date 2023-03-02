@@ -1,0 +1,24 @@
+/* 
+    Created on : 11 gen 2022, 16:56:32
+    Author     : mattia
+*/
+.verbali-socio [class*="attachment"] > .row > div{
+    -webkit-box-shadow: 1px 0px 0px 2px #f0f0f0;
+    -moz-box-shadow: 1px 0px 0px 2px #f0f0f0;
+    -o-box-shadow: 1px 0px 0px 2px #f0f0f0;
+    box-shadow: 1px 0px 0px 2px #f0f0f0;
+    margin: 3px;
+    margin-bottom: 25px;
+    border: 0px solid;
+    padding: 10px;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -o-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.verbali-socio .attachment .not-found{display: none;}
+.verbali-socio .attachment{
+}
+.verbali-socio .attachment .attachment{
+    
+}

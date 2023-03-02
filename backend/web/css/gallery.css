@@ -1,0 +1,44 @@
+/* 
+    Created on : 15 gen 2022, 19:53:15
+    Author     : Mattia Leonardo Angelillo
+*/
+#gallery .action-bar{
+    overflow: hidden;
+}
+#gallery .action-bar .title{
+    float: left;
+}
+#gallery .action-bar .type{
+    margin-top: 5px;
+}
+#gallery .action-bar .buttons{
+    float: right;
+    overflow: hidden;
+    height: 100%;
+}
+#gallery .action-bar .buttons i{
+    display: block;
+}
+#gallery .action-bar .title input{
+    background-color: transparent;
+    border: 0px solid;
+    font-size: 2.5em;
+    font-weight: 900;
+}
+#gallery label:focus + textarea{
+    color: red;
+}
+#gallery .action-bar .title input:focus{
+    border: 1px solid #fafafa;
+    background-color: #fff;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    -o-box-shadow: none;
+    box-shadow: none;
+}
+#gallery input, #gallery textarea, #gallery button, #gallery select{
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    -o-border-radius: 0;
+    border-radius: 0;
+}

@@ -1,0 +1,24 @@
+/**
+* Style for the single event
+*/
+.event .wrapper{
+    moz-border: 0px outset #adb5bd;
+    -webkit-border: 0px outset #adb5bd;
+    -o-border: 0px outset #adb5bd;
+    border: 0px outset #adb5bd;
+    padding: 5px;
+    width: 250px;
+    height: 250px;
+    box-shadow: 0px 0px 5px #adb5bd;
+    -webkit-box-shadow: 0px 0px 5px #adb5bd;
+    -moz-box-shadow: 0px 0px 5px #adb5bd;
+    -o-box-shadow: 0px 0px 5px #adb5bd;
+}
+.event .wrapper .img{
+    box-shadow: 0px 0px 5px #adb5bd;
+    border: 1px outset #adb5bd;
+    background-size: cover;
+    background-position: center;
+    width: 100%;
+    height: 100%;
+}

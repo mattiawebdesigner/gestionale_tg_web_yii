@@ -1,0 +1,25 @@
+/* 
+    Created on : 21 feb 2023, 11:15:37
+    Author     : mattia
+*/
+h1, h2{
+    text-align: center;
+    margin: 0;
+}
+h1{
+    color: #eb601d;
+}
+.border td, .border th{
+    border: 1px solid;
+    border-collapse: collapse;
+}
+table .size-1{
+    width: 40%;
+}
+table .size-2{
+    width: 5%;
+}
+.text-align-left{
+    text-align: left;
+    text-transform: uppercase;
+}

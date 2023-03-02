@@ -1,0 +1,79 @@
+/* 
+    Created on : 24 gen 2022, 21:07:33
+    Author     : Mattia Leonardo Angelillo
+*/
+.ilove-form .action-bar{
+    float: right;
+}
+.ilove-form .title, .ilove-form .subtitle-1{
+    overflow: hidden;
+    overflow-wrap: break-word;
+    resize: none;
+    height: 149px;
+    border: 0;  
+    font-size: xxx-large;
+    font-weight: 800;
+}
+.ilove-form .title:focus, .ilove-form .subtitle-1:focus{
+    box-shadow: none;
+}
+.ilove-form .subtitle-1:before{
+    content: "Anno del festival: ";
+}
+.ilove-form .subtitle-1{
+    font-size: x-large;
+    height: 80px;
+}
+.ilove-form .content,
+.ilove-form .option{
+    width: 100%;
+}
+.ilove-form .content{
+    flex-shrink: 0.5;
+}
+.ilove-form .option{
+    flex-shrink: 1.5;
+    padding-left: 10px;
+}
+.ilove-form .image .image{
+    width: 100%;
+    height: 100px;
+    background-size: cover;
+    background-position: 50% auto;
+}
+.ilove-form [role="radiogroup"]{
+    display: flex;
+    
+}
+.ilove-form .radio label{
+    padding: 5px;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -o-box-sizing: border-box;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+.ilove-form input[type='file']{
+    display: none;
+    border: 1px solid;
+}
+.ilove-form .col.flex{
+    gap: 10px;
+}
+.ilove-form .file-btn{
+    background-color: var(--color-iloveteatro);
+    color: white;
+    font-weight: 800;
+    width: 250px;
+}
+.ilove-form .file-image{
+    color: #fff;
+}
+.ilove-form .file-image.banner{
+    width: 100%;
+    aspect-ratio: 16/3;
+}
+.ilove-form .file-image.locandina{
+    width: 312px;
+    aspect-ratio: 4/6;
+}

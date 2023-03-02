@@ -1,0 +1,57 @@
+/* 
+    Created on : 8 feb 2022, 14:37:48
+    Author     : Mattia Leonardo Angelillo
+*/
+
+
+#album .preview{
+    border: 1px solid;
+    aspect-ratio: 1/1;
+    margin: 10px;
+    
+    -moz-box-shadow: 0px 0px 3px 5px var(--color-iloveteatro);
+    -webkit-box-shadow: 0px 0px 3px 5px var(--color-iloveteatro);
+    -o-box-shadow: 0px 0px 3px 5px var(--color-iloveteatro);
+    box-shadow: 0px 0px 3px 5px var(--color-iloveteatro);
+    
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -o-box-sizing: border-box;
+    box-sizing: border-box;
+    
+    background-size: cover;
+    background-position: 50% 50%;
+}
+#album .preview.col{
+    padding-right: 0;
+    padding-left: 0;
+}
+#album .preview > a:not(.trash){
+    display: flex;
+    flex-direction: column-reverse;
+    height: 100%;
+    background: rgba(255,255,255, .2);
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    font-size: 1.8em;
+    text-overflow: ellipsis;
+    font-weight: 900;
+    padding: 5px;
+}
+#album .preview > a:hover{
+    text-decoration: none;
+    background: rgba(0,0,0, .2);
+}
+
+#album .preview .trash{
+    display: none;
+}
+#album .preview:hover .trash{
+    display: flex;
+    -webkit-animation:rotate-trash 1s linear;
+    -moz-animation:rotate-trash 1s linear;
+    animation:rotate-trash 1s linear;
+}
+#album .row{margin: 0;}

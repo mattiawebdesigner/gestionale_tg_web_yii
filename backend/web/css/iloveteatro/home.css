@@ -1,0 +1,18 @@
+/* 
+    Created on : 3 mar 2022, 21:48:07
+    Author     : Mattia Leonardo Angelillo
+*/
+#sections .section{
+    padding: 10px;
+    -moz-box-shadow: 0 0 0 2px var(--color-iloveteatro);
+    -webkit-box-shadow: 0 0 0 2px var(--color-iloveteatro);
+    box-shadow: 0 0 0 2px var(--color-iloveteatro);
+    min-width: 200px;
+    max-width: 300px;
+}
+#sections .section h4{
+    color: #fff;
+    background-color: var(--color-iloveteatro);
+    padding: 10px;
+    margin: -10px -10px 3px -10px;
+}

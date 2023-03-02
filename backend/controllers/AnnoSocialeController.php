@@ -1,0 +1,223 @@
+<?php
+
+namespace backend\controllers;
+
+use Yii;
+use backend\models\AnnoSociale;
+use backend\models\AnnoSocialeSearch;
+use yii\web\Controller;
+use yii\web\NotFoundHttpException;
+use yii\filters\VerbFilter;
+use backend\models\Soci;
+use backend\models\SociSearch;
+use backend\models\SocioAnnoSociale;
+use yii\filters\AccessControl;
+
+/**
+ * AnnoSocialeController implements the CRUD actions for AnnoSociale model.
+ */
+class AnnoSocialeController extends Controller
+{
+    /**
+     * @inheritDoc
+     */
+    public function behaviors()
+    {
+        return array_merge(
+            parent::behaviors(),
+            [
+                'verbs' => [
+                    'class' => VerbFilter::className(),
+                    'actions' => [
+                        'delete' => ['POST'],
+                    ],
+                ],
+                'access' => [
+                    'class' => AccessControl::className(),
+                    'rules' => [
+                        [
+                            'actions' => ['login', 'error'],
+                            'allow' => true,
+                        ],
+                        [
+                            'actions' => [],//All page
+                            'allow' => true,
+                            'roles' => ['Super User', 'segreteria'],
+                        ],
+                    ],
+                ],
+            ]
+        );
+    }
+
+    /**
+     * Lists all AnnoSociale models.
+     * @return mixed
+     */
+    public function actionIndex()
+    {
+        $searchModel = new AnnoSocialeSearch();
+        $dataProvider = $searchModel->search($this->request->queryParams);
+
+        return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    /**
+     * Displays a single AnnoSociale model.
+     * @param string $anno Anno
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionView($anno)
+    {   
+        return $this->render('view', [
+            'model' => Soci::find()->joinWith("socioAnnoSociales")->where("anno = $anno"),
+            'anno' => $anno,
+        ]);
+    }
+
+    /**
+     * Creates a new AnnoSociale model.
+     * If creation is successful, the browser will be redirected to the 'view' page.
+     * @return mixed
+     */
+    public function actionCreate()
+    {
+        $model = new AnnoSociale();
+
+        if ($this->request->isPost) {
+            if ($model->load($this->request->post()) && $model->save()) {
+                return $this->redirect(['view', 'anno' => $model->anno]);
+            }
+        } else {
+            $model->loadDefaultValues();
+        }
+
+        return $this->render('create', [
+            'model' => $model,
+        ]);
+    }
+    
+    /**
+     * Add socio to social year
+     * 
+     * @param string $action
+     * @param int $anno
+     * @param int $anno
+     * @param int $socio
+     * @return string|\yii\web\Response
+     */
+    public function actionAdd($action = "list", $anno = 0, $socio = 0){
+        if($action == "list"){
+           return $this->addList($anno);
+        }
+        
+        $model = new SocioAnnoSociale();
+        $model->anno = $anno;
+        $model->socio = $socio;
+        
+        if($this->request->isPost){
+            if($model->load($this->request->post()) && $model->save()){
+                return $this->redirect(['view', 'anno' => $model->anno]);
+            }
+        }else{
+            $model->loadDefaultValues();
+        }
+        
+        return $this->render('addSocio', [
+            'model' => $model,
+            'socio' => Soci::findOne(['id' => $socio])
+        ]);
+    }
+        
+    private function addList($anno){
+        $searchModel = new SociSearch();
+        $dataProvider = $searchModel->search($this->request->queryParams);
+        
+        return $this->render('addList', [
+            'anno' => $anno,
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+    
+    /**
+     * Delete a socio from social year
+     * 
+     * @param int $id
+     * @param int $anno
+     * @return \yii\web\Response
+     */
+    public function actionRemove($id, $anno){
+        SocioAnnoSociale::findOne(['anno' => $anno, 'socio' => $id])->delete();
+        
+        return $this->redirect(['add', 'anno' => $anno]);
+    }
+    
+    /**
+     * Show info: Socio and Year
+     * 
+     * @param int $anno
+     * @return string
+     */
+    public function actionView_socio_anno($anno, $id){
+        return $this->render("view_socio_anno", [
+            'model' => $this->findModel($anno),
+            'socio' => Soci::findOne(['id' => $id]),
+            'annoSocio' => SocioAnnoSociale::findOne(['socio' => $id, "anno" => $anno]),
+        ]);
+    }
+    
+    /**
+     * Updates an existing AnnoSociale model.
+     * If update is successful, the browser will be redirected to the 'view' page.
+     * @param string $anno Anno
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionUpdate($id)
+    {
+        $model = $this->findModel($id);
+
+        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'anno' => $model->anno]);
+        }
+        
+        return $this->render('update', [
+            'model' => $model,
+        ]);
+    }
+
+    /**
+     * Deletes an existing AnnoSociale model.
+     * If deletion is successful, the browser will be redirected to the 'index' page.
+     * @param string $anno Anno
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionDelete($anno)
+    {
+        $this->findModel($anno)->delete();
+
+        return $this->redirect(['index']);
+    }
+
+    /**
+     * Finds the AnnoSociale model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param string $anno Anno
+     * @return AnnoSociale the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findModel($anno)
+    {
+        if (($model = AnnoSociale::findOne($anno)) !== null) {
+            return $model;
+        }
+
+        throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
+    }
+}

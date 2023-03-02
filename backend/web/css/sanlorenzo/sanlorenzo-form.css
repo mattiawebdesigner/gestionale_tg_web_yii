@@ -1,0 +1,100 @@
+/* 
+    Created on : 24 gen 2022, 21:07:33
+    Author     : Mattia Leonardo Angelillo
+*/
+.sanlorenzo .action-bar{
+    float: right;
+}
+.sanlorenzo-form .option-group{
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+}
+.sanlorenzo-form .option-group .close{
+    width: 100%;
+    text-align: right;
+    color: white;
+    padding: 10px;
+    font-size: 1.5em;
+    background-color: var(--color-1);
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+}
+.sanlorenzo-form .option-group .open.close:before{
+    content: "\f3c1";
+}
+.sanlorenzo-form .option-group .close:before{
+    content: "\f023";
+}
+.sanlorenzo-form .title, .sanlorenzo-form .subtitle-1{
+    overflow: hidden;
+    overflow-wrap: break-word;
+    resize: none;
+    height: 149px;
+    border: 0;  
+    font-size: xxx-large;
+    font-weight: 800;
+}
+.sanlorenzo-form .title:focus, .sanlorenzo-form .subtitle-1:focus{
+    box-shadow: none;
+}
+.sanlorenzo-form .subtitle-1{
+    font-size: x-large;
+    height: 80px;
+}
+.sanlorenzo-form .content,
+.sanlorenzo-form .option{
+    width: 100%;
+}
+.sanlorenzo-form .content{
+    flex-shrink: 0.5;
+}
+.sanlorenzo-form .option{
+    flex-shrink: 1.5;
+    padding-left: 10px;
+    display: none;
+}
+.sanlorenzo-form .image .image{
+    width: 100%;
+    height: 100px;
+    background-size: cover;
+    background-position: 50% auto;
+}
+.sanlorenzo-form [role="radiogroup"]{
+    display: flex;
+    
+}
+.sanlorenzo-form .radio label{
+    padding: 5px;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -o-box-sizing: border-box;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+.sanlorenzo-form input[type='file']{
+    display: none;
+    border: 1px solid;
+}
+.sanlorenzo-form .col.flex{
+    gap: 10px;
+}
+.sanlorenzo-form .file-btn{
+    background-color: var(--color-iloveteatro);
+    color: white;
+    font-weight: 800;
+    width: 250px;
+}
+.sanlorenzo-form .file-image{
+    color: #fff;
+}
+.sanlorenzo-form .file-image.banner{
+    width: 100%;
+    aspect-ratio: 16/3;
+}
+.sanlorenzo-form .file-image.locandina{
+    width: 312px;
+    aspect-ratio: 4/6;
+}
+.sanlorenzo-form .cover{width: 100%;background-color: rgba(0,0,0,.5)}
+.sanlorenzo-form .cover img{max-width: 100%;}

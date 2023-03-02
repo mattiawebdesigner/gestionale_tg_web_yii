@@ -1,0 +1,72 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 12 gen 2022, 21:20:30
+    Author     : mattia
+*/
+
+
+/*------------------------------------------*/
+.tabs .nav-tabs {
+    margin-bottom: 1rem;
+}
+.nav-tabs.nav-tabs-vertical {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    border-bottom: none;
+    border-right: 1px solid #dfe4f2;
+}
+.nav-tabs {
+    position: relative;
+    background-color: #fff;
+    border-bottom-color: #dfe4f2;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    -ms-flex-wrap: nowrap;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+}
+.nav {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    padding-left: 0;
+    margin-bottom: 0;
+    list-style: none;
+}
+.nav-tabs.nav-tabs-vertical .nav-item.show .nav-link, .nav-tabs.nav-tabs-vertical .nav-link.active {
+    border-bottom: none;
+    border-right-color: #06c !important;
+    border-right: 3px solid !important;
+}
+.nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+    border-bottom-color: #06c;
+    color: #06c;
+    cursor: inherit;
+}
+.nav-tabs .nav-link {
+    margin-bottom: -1px;
+    border: 0px solid transparent !important;
+    border-top-left-radius: 0rem !important;
+    border-top-right-radius: 0rem !important;
+}
+
+
+@media (min-width: 1200px){
+    .nav-tabs {
+        overflow-x: hidden;
+        -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+    }
+}

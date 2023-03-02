@@ -1,0 +1,56 @@
+/* 
+    Created on : 4 gen 2022, 12:10:35
+    Author     : Mattia Leonardo Angelillo
+*/
+#rendiconto{
+    border: 0px solid;
+}
+#rendiconto,
+#rendiconto #form-in,
+#rendiconto #form-out{
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -o-box-sizing: border-box;
+    box-sizing: border-box;
+}
+#rendiconto .element{
+    border-bottom: 1px solid;
+    margin-bottom: 10px;
+}
+#rendiconto .element:last-child{
+    border: 0;
+}
+
+#rendiconto .info > div{
+    float: left;
+    margin-left: 8px;
+    cursor: default;
+}
+#rendiconto .rendiconto{
+    margin-top: 25px;
+}
+
+#rendiconto [data-title-paste], #rendiconto [data-collapse]{
+    float: left;
+}
+#rendiconto h5{
+    padding-left: 15px;
+    line-height: 37px;
+}
+#rendiconto [data-toggle] div:nth-child(2), #rendiconto [data-toggle] div:nth-child(3){
+    float: left;
+}
+#rendiconto [data-toggle] div:nth-child(2){margin-right: 25px;}
+#rendiconto [data-toggle] div:last-child{clear: both;}
+
+#rendiconto [data-save], #rendiconto [data-cancel], #rendiconto [data-delete]{
+    cursor: pointer;
+    color: green;
+    font-size: small;
+}
+#rendiconto [data-cancel]{color: red;}
+#rendiconto table span{cursor: default;}
+
+#rendiconto .action-panel{
+    display: none;
+}

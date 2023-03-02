@@ -1,0 +1,80 @@
+/* 
+    Created on : 16 gen 2022, 11:08:41
+    Author     : matti
+*/
+#tg_gallery .action-bar .buttons{
+    text-align: right;
+}
+#tg_gallery .action-bar .title input{
+    height: 80px;
+    font-size: 2.5em;
+    font-weight: 900;
+    background-color: transparent;
+}
+#tg_gallery .action-bar .buttons select{
+    margin-top: 5px;
+}
+#tg_gallery label{
+    cursor: pointer;
+    font-weight: 700;
+}
+#tg_gallery label[data-show-sibling="true"]:hover{
+    color: #dc3545;
+}
+#tg_gallery input, #tg_gallery input, #tg_gallery textarea, #tg_gallery #tab > li > a{
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    -o-border-radius: 0;
+    border-radius: 0;
+}
+#tg_gallery .table-responsive-sm td:first-child, #tg_gallery .table-responsive-md td:first-child, #tg_gallery .table-responsive-lg td:first-child, #tg_gallery .table-responsive-xl td:first-child{
+    width: 33.33%;
+    text-align: center;
+    padding: 10px;
+}
+/* Tab */
+#tg_gallery #tab > li > a{
+    background-color: transparent;
+}
+#tg_gallery #tab > li .active{
+    color: #dc3545;
+    font-weight: 600;
+    border-bottom: 3px solid #dc3545;
+}
+#tg_gallery #tab{
+    border-bottom: 1px solid;
+}
+#tg_gallery [data-copy]{
+    display: none;
+}
+#tg_gallery .img-thumb{
+    border: 1px solid #eee;
+    position: relative;
+    height: 150px;
+    width: 150px;
+    background-size: auto 150px !important;
+    background-position: 50% !important;
+    margin: 0 auto;
+}
+#tg_gallery .img-thumb input[type="file"]{
+    display: none;
+}
+#tg_gallery .img-thumb > div,
+#tg_gallery .img-thumb label{
+    width: 100%;
+    height: 100%;
+}
+#tg_gallery .table-bordered{
+    border: 2px inset #dc3545;
+}
+#tg_gallery .row.slide .table-bordered td:first-child{
+    width: 250px;
+}
+#tg_gallery .table-bordered th, #tg_gallery .table-bordered td{
+    border: 0px solid #dc3545;
+}
+
+/* For I Love Teatro homegallery */
+.iloveteatro.gallery-home #tg_gallery .action-bar .title input{
+    border: 0;  
+}

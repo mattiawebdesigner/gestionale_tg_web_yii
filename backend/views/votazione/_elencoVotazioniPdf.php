@@ -1,0 +1,1 @@
+<h1 style="text-align: center;">ELENCO SOCI AVENTI DIRITTO DI VOTI</h1>

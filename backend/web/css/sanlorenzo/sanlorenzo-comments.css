@@ -1,0 +1,52 @@
+/* 
+    Created on : 8 giu 2022, 22:16:32
+    Author     : mattia
+*/
+.crm-sanlorenzo-comments-articles .comments .comment{
+    -moz-box-shadow: 0 0 0 2px #005cbf;
+    -webkit-box-shadow: 0 0 0 2px #005cbf;
+    -o-box-shadow: 0 0 0 2px #005cbf;
+    box-shadow: 0 0 0 2px #005cbf;
+    
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -o-border-radius: 5px;
+    border-radius: 5px;
+    
+    margin-bottom: 20px;
+    padding: 10px;  
+    padding-bottom: 25px;
+}
+.crm-sanlorenzo-comments-articles .comments .comment{
+    position: relative;
+}
+.crm-sanlorenzo-comments-articles .comments .comment.approved{
+    -moz-box-shadow: 0 0 0 2px #008013;
+    -webkit-box-shadow: 0 0 0 2px #008013;
+    -o-box-shadow: 0 0 0 2px #008013;
+    box-shadow: 0 0 0 2px #008013;
+}
+.crm-sanlorenzo-comments-articles .comments .comment.rejected{
+    -moz-box-shadow: 0 0 0 2px #7A1200;
+    -webkit-box-shadow: 0 0 0 2px #7A1200;
+    -o-box-shadow: 0 0 0 2px #7A1200;
+    box-shadow: 0 0 0 2px #7A1200;
+}
+.crm-sanlorenzo-comments-articles .actions{
+    position: absolute;
+    bottom: -10px;
+    left: 10px;
+}
+.crm-sanlorenzo-comments-articles .actions > a{
+    border: 1px solid;
+    background: white;
+    width: 25px;
+    height: 25px;
+    display: inline-block;
+    border-radius: 100%;
+    text-align: center;
+}
+.crm-sanlorenzo-comments-articles .actions > a:hover{
+    background-color: var(--color-link-tg1);
+    color: white;
+}

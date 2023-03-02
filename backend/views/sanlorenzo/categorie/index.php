@@ -1,0 +1,42 @@
+<?php
+
+use yii\helpers\Html;
+use yii\helpers\Url;
+use yii\grid\GridView;
+
+/* @var $this yii\web\View */
+/* @var $searchModel backend\models\VerbaliSearch */
+/* @var $dataProvider yii\data\ActiveDataProvider */
+
+$this->title = Yii::t('app', 'Categorie');
+?>
+<div class="verbali-index">
+
+    <h1><i class="fa-solid fa-newspaper"></i> <?= Html::encode($this->title) ?></h1>
+
+    <p>
+        <?= Html::a('<i class="fas fa-plus"></i> '.Yii::t('app', 'Nuova categoria'), ['/sanlorenzo/categoria-create'], ['class' => 'btn btn-success']) ?>
+    </p>
+
+    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+    
+    <?= GridView::widget([
+        'dataProvider' => $dataProvider,
+        'filterModel' => $searchModel,
+        'columns' => [
+            ['class' => 'yii\grid\SerialColumn'],
+
+            'categoria',
+            
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'urlCreator' => function ($action, backend\models\SnlCategorie $model, $key, $index, $column) {
+                    return Url::toRoute(['/sanlorenzo/categorie-'.$action, 'id' => $model->id ]);
+                },
+                'template' => '{update} {delete}',
+            ],
+        ],
+    ]); ?>
+
+
+</div>

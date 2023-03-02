@@ -1,0 +1,20 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 12 gen 2022, 21:20:30
+    Author     : mattia
+*/
+/*------------------------------------------*/
+#ilove-tabs{
+    border-bottom: 2px solid var(--color-iloveteatro);
+}
+#ilove-tabs > a:not(.active),#ilove-tabs-content .nav > a:not(.active){
+    color: var(--color-iloveteatro);
+}
+#ilove-tabs a.active, #ilove-tabs-content a.active{
+    border-bottom: 2px solid var(--color-iloveteatro) !important;
+    cursor: default;
+}

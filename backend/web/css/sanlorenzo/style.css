@@ -1,0 +1,20 @@
+/* 
+    Created on : 23 mag 2022, 21:24:30
+    Author     : Mattia Leonardo Angelillo
+*/
+:root{
+    --color-1: #24536E;
+}
+.flex{display: flex;}
+.gap-1{gap: 10px;}
+.open{cursor: pointer;}
+.width-100{width: 100%;}
+
+.center{text-align: center;}
+.hr{border-bottom: 0px inset;background: #0f0f0f;}
+
+/*MAINMENU*/
+#mainmenu img{max-width: 90px;}
+#mainmenu #mainmenu-collapse > ul > li{line-height: 58px;}
+#mainmenu .dropdown-menu:not(.show){display: none !important;}
+/*END MAINMENU*/

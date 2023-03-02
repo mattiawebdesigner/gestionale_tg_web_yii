@@ -1,0 +1,151 @@
+:root{
+	--main-color: #dee2e6;
+	--color: #212529;
+	--color-white1: #f5f5f5;
+        --color-black1: black;
+}
+
+h1{
+    border-color: var(--color-black1);
+    border-bottom-style: inset;
+    border-bottom-width: 2px;
+    text-align: center;
+}
+
+main{
+	min-height: 100%;
+}
+main > .container {
+    padding: 85px 15px 20px;
+}
+.line-through{text-decoration: line-through;}
+
+.breadcrumb{background-color: var(--color-white1);}
+
+
+.help-block{color: var(--danger);}
+.footer {
+    background-color: #f5f5f5;
+    font-size: .9em;
+    height: 60px;
+}
+
+.footer > .container {
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+.not-set {
+    color: #c55;
+    font-style: italic;
+}
+.display-none{display: none;}
+
+/* add sorting icons to gridview sort links */
+a.asc:after, a.desc:after {
+    content: '';
+    left: 3px;
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border: solid 5px transparent;
+    margin: 4px 4px 2px 4px;
+    background: transparent;
+}
+
+a.asc:after {
+    border-bottom: solid 7px #212529;
+    border-top-width: 0;
+}
+
+a.desc:after {
+    border-top: solid 7px #212529;
+    border-bottom-width: 0;
+}
+
+.grid-view th,
+.grid-view td:last-child {
+    white-space: nowrap;
+}
+
+.grid-view .filters input,
+.grid-view .filters select {
+    min-width: 50px;
+}
+
+.hint-block {
+    display: block;
+    margin-top: 5px;
+    color: #999;
+}
+
+.error-summary {
+    color: #a94442;
+    background: #fdf7f7;
+    border-left: 3px solid #eed3d7;
+    padding: 10px 20px;
+    margin: 0 0 15px 0;
+}
+
+/* align the logout "link" (button in form) of the navbar */
+.nav li > form > button.logout {
+    padding-top: 7px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+@media(max-width:767px) {
+    .nav li > form > button.logout {
+        display:block;
+        text-align: left;
+        width: 100%;
+        padding: 10px 0;
+    }
+}
+
+.nav > li > form > button.logout:focus,
+.nav > li > form > button.logout:hover {
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.nav > li > form > button.logout:focus {
+    outline: none;
+}
+.navbar img{
+    width: 30px;
+    height: auto;
+}
+footer ul, footer ul li{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+table img{
+	width: 150px;
+}
+
+
+/*MAIN MENU*/
+#mainmenu.navbar > .container-fluid{
+    width: auto; 
+}
+
+@media (min-width: 1280px){
+    main > .container{
+        max-width: 90%;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

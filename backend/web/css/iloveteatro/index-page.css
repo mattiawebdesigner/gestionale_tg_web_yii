@@ -1,0 +1,31 @@
+/* 
+    Created on : 23 gen 2022, 21:07:33
+    Author     : Mattia Leonardo Angelillo
+*/
+.index-page{
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+.index-page .item{
+    border: 1px solid;
+    padding: 15px;
+    -moz-box-shadow: 0px 0px 5px;
+    -webkit-box-shadow: 0px 0px 5px;
+    -o-box-shadow: 0px 0px 5px;
+    box-shadow: 0px 0px 5px;
+}
+.index-page .item:hover{
+    -moz-box-shadow: 0px 0px 5px #005cbf;
+    -webkit-box-shadow: 0px 0px 5px #005cbf;
+    -o-box-shadow: 0px 0px 5px #005cbf;
+    box-shadow: 0px 0px 5px #005cbf;
+}
+.index-page .item a{
+    display: block;
+    padding: 15px;
+    font-size: 1.1em;
+}
+.index-page .item a:hover{
+    text-decoration: none;
+}

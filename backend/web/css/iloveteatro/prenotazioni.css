@@ -1,0 +1,24 @@
+/* 
+    Created on : 3 mar 2022, 18:17:44
+    Author     : Mattia Leonardo Angelillo
+*/
+.prenotazioni{
+    margin-left: 10px;
+}
+.prenotazioni .name{
+    border: 0px solid;
+    padding: 5px;
+    box-shadow: 0 0 3px #000;
+    position: relative;
+}
+.prenotazioni .name .trash,.prenotazioni .name .paided-ticket,.prenotazioni .name .paided-no-ticket, .prenotazioni .name .show-ticket{
+    position: absolute;
+    right: -18px;
+    top: -21px;
+}
+.prenotazioni .name .paided-ticket{
+    right: 25px;
+}
+.prenotazioni .name .show-ticket{
+    right: 71px;
+}

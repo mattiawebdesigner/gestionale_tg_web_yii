@@ -1,0 +1,10 @@
+/*
+CSS for upload files
+*/
+/* 
+    Created on : 17 gen 2022, 09:48:38
+    Author     : Mattia Leonardo Angelillo
+*/
+input[type='file']{
+    display: none;
+}
