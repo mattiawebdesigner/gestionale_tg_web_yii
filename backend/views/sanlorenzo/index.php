@@ -29,7 +29,7 @@ $this->title = Yii::t('app', 'Gestione sito La Notte di San Lorenzo');
         <div class="item">
             <h5>
                 <i class="fas fa-plus-circle"></i>
-                <?= Html::a(Yii::t('app', 'Nuova edizione di San Lorenzo'), ['sanlorenzo/create-events']) ?>
+                <?= Html::a(Yii::t('app', 'Nuova edizione di San Lorenzo'), ['sanlorenzo/create-event']) ?>
             </h5>
         </div>
         <div class="item">
@@ -52,13 +52,16 @@ $this->title = Yii::t('app', 'Gestione sito La Notte di San Lorenzo');
         <div class="item">
             <h5>
                 <i class="fas fa-eye"></i>
-                <?= Html::a(Yii::t('app', 'Il contest'), ['sanlorenzo/view-contest', 'id' => \backend\models\SnlContest::findOne(backend\models\SnlEdizione::findOne(['anno' => date('Y')])->contest)->id]) ?>
+                <?= Html::a(Yii::t('app', 'Dati dell\'ultimo contest'), ['sanlorenzo/view-contest', 
+                    'id' => \backend\models\SnlContest::findOne(
+                                backend\models\SnlEdizione::find()->orderBy(['anno' => SORT_DESC])->one()->contest
+                            )->id]) ?>
             </h5>
         </div>
     </div>
     <br />
     
-    <div class="flex gap-1">
+    <!--<div class="flex gap-1">
         <div class="item">
             <h5>
                 <i class="fas fa-eye"></i>
@@ -105,5 +108,5 @@ $this->title = Yii::t('app', 'Gestione sito La Notte di San Lorenzo');
                 <?= Html::a(Yii::t('app', 'Gli stand alimentari'), ['sanlorenzo/stand-index']) ?>
             </h5>
         </div>
-    </div>
+    </div>-->
 </div>

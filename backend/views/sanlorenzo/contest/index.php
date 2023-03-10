@@ -5,8 +5,8 @@ use dosamigos\tinymce\TinyMce;
 
 $this->title = ($type == "create") 
         ?  Yii::t('app', 'Nuova edizione') 
-        : Yii::t('app', 'Aggiornamento edizione {edizione}', [
-            'edizione' => $model->edizione
+        : Yii::t('app', 'Aggiornamento contest: {contest}', [
+            'contest' => $model->nome
         ]);
 ?>
 <div class="sanlorenzo-events-index sanlorenzo-form">
@@ -15,6 +15,11 @@ $this->title = ($type == "create")
     
     <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
         <div class="action-bar">
+            
+            <span class="btn btn-warning">
+                <?= Html::a('<i class="fa-solid fa-users"></i> '.Yii::t('app', 'Iscritti'), ['sanlorenzo/subscribers'], ['target' => '_blank'])  ?>
+            </span>
+
             <?= Html::submitButton('<i class="far fa-save"></i> '.Yii::t('app', 'Salva e chiudi'), ['class' => 'btn btn-success']) ?>
 
             <?php if($type=="update") : ?>
@@ -33,12 +38,12 @@ $this->title = ($type == "create")
                 </span>
         </div>
     
-        <?= $form->field($model, 'edizione')->textInput([
+        <?= $form->field($model, 'edizione')->hiddenInput([
             'placeholder'   => Yii::t('app', 'Edizione del contest'),
             'autofocus'     => 'autofocus',
             'class'         => 'form-control title',
             'maxlength'     => true,
-        ]) ?>
+        ])->label(false) ?>
     
         <?php if($type == "create"): ?>
             <?= $form->field($model, 'allegato_a')->fileInput(['multiple' => 'multiple']) ?>

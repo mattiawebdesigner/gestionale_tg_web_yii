@@ -63,7 +63,9 @@ class SnlConcorrentiSearch extends SnlConcorrenti
             'contest' => $this->contest,
         ]);
         $query->andFilterWhere([
-            'contest' => \backend\models\SnlContest::findOne(\backend\models\SnlEdizione::findOne(['anno' => date('Y')]))->id,
+            'contest' => \backend\models\SnlContest::findOne(
+                            SnlEdizione::find()->orderBy(['anno' => SORT_DESC])->one()->contest
+                        )->id,
         ]);
 
         $query->andFilterWhere(['like', 'nome', $this->nome])
