@@ -38,7 +38,7 @@ class SnlPartnerSearch extends SnlPartner
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
+    public function search($params/*, $partner = SnlPartner::PA_ASSOCIAZIONI*/)
     {
         $query = SnlPartner::find();
 
@@ -58,9 +58,14 @@ class SnlPartnerSearch extends SnlPartner
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'id' => $this->id,
-            'ordinamento' => $this->ordinamento,
-            'contest' => $this->contest,
+            'id'                    => $this->id,
+            'ordinamento'           => $this->ordinamento,
+            //'tipologia_di_partner'  => $partner,
+        ]);
+        $query->andFilterWhere([
+            'contest' => \backend\models\SnlContest::findOne(
+                            SnlEdizione::find()->orderBy(['anno' => SORT_DESC])->one()->contest
+                        )->id,
         ]);
 
         $query->andFilterWhere(['like', 'partner', $this->partner])
