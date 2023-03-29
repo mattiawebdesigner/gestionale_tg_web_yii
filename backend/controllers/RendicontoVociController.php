@@ -1,134 +1,134 @@
-<?php
-
-namespace backend\controllers;
-
-use backend\models\RendicontoVoci;
-use backend\models\RendicontoVociSearch;
-use yii\web\Controller;
-use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
-
-/**
- * RendicontoVociController implements the CRUD actions for RendicontoVoci model.
- */
-class RendicontoVociController extends Controller
-{
-    /**
-     * @inheritDoc
-     */
-    public function behaviors()
-    {
-        return array_merge(
-            parent::behaviors(),
-            [
-                'verbs' => [
-                    'class' => VerbFilter::className(),
-                    'actions' => [
-                        'delete' => ['POST'],
-                    ],
-                ],
-            ]
-        );
-    }
-
-    /**
-     * Lists all RendicontoVoci models.
-     *
-     * @return string
-     */
-    public function actionIndex()
-    {
-        $searchModel = new RendicontoVociSearch();
-        $dataProvider = $searchModel->search($this->request->queryParams);
-
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
-    }
-
-    /**
-     * Displays a single RendicontoVoci model.
-     * @param int $id_rendiconto Id Rendiconto
-     * @return string
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionView($id_rendiconto)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id_rendiconto),
-        ]);
-    }
-
-    /**
-     * Creates a new RendicontoVoci model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return string|\yii\web\Response
-     */
-    public function actionCreate()
-    {
-        $model = new RendicontoVoci();
-
-        if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id_rendiconto' => $model->id_rendiconto]);
-            }
-        } else {
-            $model->loadDefaultValues();
-        }
-
-        return $this->render('create', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Updates an existing RendicontoVoci model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $id_rendiconto Id Rendiconto
-     * @return string|\yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionUpdate($id_rendiconto)
-    {
-        $model = $this->findModel($id_rendiconto);
-
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id_rendiconto' => $model->id_rendiconto]);
-        }
-
-        return $this->render('update', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Deletes an existing RendicontoVoci model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param int $id_rendiconto Id Rendiconto
-     * @return \yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionDelete($id_rendiconto)
-    {
-        $this->findModel($id_rendiconto)->delete();
-
-        return $this->redirect(['index']);
-    }
-
-    /**
-     * Finds the RendicontoVoci model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $id_rendiconto Id Rendiconto
-     * @return RendicontoVoci the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    protected function findModel($id_rendiconto)
-    {
-        if (($model = RendicontoVoci::findOne(['id_rendiconto' => $id_rendiconto])) !== null) {
-            return $model;
-        }
-
-        throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
-    }
-}
+<?php
+
+namespace backend\controllers;
+
+use backend\models\RendicontoVoci;
+use backend\models\RendicontoVociSearch;
+use yii\web\Controller;
+use yii\web\NotFoundHttpException;
+use yii\filters\VerbFilter;
+
+/**
+ * RendicontoVociController implements the CRUD actions for RendicontoVoci model.
+ */
+class RendicontoVociController extends Controller
+{
+    /**
+     * @inheritDoc
+     */
+    public function behaviors()
+    {
+        return array_merge(
+            parent::behaviors(),
+            [
+                'verbs' => [
+                    'class' => VerbFilter::className(),
+                    'actions' => [
+                        'delete' => ['POST'],
+                    ],
+                ],
+            ]
+        );
+    }
+
+    /**
+     * Lists all RendicontoVoci models.
+     *
+     * @return string
+     */
+    public function actionIndex()
+    {
+        $searchModel = new RendicontoVociSearch();
+        $dataProvider = $searchModel->search($this->request->queryParams);
+
+        return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    /**
+     * Displays a single RendicontoVoci model.
+     * @param int $id_rendiconto Id Rendiconto
+     * @return string
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionView($id_rendiconto)
+    {
+        return $this->render('view', [
+            'model' => $this->findModel($id_rendiconto),
+        ]);
+    }
+
+    /**
+     * Creates a new RendicontoVoci model.
+     * If creation is successful, the browser will be redirected to the 'view' page.
+     * @return string|\yii\web\Response
+     */
+    public function actionCreate()
+    {
+        $model = new RendicontoVoci();
+
+        if ($this->request->isPost) {
+            if ($model->load($this->request->post()) && $model->save()) {
+                return $this->redirect(['view', 'id_rendiconto' => $model->id_rendiconto]);
+            }
+        } else {
+            $model->loadDefaultValues();
+        }
+
+        return $this->render('create', [
+            'model' => $model,
+        ]);
+    }
+
+    /**
+     * Updates an existing RendicontoVoci model.
+     * If update is successful, the browser will be redirected to the 'view' page.
+     * @param int $id_rendiconto Id Rendiconto
+     * @return string|\yii\web\Response
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionUpdate($id_rendiconto)
+    {
+        $model = $this->findModel($id_rendiconto);
+
+        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id_rendiconto' => $model->id_rendiconto]);
+        }
+
+        return $this->render('update', [
+            'model' => $model,
+        ]);
+    }
+
+    /**
+     * Deletes an existing RendicontoVoci model.
+     * If deletion is successful, the browser will be redirected to the 'index' page.
+     * @param int $id_rendiconto Id Rendiconto
+     * @return \yii\web\Response
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionDelete($id_rendiconto)
+    {
+        $this->findModel($id_rendiconto)->delete();
+
+        return $this->redirect(['index']);
+    }
+
+    /**
+     * Finds the RendicontoVoci model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param int $id_rendiconto Id Rendiconto
+     * @return RendicontoVoci the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findModel($id_rendiconto)
+    {
+        if (($model = RendicontoVoci::findOne(['id_rendiconto' => $id_rendiconto])) !== null) {
+            return $model;
+        }
+
+        throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
+    }
+}

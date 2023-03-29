@@ -1,208 +1,208 @@
-<?php
-
-namespace backend\controllers;
-
-use Yii;
-use backend\models\Nominativo;
-use backend\models\NominativoSearch;
-use yii\web\Controller;
-use yii\web\NotFoundHttpException;
-use yii\filters\AccessControl;
-use yii\filters\VerbFilter;
-use backend\models\MediaUploadForm;
-use backend\models\AttivitaSearch;
-use backend\models\Partecipazione;
-use backend\models\Media;
-use yii\data\ActiveDataProvider;
-
-/**
- * NominativoController implements the CRUD actions for Nominativo model.
- */
-class NominativoController extends Controller
-{
-    /**
-     * @inheritDoc
-     */
-    public function behaviors()
-    {
-        return array_merge(
-            parent::behaviors(),
-            [
-                'verbs' => [
-                    'class' => VerbFilter::className(),
-                    'actions' => [
-                        'delete' => ['POST'],
-                    ],
-                ],
-                'access' => [
-                    'class' => AccessControl::className(),
-                    'rules' => [
-                        [
-                            'actions' => ['login', 'error'],
-                            'allow' => true,
-                        ],
-                        [
-                            'actions' => [],//All page
-                            'allow' => true,
-                            'roles' => ['Super User', 'event manager'],
-                        ],
-                    ],
-                ],
-            ]
-        );
-    }
-
-    /**
-     * Lists all Nominativo models.
-     * @return mixed
-     */
-    public function actionIndex()
-    {
-        $searchModel = new NominativoSearch();
-        $dataProvider = $searchModel->search($this->request->queryParams);
-
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
-    }
-
-    /**
-     * Displays a single Nominativo model.
-     * @param string $id ID
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionView($id)
-    {
-        $searchModel = new NominativoSearch();
-        $dataProvider = new ActiveDataProvider([
-            'query'         => Nominativo::findAttivita($id),
-            'pagination'    => [
-                'pageSize' => 10,
-            ],
-        ]);
-        
-        return $this->render('view', [
-            'model'         => $this->findModel($id),
-            'dataProvider'  => $dataProvider,
-            'searchModel'   => $searchModel,
-        ]);
-    }
-
-    /**
-     * Creates a new Nominativo model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
-    public function actionCreate()
-    {
-        $model = new Nominativo();
-        if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                
-                if(isset(($this->request->post())['selection']))
-                    foreach (($this->request->post())['selection'] as $value){
-                        $partecipazione = new Partecipazione();
-                        $partecipazione->attivita   = $value;
-                        $partecipazione->nominativo = $model->id;
-
-                        $partecipazione->save();
-                    }
-                
-                
-                return $this->redirect(['view', 'id' => $model->id]);
-            }
-        } else {
-            $model->loadDefaultValues();
-        }
-        
-        $upload         = new MediaUploadForm();
-        $searchAttivita = new AttivitaSearch();
-        $attivita       = $searchAttivita->search($this->request->queryParams);
-        $media          = Media::find()->all();
-        
-        return $this->render('create', [
-            'model'          => $model,
-            'upload'         => $upload,
-            'attivita'       => $attivita,
-            'searchAttivita' => $searchAttivita,
-            'media'          => $media,
-        ]);
-    }
-
-    /**
-     * Updates an existing Nominativo model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param string $id ID
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionUpdate($id)
-    {
-        $model          = $this->findModel($id);
-        $upload         = new MediaUploadForm();
-        $media          = Media::find()->all();
-        $searchAttivita = new AttivitaSearch();
-        $attivita       = $searchAttivita->search($this->request->queryParams);
-        $myAttivita     = Nominativo::findAttivita($id);
-       
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            $partecipazione = Partecipazione::find(['nominativo' => $id])->all();
-            //Delete
-            foreach ($partecipazione as $value) $value->delete();
-            
-            
-            if(isset(($this->request->post())['selection'])){
-                foreach ($this->request->post()['selection'] as $value){
-                    $partecipazione = new Partecipazione();
-                    $partecipazione->attivita   = $value;
-                    $partecipazione->nominativo = $model->id;
-
-                    $partecipazione->save();
-                }
-
-                return $this->redirect(['view', 'id' => $model->id]);
-            }
-        }
-
-        return $this->render('update', [
-            'model'          => $model,
-            'attivita'       => $attivita,
-            'searchAttivita' => $searchAttivita,
-            'upload'        => $upload,
-            'media'         => $media,
-            'myAttivita'    => $myAttivita
-        ]);
-    }
-
-    /**
-     * Deletes an existing Nominativo model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param string $id ID
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionDelete($id)
-    {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
-    }
-
-    /**
-     * Finds the Nominativo model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param string $id ID
-     * @return Nominativo the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    protected function findModel($id)
-    {
-        if (($model = Nominativo::findOne($id)) !== null) {
-            return $model;
-        }
-
-        throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
-    }
-}
+<?php
+
+namespace backend\controllers;
+
+use Yii;
+use backend\models\Nominativo;
+use backend\models\NominativoSearch;
+use yii\web\Controller;
+use yii\web\NotFoundHttpException;
+use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
+use backend\models\MediaUploadForm;
+use backend\models\AttivitaSearch;
+use backend\models\Partecipazione;
+use backend\models\Media;
+use yii\data\ActiveDataProvider;
+
+/**
+ * NominativoController implements the CRUD actions for Nominativo model.
+ */
+class NominativoController extends Controller
+{
+    /**
+     * @inheritDoc
+     */
+    public function behaviors()
+    {
+        return array_merge(
+            parent::behaviors(),
+            [
+                'verbs' => [
+                    'class' => VerbFilter::className(),
+                    'actions' => [
+                        'delete' => ['POST'],
+                    ],
+                ],
+                'access' => [
+                    'class' => AccessControl::className(),
+                    'rules' => [
+                        [
+                            'actions' => ['login', 'error'],
+                            'allow' => true,
+                        ],
+                        [
+                            'actions' => [],//All page
+                            'allow' => true,
+                            'roles' => ['Super User', 'event manager'],
+                        ],
+                    ],
+                ],
+            ]
+        );
+    }
+
+    /**
+     * Lists all Nominativo models.
+     * @return mixed
+     */
+    public function actionIndex()
+    {
+        $searchModel = new NominativoSearch();
+        $dataProvider = $searchModel->search($this->request->queryParams);
+
+        return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    /**
+     * Displays a single Nominativo model.
+     * @param string $id ID
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionView($id)
+    {
+        $searchModel = new NominativoSearch();
+        $dataProvider = new ActiveDataProvider([
+            'query'         => Nominativo::findAttivita($id),
+            'pagination'    => [
+                'pageSize' => 10,
+            ],
+        ]);
+        
+        return $this->render('view', [
+            'model'         => $this->findModel($id),
+            'dataProvider'  => $dataProvider,
+            'searchModel'   => $searchModel,
+        ]);
+    }
+
+    /**
+     * Creates a new Nominativo model.
+     * If creation is successful, the browser will be redirected to the 'view' page.
+     * @return mixed
+     */
+    public function actionCreate()
+    {
+        $model = new Nominativo();
+        if ($this->request->isPost) {
+            if ($model->load($this->request->post()) && $model->save()) {
+                
+                if(isset(($this->request->post())['selection']))
+                    foreach (($this->request->post())['selection'] as $value){
+                        $partecipazione = new Partecipazione();
+                        $partecipazione->attivita   = $value;
+                        $partecipazione->nominativo = $model->id;
+
+                        $partecipazione->save();
+                    }
+                
+                
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
+        } else {
+            $model->loadDefaultValues();
+        }
+        
+        $upload         = new MediaUploadForm();
+        $searchAttivita = new AttivitaSearch();
+        $attivita       = $searchAttivita->search($this->request->queryParams);
+        $media          = Media::find()->all();
+        
+        return $this->render('create', [
+            'model'          => $model,
+            'upload'         => $upload,
+            'attivita'       => $attivita,
+            'searchAttivita' => $searchAttivita,
+            'media'          => $media,
+        ]);
+    }
+
+    /**
+     * Updates an existing Nominativo model.
+     * If update is successful, the browser will be redirected to the 'view' page.
+     * @param string $id ID
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionUpdate($id)
+    {
+        $model          = $this->findModel($id);
+        $upload         = new MediaUploadForm();
+        $media          = Media::find()->all();
+        $searchAttivita = new AttivitaSearch();
+        $attivita       = $searchAttivita->search($this->request->queryParams);
+        $myAttivita     = Nominativo::findAttivita($id);
+       
+        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+            $partecipazione = Partecipazione::find(['nominativo' => $id])->all();
+            //Delete
+            foreach ($partecipazione as $value) $value->delete();
+            
+            
+            if(isset(($this->request->post())['selection'])){
+                foreach ($this->request->post()['selection'] as $value){
+                    $partecipazione = new Partecipazione();
+                    $partecipazione->attivita   = $value;
+                    $partecipazione->nominativo = $model->id;
+
+                    $partecipazione->save();
+                }
+
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
+        }
+
+        return $this->render('update', [
+            'model'          => $model,
+            'attivita'       => $attivita,
+            'searchAttivita' => $searchAttivita,
+            'upload'        => $upload,
+            'media'         => $media,
+            'myAttivita'    => $myAttivita
+        ]);
+    }
+
+    /**
+     * Deletes an existing Nominativo model.
+     * If deletion is successful, the browser will be redirected to the 'index' page.
+     * @param string $id ID
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionDelete($id)
+    {
+        $this->findModel($id)->delete();
+
+        return $this->redirect(['index']);
+    }
+
+    /**
+     * Finds the Nominativo model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param string $id ID
+     * @return Nominativo the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findModel($id)
+    {
+        if (($model = Nominativo::findOne($id)) !== null) {
+            return $model;
+        }
+
+        throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
+    }
+}

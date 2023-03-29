@@ -1,74 +1,74 @@
-<?php
-
-namespace backend\controllers;
-
-use Yii;
-use backend\models\Allegati;
-use yii\web\Controller;
-use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
-
-/**
- * AllegatiController implements the CRUD actions for Allegati model.
- */
-class AllegatiController extends Controller
-{
-    /**
-     * @inheritDoc
-     */
-    public function behaviors()
-    {
-        return array_merge(
-            parent::behaviors(),
-            [
-                'verbs' => [
-                    'class' => VerbFilter::className(),
-                    'actions' => [
-                        'delete' => ['POST'],
-                    ],
-                ],
-            ]
-        );
-    }
-
-    /**
-     * Deletes an existing Allegati model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param int $id ID
-     * @return \yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionDelete($id, $id_verbale)
-    {
-        
-        $model = $this->findModel($id);
-        $allegati = Allegati::find()->where(['id_verbale' => $id_verbale, 'id' => $id])->all();
-        
-        //delete file from filesystem
-        foreach ($allegati as $val){
-            unlink(Yii::$app->params['backendWebInternalPath'].$val->allegato);
-        }
-        
-        $model->delete();
-        
-        return $this->redirect(['/verbali/view', 
-            'numero_protocollo' => $id_verbale
-        ]);
-    }
-
-    /**
-     * Finds the Allegati model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $id ID
-     * @return Allegati the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    protected function findModel($id)
-    {
-        if (($model = Allegati::findOne(['id' => $id])) !== null) {
-            return $model;
-        }
-
-        throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
-    }
-}
+<?php
+
+namespace backend\controllers;
+
+use Yii;
+use backend\models\Allegati;
+use yii\web\Controller;
+use yii\web\NotFoundHttpException;
+use yii\filters\VerbFilter;
+
+/**
+ * AllegatiController implements the CRUD actions for Allegati model.
+ */
+class AllegatiController extends Controller
+{
+    /**
+     * @inheritDoc
+     */
+    public function behaviors()
+    {
+        return array_merge(
+            parent::behaviors(),
+            [
+                'verbs' => [
+                    'class' => VerbFilter::className(),
+                    'actions' => [
+                        'delete' => ['POST'],
+                    ],
+                ],
+            ]
+        );
+    }
+
+    /**
+     * Deletes an existing Allegati model.
+     * If deletion is successful, the browser will be redirected to the 'index' page.
+     * @param int $id ID
+     * @return \yii\web\Response
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionDelete($id, $id_verbale)
+    {
+        
+        $model = $this->findModel($id);
+        $allegati = Allegati::find()->where(['id_verbale' => $id_verbale, 'id' => $id])->all();
+        
+        //delete file from filesystem
+        foreach ($allegati as $val){
+            unlink(Yii::$app->params['backendWebInternalPath'].$val->allegato);
+        }
+        
+        $model->delete();
+        
+        return $this->redirect(['/verbali/view', 
+            'numero_protocollo' => $id_verbale
+        ]);
+    }
+
+    /**
+     * Finds the Allegati model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param int $id ID
+     * @return Allegati the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findModel($id)
+    {
+        if (($model = Allegati::findOne(['id' => $id])) !== null) {
+            return $model;
+        }
+
+        throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
+    }
+}
