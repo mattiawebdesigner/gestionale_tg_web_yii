@@ -139,7 +139,7 @@ CSS;
                     Yii::$app->mailer->compose(['html' =>'layouts/html'], ['content' => <<<TESTO
                         Io sottoscritto <b>{$delegante}</b> delego <b>{$delegato}</b> per la riunione che si terrà in data <b>{$data_delega}</b>
 TESTO])
-                    ->setFrom(["noreply-crm@teatralmentegioia.it" => "Teatralmente Gioia"])
+                    ->setFrom([Yii::$app->params['noreplyEmail'] => Yii::$app->params['noreplyEmailName']])
                     ->setTo([Yii::$app->user->identity->email, Yii::$app->params['email']])
                     ->setSubject(Yii::t('app', 'Modulo di delega').' | '. Yii::t('app', 'Gestionale Teatralmente Gioia'))
                     ->attach($allegato_name)
