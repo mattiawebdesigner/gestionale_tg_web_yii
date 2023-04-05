@@ -6,7 +6,7 @@ return ['label' => 'Segreteria', 'url' => '#', 'items' => [
             ['label' =>  Yii::t('app', 'Soci suddivisi per anno'), 'url' => ['/soci/index']],
             ['label' =>  Yii::t('app', 'Tutti i soci'), 'url' => ['/soci/all']],
             '<hr />',
-            
+    
             //Albo d'oro
             ['label' => 'Albo D\'Oro'],
             ['label' => Yii::t('app', 'Nuovo Componente'), 'url' => ['/nominativo/create']],
@@ -14,27 +14,29 @@ return ['label' => 'Segreteria', 'url' => '#', 'items' => [
             '<hr />',
             
             //Documentazione
-            ['label' => Yii::t('app', 'Documentazione'), 'url' => ['/documentazione/index']],
-            '<hr />',
-            
+            /*['label' => Yii::t('app', 'Documentazione'), 'url' => ['/documentazione/index']],
+            '<hr />',*/
+
             //Rendiconti
             ['label' => Yii::t('app', 'Rendicontazioni')],
             ['label' => Yii::t('app', 'Le rendicontazioni'), 'url' => ['/rendiconto/index']],
             ['label' => Yii::t('app', 'Nuova rendicontazione'), 'url' => ['/rendiconto/create']],
             '<hr />',
-            
+    
             //Verbali
             ['label' => Yii::t('app', 'Gestione dei verbali')],
             ['label' => Yii::t('app', 'I verbali'), 'url' => ['/verbali/manage']],
-            '<hr />',
-            
-            //Verbali
-            ['label' => Yii::t('app', 'Gestione mail')],
+            '<hr />',            
+
+            //Email
+            /*['label' => Yii::t('app', 'Gestione mail')],
+
             ['label' => Yii::t('app', 'Nuova mail'), 'url' => ['/email/create']],
-            '<hr />',
-            
+
+            '<hr />',*/
+
             //Votazioni
             ['label' => Yii::t('app', 'Votazioni')],
+            //['label' => Yii::t('app', 'Genera elenco soci aventi diritto al voto'), 'url' => ['/soci/elenco-votazioni']],
             ['label' => Yii::t('app', 'Gestione delle votazioni'), 'url' => ['/votazione/gestione-votazioni']],
-            
         ]];
