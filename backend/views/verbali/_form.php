@@ -30,6 +30,9 @@ use dosamigos\tinymce\TinyMce;
             <span class="btn btn-warning">
                 <?= Html::a('<i class="fas fa-download"></i> ', ['download', 'numero_protocollo' => $model->numero_protocollo])  ?>
             </span>
+            <span class="btn btn-warning">
+                <?= Html::a('<i class="fa-solid fa-clock-rotate-left"></i> ', ['modifiche', 'numero_protocollo' => $model->numero_protocollo], ['target' => '_blank'])  ?>
+            </span>
         </div>
     </div>
     
