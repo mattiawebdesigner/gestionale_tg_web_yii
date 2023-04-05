@@ -16,6 +16,7 @@ $this->title = Yii::t('app', 'Articolo: {name}', [
     
     <div class="container comments">
         
+        
         <?php foreach($comments as $comment): ?>
             <?php $c = (SnlCommenti::find()->where(['id' => $comment->commento])->all())[0]; ?>
             
