@@ -13,6 +13,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use kartik\mpdf\Pdf;
 use yii\web\UploadedFile;
+use yii\filters\AccessControl;
 
 /**
  * VerbaliController implements the CRUD actions for Verbali model.
@@ -33,7 +34,18 @@ class VerbaliController extends Controller
                         'delete' => ['POST'],
                     ],
                 ],
-            ]
+                'access' => [
+                    'class' => AccessControl::className(),
+                    'rules' => [
+                        [
+                            'actions' => [],//All page
+                            'allow' => true,
+                            'roles' => ['Super User', 'segreteria'],
+                        ]
+                    ],
+                ]
+            ],
+            
         );
     }
 
@@ -527,6 +539,53 @@ TESTO])
     function actionIndexSocio(){
         return $this->render("index-socio", [
             'start' => 2004,
+        ]);
+    }
+    
+    /**
+     * Visualizza le modifiche apportate ai verbali
+     * indicando il socio che le ha apportate
+     * 
+     * Aggiunto in data 05/04/2023
+     * 
+     * @param string $numero_protocollo Numero di protocollo del verbale
+     */
+    function actionModifiche($numero_protocollo){
+        $versioneVerbale = \backend\models\VersioneVerbale::find()
+                        ->where(['numero_protocollo' => $numero_protocollo])
+                        ->all();
+        
+        $modifiche = array();
+        for($i = 0; $i<sizeof($versioneVerbale); $i ++){
+            /*$verbaleStorico[$i] = \backend\models\VerbaleStorico::find()
+                            ->where(['id' => $versioneVerbale[$i]->numero_protocollo_storico])
+                            ->all();*/
+            $modifiche[$i] = new \stdClass();
+            
+            //Dati sulla modifica del verbale
+            $modifiche[$i]->verbaleStorico = \backend\models\VerbaleStorico::find()
+                            ->where(['id' => $versioneVerbale[$i]->numero_protocollo_storico])
+                            ->one();
+            //Dati sulla versione del verbale
+            $modifiche[$i]->versioneVerbale = new \stdClass();
+            $modifiche[$i]->versioneVerbale->numero_protocollo = $numero_protocollo;
+            $modifiche[$i]->versioneVerbale->numero_protocollo_storico = $versioneVerbale[$i]->numero_protocollo_storico;
+            $modifiche[$i]->versioneVerbale->data_modifica = $versioneVerbale[$i]->data_modifica;
+            $modifiche[$i]->versioneVerbale->utente = \backend\models\Utenti::findOne( $versioneVerbale[$i]->utente);
+        }
+        
+        
+        //$modifiche = $verbaleStorico;
+        
+        /*echo "<pre>";
+        //print_r($versioneVerbale);
+        print_r($modifiche);
+        echo "</pre>";
+        return;*/
+        
+        return $this->render("modifiche", [
+            'numero_protocollo' => $numero_protocollo,
+            'modifiche'         => $modifiche,
         ]);
     }
     
