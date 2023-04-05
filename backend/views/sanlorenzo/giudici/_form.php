@@ -13,7 +13,11 @@ use dosamigos\tinymce\TinyMce;
     <?php $form = ActiveForm::begin(); ?>
 
 		<div class="form-group">
-        <?= Html::submitButton('<i class="fa-solid fa-floppy-disk"></i> ' . Yii::t('app', 'Salva il nuovo giurato'), ['class' => 'btn btn-success']) ?>
+        <?php if($type=="update"): ?>
+            <?= Html::submitButton('<i class="fa-solid fa-floppy-disk"></i> ' . Yii::t('app', 'Aggiorna il giurato'), ['class' => 'btn btn-success']) ?>
+        <?php else : ?>
+            <?= Html::submitButton('<i class="fa-solid fa-floppy-disk"></i> ' . Yii::t('app', 'Salva il nuovo giurato'), ['class' => 'btn btn-success']) ?>
+        <?php endif; ?>
     </div>
     
     <?= $form->field($model, 'nome')->textInput(['maxlength' => true]) ?>

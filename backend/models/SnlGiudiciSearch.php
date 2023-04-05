@@ -37,7 +37,7 @@ class SnlGiudiciSearch extends SnlGiudici
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
+    public function searchGiudiciInCorso($params)
     {
         $query = SnlGiudici::find();
 
@@ -58,7 +58,12 @@ class SnlGiudiciSearch extends SnlGiudici
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'contest' => $this->contest,
+        ]);
+        
+        $query->andFilterWhere([
+            'contest' => \backend\models\SnlContest::findOne(
+                            SnlEdizione::find()->orderBy(['anno' => SORT_DESC])->one()->contest
+                        )->id,
         ]);
 
         $query->andFilterWhere(['like', 'nome', $this->nome])

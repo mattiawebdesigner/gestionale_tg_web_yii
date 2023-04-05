@@ -5,7 +5,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model backend\models\Nominativo */
 
-$this->title = Yii::t('app', 'Aggiunta nuovo Partner');
+$this->title = Yii::t('app', 'Aggiunta nuovo giurato');
 ?>
 <div id="imgs" class="nominativo-create">
 
