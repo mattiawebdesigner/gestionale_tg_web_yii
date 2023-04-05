@@ -282,6 +282,28 @@ TESTO])
         //Allegati attuali del verbale
         $allegatiReal   = Allegati::find()->where(['id_verbale' => $numero_protocollo])->all();
 
+        //Dati per la storicità delle modifiche
+        $verbalePrimaDellaModifica = new \backend\models\VerbaleStorico();
+        $verbalePrimaDellaModifica->bozza            = $model->bozza;
+        $verbalePrimaDellaModifica->contenuto        = $model->contenuto;
+        $verbalePrimaDellaModifica->data             = $model->data;
+        $verbalePrimaDellaModifica->data_inserimento = $model->data_inserimento;
+        $verbalePrimaDellaModifica->firma            = $model->firma;
+        $verbalePrimaDellaModifica->numero_protocollo= $model->numero_protocollo;
+        $verbalePrimaDellaModifica->oggetto          = $model->oggetto;
+        $verbalePrimaDellaModifica->ora_fine         = $model->ora_fine;
+        $verbalePrimaDellaModifica->ora_inizio       = $model->ora_inizio;
+        $verbalePrimaDellaModifica->ordine_del_giorno= $model->ordine_del_giorno;
+        $verbalePrimaDellaModifica->tipo             = $model->tipo;
+        $verbalePrimaDellaModifica->save();
+        
+        $versioneVerbale = new \backend\models\VersioneVerbale();
+        $versioneVerbale->numero_protocollo         = $model->numero_protocollo;
+        $versioneVerbale->numero_protocollo_storico = $verbalePrimaDellaModifica->id;
+        $versioneVerbale->data_modifica             = date("Y-m-d H:i:s");
+        $versioneVerbale->utente                    = Yii::$app->user->identity->id;
+        $versioneVerbale->save();
+
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
             $allegati->allegato = UploadedFile::getInstances($allegati, 'allegato');
                 
@@ -294,7 +316,7 @@ TESTO])
                 $allegati->id_verbale = $model->numero_protocollo;
                 $allegati->nome_originale = $value->baseName;
                 $allegati->nome = $fileName;
-
+                
                 if($allegati->save()){
                     $value->saveAs($basePath.$fileName);
                 }else{
