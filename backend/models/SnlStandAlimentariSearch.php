@@ -38,7 +38,7 @@ class SnlStandAlimentariSearch extends SnlStandAlimentari
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
+    public function searchStandInCorso($params)
     {
         $query = SnlStandAlimentari::find();
 
@@ -60,7 +60,11 @@ class SnlStandAlimentariSearch extends SnlStandAlimentari
         $query->andFilterWhere([
             'id' => $this->id,
             'n_postazione' => $this->n_postazione,
-            'contest' => $this->contest,
+        ]);
+        $query->andFilterWhere([
+            'contest' => \backend\models\SnlContest::findOne(
+                            SnlEdizione::find()->orderBy(['anno' => SORT_DESC])->one()->contest
+                        )->id,
         ]);
 
         $query->andFilterWhere(['like', 'nome', $this->nome])

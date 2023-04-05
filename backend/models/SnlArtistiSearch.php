@@ -38,7 +38,7 @@ class SnlArtistiSearch extends SnlArtisti
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
+    public function searchArtistiInCorso($params)
     {
         $query = SnlArtisti::find();
 
