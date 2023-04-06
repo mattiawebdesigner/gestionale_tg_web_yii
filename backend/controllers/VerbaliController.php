@@ -41,6 +41,11 @@ class VerbaliController extends Controller
                             'actions' => [],//All page
                             'allow' => true,
                             'roles' => ['Super User', 'segreteria'],
+                        ],
+                        [
+                            'actions' => ['index-socio','view-socio-convocazione', 'view-socio-verbale', 'content-convocazioni', 'content-verbali'],
+                            'allow' => true,
+                            'roles' => ['Socio'],
                         ]
                     ],
                 ]
