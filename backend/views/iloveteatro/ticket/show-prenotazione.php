@@ -6,15 +6,21 @@ use app\models\IltPlatea;
 use app\models\IltPalco;
 use app\models\IltOrdine;
 use app\models\IltPosto;
-use app\models\IltSpettacolo;
 
 $this->title = Yii::t('app', 'Gestisci prenotazione: {spettacolo}', [
-    'spettacolo' => IltSpettacolo::findOne($prenotazioni[0]->spettacolo)->spettacolo,
+    'spettacolo' => $spettacolo->spettacolo,
 ]);
 ?>
 <h1><?= Html::encode( $this->title ) ?></h1>
 
 <?php //Buttons ?>
+
+<?php
+//Messaggio nessun ticket
+if(isset($prenotazioni) && sizeof($prenotazioni) === 0):
+?>
+<p class="alert alert-info"><?= Yii::t('app', 'Nessun ticket emesso') ?></p>
+<?php endif; ?>
 
 <?php foreach($prenotazioni as $prenotazione) : ?>
 <div class="flex gap-1">
@@ -163,9 +169,3 @@ $this->title = Yii::t('app', 'Gestisci prenotazione: {spettacolo}', [
             <hr />
     </div>
 <?php endforeach; ?>
-
-<!--
-<pre>
-    <?php print_r( $prenotazioni ) ?>
-</pre>
--->
