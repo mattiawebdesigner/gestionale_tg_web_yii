@@ -92,7 +92,7 @@ class VerbaliController extends Controller
                 
                 if($delega->save()){                    
                     $delegante  = \backend\models\Utenti::find()->where(['id' => $delega->delegante])->one()->cognome.' '.\backend\models\Utenti::find()->where(['id' => $delega->delegante])->one()->nome;
-                    $delegato   = \backend\models\Utenti::find()->where(['id' => $delega->delegante])->one()->cognome.' '.\backend\models\Utenti::find()->where(['id' => $delega->delegato])->one()->nome;
+                    $delegato   = \backend\models\Utenti::find()->where(['id' => $delega->delegato])->one()->cognome.' '.\backend\models\Utenti::find()->where(['id' => $delega->delegato])->one()->nome;
                     
                     //Generazione PDF
                     $heading = $this->renderPartial('_pdf-heading');
