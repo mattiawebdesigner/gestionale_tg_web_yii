@@ -102,7 +102,7 @@ class IltIscrizioniSearch extends IltIscrizioni
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'festival' => IltFestival::findOne(['anno' => date('Y')])->id,
+            'festival' => IltFestival::find()->orderBy(['anno' => SORT_DESC])->one()->id,
         ]);
 
         $query->andFilterWhere(['like', 'compagnia', $this->compagnia])
