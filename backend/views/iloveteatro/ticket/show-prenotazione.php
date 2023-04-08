@@ -151,6 +151,7 @@ if(isset($prenotazioni) && sizeof($prenotazioni) === 0):
             $fila = IltFila::findOne($posto->fila);
             $platea = IltPlatea::findOne(['fila' => $fila->id]);
             $palco = IltPalco::findOne(['fila' => $fila->id]);
+            $ordine = null;
             ?>
             <strong class="c-1">
                 <?= (($platea<>null)?"Platea":
