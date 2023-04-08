@@ -51,5 +51,9 @@ $this->title = Yii::t('app', 'Grafico generale di vendita')
     </script>
     
     
-    <!--Div that will hold the pie chart-->
-    <div id="barchart_values" style="width: 900px; height: 300px;"></div>
+    <?php if(isset($shows) && sizeof($shows) > 0) : ?>
+        <!--Div that will hold the pie chart-->
+        <div id="barchart_values" style="width: 900px; height: 300px;"></div>
+    <?php else : ?>
+        <p class="alert alert-info"><?= Yii::t('app', 'Non ci sono biglietti venduti') ?></p>
+    <?php endif; ?>

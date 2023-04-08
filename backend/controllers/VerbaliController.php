@@ -41,6 +41,11 @@ class VerbaliController extends Controller
                             'actions' => [],//All page
                             'allow' => true,
                             'roles' => ['Super User', 'segreteria'],
+                        ],
+                        [
+                            'actions' => ['index-socio','view-socio-convocazione', 'view-socio-verbale', 'content-convocazioni', 'content-verbali'],
+                            'allow' => true,
+                            'roles' => ['Socio'],
                         ]
                     ],
                 ]
@@ -87,7 +92,7 @@ class VerbaliController extends Controller
                 
                 if($delega->save()){                    
                     $delegante  = \backend\models\Utenti::find()->where(['id' => $delega->delegante])->one()->cognome.' '.\backend\models\Utenti::find()->where(['id' => $delega->delegante])->one()->nome;
-                    $delegato   = \backend\models\Utenti::find()->where(['id' => $delega->delegante])->one()->cognome.' '.\backend\models\Utenti::find()->where(['id' => $delega->delegato])->one()->nome;
+                    $delegato   = \backend\models\Utenti::find()->where(['id' => $delega->delegato])->one()->cognome.' '.\backend\models\Utenti::find()->where(['id' => $delega->delegato])->one()->nome;
                     
                     //Generazione PDF
                     $heading = $this->renderPartial('_pdf-heading');
