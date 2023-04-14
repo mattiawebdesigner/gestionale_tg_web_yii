@@ -450,8 +450,10 @@ CSS;
         ]);
         
         foreach ($allegati as $allegato){
-            
-            if(end(explode(".", $allegato->allegato) ) === "pdf"){
+            $a       = $allegato->allegato;
+            $explode = explode(".", $a);
+            $end = end($explode);
+            if($end === "pdf"){
                 $pdf->addPdfAttachment(Yii::$app->params['backendWebInternalPath'].$allegato->allegato);
             }
         }
