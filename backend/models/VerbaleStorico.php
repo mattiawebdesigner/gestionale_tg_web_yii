@@ -45,7 +45,6 @@ class VerbaleStorico extends \yii\db\ActiveRecord
             [['contenuto'], 'string'],
             [['numero_protocollo'], 'string', 'max' => 10],
             [['oggetto', 'ordine_del_giorno'], 'string', 'max' => 255],
-            [['firma'], 'string', 'max' => 100],
             [['numero_protocollo'], 'unique'],
             [['tipo'], 'exist', 'skipOnError' => true, 'targetClass' => TipoVerbali::className(), 'targetAttribute' => ['tipo' => 'id']],
         ];
