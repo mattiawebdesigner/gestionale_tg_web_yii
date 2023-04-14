@@ -4,7 +4,7 @@
     --color-white: white;
     --color-black: black;
    --color-link-tg1: #eb601d;
-   --color-link-tg2: f9d916;
+   --color-link-tg2: #f9d916;
    
    --color-iloveteatro: #A91916;
 }
@@ -15,6 +15,7 @@
 .dropdown-item.active, .dropdown-item:active{color: white;}
 a.btn{color: var(--color-white);}
 a.btn.btn-outline-secondary{color: var(--color-black);}
+a.btn.btn-link{color: var(--color-blue);}
 
 body{
     /*background: url(.);

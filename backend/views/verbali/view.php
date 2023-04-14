@@ -26,6 +26,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 'method' => 'post',
             ],
         ]) ?>
+        <?= Html::a(Yii::t('app', '{icon}Modifiche al verbale', [
+            'icon' => '<i class="fa-solid fa-clock-rotate-left"></i> ',
+        ]), ['modifiche', 'numero_protocollo' => $model->numero_protocollo], ['target' => '_blank', 'class' => 'btn btn-link'])  ?>
     </p>
     
     <h4>Prot: <?= $model->numero_protocollo ?></h4>
