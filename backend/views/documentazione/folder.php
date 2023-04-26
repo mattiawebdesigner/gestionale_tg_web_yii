@@ -14,7 +14,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <div id="document-container">
 
-    <h4><?= Yii::t('app', 'File') ?></h4>
+    <h4><?= Yii::t('app', 'Files') ?></h4>
     <?php if(sizeof($documenti) > 0) : ?>
     <div class="files">
         <?php foreach($documenti as $k => $cartella) : ?>

@@ -35,7 +35,7 @@ $this->params['breadcrumbs'][] = $this->title;
         
         <?php //Visualizzo eventuali file non categorizzati ?>
         
-        <h4><?= Yii::t('app', 'File') ?></h4>
+        <h4><?= Yii::t('app', 'Files') ?></h4>
         <div class="files">
             <?php foreach($documenti as $k => $cartella) : ?>
             
