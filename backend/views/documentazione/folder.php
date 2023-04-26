@@ -1,11 +1,11 @@
 <?php
 use yii\helpers\Html;
 
-$this->title = Yii::t('app', 'Cartella');
+$this->title = Yii::t('app', $cartella_obj->categoria);
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Documentazione'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<h1><?= Html::encode($this->title) ?></h1>
+<h1><i class="fa-solid fa-folder"></i> <?= Html::encode($this->title) ?></h1>
 
 <?= $this->render("_actions", [
     'id' => $id,
@@ -39,6 +39,10 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php endif; ?>
     
 </div>
+
+<pre>
+    <?php print_r($cartella_obj) ?>
+</pre>
 
 <?php
 $this->registerCssFile("@web/css/documentazione.css",['depends' => yii\bootstrap4\BootstrapAsset::class]);

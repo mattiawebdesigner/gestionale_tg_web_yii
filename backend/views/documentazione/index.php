@@ -10,7 +10,7 @@ $this->title = Yii::t('app', 'Documentazione');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="documentazione-index">
-    <h1><?= Html::encode($this->title) ?></h1>
+    <h1><i class="fa-solid fa-folder"></i> <?= Html::encode($this->title) ?></h1>
     
     <?= $this->render("_actions", [
         'id' => 1,
