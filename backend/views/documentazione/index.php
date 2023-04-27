@@ -56,9 +56,8 @@ $id = 1;
         <h4><?= Yii::t('app', 'Files') ?></h4>
         <div class="files">
             <?php foreach($documenti as $k => $cartella) : ?>
-            
-            <a href="">
-                <div class="file">
+            <div class="file">
+                <a href="">
                     <div class="icon">
                         <i class="fa-solid fa-file"></i>
                     </div>
@@ -66,8 +65,25 @@ $id = 1;
                     <div class="name">
                         <?= $cartella->fileName ?>
                     </div>
+                </a>
+                
+                <div class="actions">
+                    <div class="point">
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                    </div>
+                    
+                    <div class="menu">
+                        <div class="content ">
+                            <div class="trash">
+                                <i class="fa-solid fa-trash-can"></i> 
+                                <?= Html::a(Yii::t('app', 'Cancella il file'), ['delete-file', 'id' => $cartella->id]) ?>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </a>
+            </div>
             <?php endforeach; ?>
         </div>
     </div>
@@ -76,3 +92,4 @@ $id = 1;
 
 <?php
 $this->registerCssFile("@web/css/documentazione.css",['depends' => yii\bootstrap4\BootstrapAsset::class]);
+$this->registerJsFile("@web/js/documentazione.js",['depends' => yii\web\JqueryAsset::class]);

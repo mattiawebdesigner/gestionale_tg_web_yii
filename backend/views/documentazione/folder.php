@@ -18,9 +18,8 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php if(sizeof($documenti) > 0) : ?>
     <div class="files">
         <?php foreach($documenti as $k => $cartella) : ?>
-
-        <a href="">
-            <div class="file">
+        <div class="file">
+            <a href="">
                 <div class="icon">
                     <i class="fa-solid fa-file"></i>
                 </div>
@@ -28,8 +27,25 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="name">
                     <?= $cartella->fileName ?>
                 </div>
-            </div>
-        </a>
+            </a>
+            
+            <div class="actions">
+                    <div class="point">
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                    </div>
+                    
+                    <div class="menu">
+                        <div class="content ">
+                            <div class="trash">
+                                <i class="fa-solid fa-trash-can"></i> 
+                                <?= Html::a(Yii::t('app', 'Cancella il file'), ['delete-file', 'id' => $cartella->id, 'cartella_id' => $cartella_obj->id]) ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </div>
         <?php endforeach; ?>
     </div>
     <?php else: ?>
@@ -42,3 +58,4 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <?php
 $this->registerCssFile("@web/css/documentazione.css",['depends' => yii\bootstrap4\BootstrapAsset::class]);
+$this->registerJsFile("@web/js/documentazione.js",['depends' => yii\web\JqueryAsset::class]);
