@@ -17,7 +17,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <p>
         <?= Html::a('<i class="fas fa-table"></i>', ['index', 'id' => $cartellaId], ['class' => 'btn btn-success']) ?>
-        <!--<?= Html::a('<i class="fas fa-pencil"></i> '.Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>-->
+        <?= Html::a('<i class="fa-solid fa-download"></i> '.Yii::t('app', 'Scarica'), $model->link, ['class' => 'btn btn-warning', 'download' => true]) ?>
         <?= Html::a('<i class="fas fa-trash"></i> '.Yii::t('app', 'Delete'), ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [

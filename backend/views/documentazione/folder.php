@@ -42,6 +42,10 @@ $this->params['breadcrumbs'][] = $this->title;
                                 <i class="fa-solid fa-trash-can"></i> 
                                 <?= Html::a(Yii::t('app', 'Cancella il file'), ['delete-file', 'id' => $documento->id, 'cartella_id' => $cartella_obj->id]) ?>
                             </div>
+                            <div class="download">
+                                <i class="fa-solid fa-download"></i> 
+                                <?= Html::a(Yii::t('app', 'Scarica il file'), $documento->link, ['download' => true]) ?>
+                            </div>
                         </div>
                     </div>
                 </div>

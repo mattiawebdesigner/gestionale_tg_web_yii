@@ -61,9 +61,12 @@
     width: 200px;
     padding: 10px;
 }
+#document-container .actions .content{
+    flex-direction: column;
+}
 #document-container .actions .menu .content, #document-container .actions .menu .content > div{
     display: flex;
-    align-items: center;
+    /*align-items: center;*/
     gap: 5px;
 }
 #document-container .actions > .point{

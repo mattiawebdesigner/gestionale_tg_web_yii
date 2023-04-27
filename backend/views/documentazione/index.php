@@ -85,6 +85,10 @@ $id = 1;
                                 <i class="fa-solid fa-trash-can"></i> 
                                 <?= Html::a(Yii::t('app', 'Cancella il file'), ['delete-file', 'id' => $documento->id]) ?>
                             </div>
+                            <div class="download">
+                                <i class="fa-solid fa-download"></i> 
+                                <?= Html::a(Yii::t('app', 'Scarica il file'), $documento->link, ['download' => true]) ?>
+                            </div>
                         </div>
                     </div>
                 </div>
