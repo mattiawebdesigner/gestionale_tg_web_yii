@@ -60,15 +60,15 @@ $id = 1;
         
         <h4><?= Yii::t('app', 'Files') ?></h4>
         <div class="files">
-            <?php foreach($documenti as $k => $cartella) : ?>
+            <?php foreach($documenti as $k => $documento) : ?>
             <div class="file">
-                <a href="">
+                <a href="?r=documentazione/view&id=<?= $documento->id ?>&cartellaId=<?= $id ?>">
                     <div class="icon">
                         <i class="fa-solid fa-file"></i>
                     </div>
 
                     <div class="name">
-                        <?= $cartella->fileName ?>
+                        <?= $documento->fileName ?>
                     </div>
                 </a>
                 
@@ -83,7 +83,7 @@ $id = 1;
                         <div class="content ">
                             <div class="trash">
                                 <i class="fa-solid fa-trash-can"></i> 
-                                <?= Html::a(Yii::t('app', 'Cancella il file'), ['delete-file', 'id' => $cartella->id]) ?>
+                                <?= Html::a(Yii::t('app', 'Cancella il file'), ['delete-file', 'id' => $documento->id]) ?>
                             </div>
                         </div>
                     </div>

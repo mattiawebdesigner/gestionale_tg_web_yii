@@ -16,8 +16,8 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('<i class="fas fa-table"></i>', ['index'], ['class' => 'btn btn-success']) ?>
-        <?= Html::a('<i class="fas fa-pencil"></i> '.Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a('<i class="fas fa-table"></i>', ['index', 'id' => $cartellaId], ['class' => 'btn btn-success']) ?>
+        <!--<?= Html::a('<i class="fas fa-pencil"></i> '.Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>-->
         <?= Html::a('<i class="fas fa-trash"></i> '.Yii::t('app', 'Delete'), ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
@@ -26,18 +26,8 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ]) ?>
     </p>
-
-    <?= DetailView::widget([
-        'model' => $model,
-        'attributes' => [
-            'id',
-            'link',
-            'mime',
-            'visibile_socio',
-        ],
-    ]) ?>
 		
-	<embed src="<?= $model->link ?>" />
+    <embed src="<?= $model->link ?>" />
 
 </div>
 <?php

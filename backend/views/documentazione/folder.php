@@ -17,15 +17,15 @@ $this->params['breadcrumbs'][] = $this->title;
     <h4><?= Yii::t('app', 'Files') ?></h4>
     <?php if(sizeof($documenti) > 0) : ?>
     <div class="files">
-        <?php foreach($documenti as $k => $cartella) : ?>
+        <?php foreach($documenti as $k => $documento) : ?>
         <div class="file">
-            <a href="">
+            <a href="?r=documentazione/view&id=<?= $documento->id ?>&cartellaId=<?= $id ?>">
                 <div class="icon">
                     <i class="fa-solid fa-file"></i>
                 </div>
 
                 <div class="name">
-                    <?= $cartella->fileName ?>
+                    <?= $documento->fileName ?>
                 </div>
             </a>
             
@@ -40,7 +40,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         <div class="content ">
                             <div class="trash">
                                 <i class="fa-solid fa-trash-can"></i> 
-                                <?= Html::a(Yii::t('app', 'Cancella il file'), ['delete-file', 'id' => $cartella->id, 'cartella_id' => $cartella_obj->id]) ?>
+                                <?= Html::a(Yii::t('app', 'Cancella il file'), ['delete-file', 'id' => $documento->id, 'cartella_id' => $cartella_obj->id]) ?>
                             </div>
                         </div>
                     </div>
