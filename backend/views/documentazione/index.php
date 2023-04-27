@@ -8,19 +8,20 @@ use yii\helpers\Html;
 
 $this->title = Yii::t('app', 'Documentazione');
 $this->params['breadcrumbs'][] = $this->title;
+$id = 1;
 ?>
 <div class="documentazione-index">
     <h1><i class="fa-solid fa-folder"></i> <?= Html::encode($this->title) ?></h1>
     
     <?= $this->render("_actions", [
-        'id' => 1,
+        'id' => $id,
     ]) ?>
     
     <div id="document-container">
         <div class="folders">
         <?php foreach($cartelle as $k => $cartella) : ?>
-            <a href="?r=documentazione/folder&id=<?= $cartella->id ?>">
-                <div class="folder">
+            <div class="folder">
+                <a href="?r=documentazione/folder&id=<?= $cartella->id ?>">
                     <div class="icon">
                         <i class="fa-solid fa-folder"></i>
                     </div>
@@ -28,8 +29,25 @@ $this->params['breadcrumbs'][] = $this->title;
                     <div class="name">
                         <?= $cartella->categoria ?>
                     </div>
+                </a>
+                
+                <div class="actions">
+                    <div class="point">
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                    </div>
+                    
+                    <div class="menu">
+                        <div class="content ">
+                            <div class="trash">
+                                <i class="fa-solid fa-trash-can"></i> 
+                                <?= Html::a(Yii::t('app', 'Cancella la cartella'), ['delete-folder', 'id' => $cartella->id]) ?>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </a>
+            </div>
             <?php endforeach; ?>
         </div>
         
