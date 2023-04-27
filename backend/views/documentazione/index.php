@@ -17,6 +17,11 @@ $id = 1;
         'id' => $id,
     ]) ?>
     
+    <div data-action="create-folder" class="btn btn-success">
+        <i class="fa-solid fa-plus"></i> <?= Yii::t('app', 'Nuova cartella') ?>
+    </div>
+    <p></p>
+    
     <div id="document-container">
         <div class="folders">
         <?php foreach($cartelle as $k => $cartella) : ?>
@@ -88,8 +93,48 @@ $id = 1;
         </div>
     </div>
 </div>
+
+<div id="new-folder">
+    <div>
+        
+        <div data-close>
+            <i class="fa-solid fa-circle-xmark"></i>
+        </div>
+
+        <input type="text" class="form form-control" placeholder="<?= Yii::t('app', 'Nome della cartella') ?>" data-name />
+        <div class="btn btn-success" data-save="folder">
+            <i class="fa-solid fa-floppy-disk"></i> <?= Yii::t('app', 'Crea cartella') ?>
+        </div>
+    </div>
+</div>
     
 
 <?php
 $this->registerCssFile("@web/css/documentazione.css",['depends' => yii\bootstrap4\BootstrapAsset::class]);
 $this->registerJsFile("@web/js/documentazione.js",['depends' => yii\web\JqueryAsset::class]);
+$this->registerJs(<<<JS
+jQuery("[data-save='folder']").click((e)=>{
+    var nomeCartella = jQuery(" [data-name]", jQuery(e.currentTarget).parent()).val();
+    $.ajax({
+        type 	:'POST',
+        url  :'?r=documentazione/create-folder',
+        data: { 'nomeCartellla': nomeCartella },
+        success  : function(response) {
+            if(response){
+                location.reload();
+            }else{
+                alert("Errore nella creazione della cartella");
+            }
+        },
+        error: function(){
+            alert("Errore nella creazione della cartella");
+        }
+    });
+});
+jQuery("[data-action='create-folder']").click((e)=>{
+    jQuery("#new-folder").css("display", "flex");
+});
+jQuery("[data-close]").click((e)=>{
+    jQuery(e.currentTarget).parent().parent().hide();
+});
+JS);
