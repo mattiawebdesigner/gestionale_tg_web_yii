@@ -40,9 +40,5 @@ $this->params['breadcrumbs'][] = $this->title;
     
 </div>
 
-<pre>
-    <?php print_r($cartella_obj) ?>
-</pre>
-
 <?php
 $this->registerCssFile("@web/css/documentazione.css",['depends' => yii\bootstrap4\BootstrapAsset::class]);
