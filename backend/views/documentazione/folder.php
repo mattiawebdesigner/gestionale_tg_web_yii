@@ -11,6 +11,7 @@ $this->params['breadcrumbs'][] = $this->title;
     'id' => $id,
 ]) ?>
 
+<?= Html::a('<i class="fa-solid fa-arrow-left-long"></i> ' . Yii::t('app', 'Indietro'), ['documentazione/index']) ?>
 
 <div id="document-container">
 
