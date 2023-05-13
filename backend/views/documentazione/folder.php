@@ -4,14 +4,18 @@ use yii\helpers\Html;
 $this->title = Yii::t('app', $cartella_obj->categoria);
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Documentazione'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
+
+$socio = $socio ?? false;
 ?>
 <h1><i class="fa-solid fa-folder"></i> <?= Html::encode($this->title) ?></h1>
 
-<?= $this->render("_actions", [
-    'id' => $id,
-]) ?>
+<?php if(!$socio) : ?>
+    <?= $this->render("_actions", [
+        'id' => $id,
+    ]) ?>
+<?php endif; ?>
 
-<?= Html::a('<i class="fa-solid fa-arrow-left-long"></i> ' . Yii::t('app', 'Indietro'), ['documentazione/index']) ?>
+<?= Html::a('<i class="fa-solid fa-arrow-left-long"></i> ' . Yii::t('app', 'Indietro'), ['documentazione/index', 'socio' => $socio]) ?>
 
 <div id="document-container">
 
@@ -20,7 +24,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="files">
         <?php foreach($documenti as $k => $documento) : ?>
         <div class="file">
-            <a href="?r=documentazione/view&id=<?= $documento->id ?>&cartellaId=<?= $id ?>">
+            <a href="?r=documentazione/view&id=<?= $documento->id ?>&cartellaId=<?= $id ?>&socio=<?= $socio ?>">
                 <div class="icon">
                     <i class="fa-solid fa-file"></i>
                 </div>
@@ -30,7 +34,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 </div>
             </a>
             
-            <div class="actions">
+            
+            <?php if(!$socio) : ?>
+                <div class="actions">
                     <div class="point">
                         <div></div>
                         <div></div>
@@ -50,6 +56,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         </div>
                     </div>
                 </div>
+            <?php endif; ?>
         </div>
         <?php endforeach; ?>
     </div>

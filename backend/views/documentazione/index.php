@@ -9,24 +9,29 @@ use yii\helpers\Html;
 $this->title = Yii::t('app', 'Documentazione');
 $this->params['breadcrumbs'][] = $this->title;
 $id = 1;
+//Flag per valutare se si sta visualizzando la index
+//di amministrazione o del socio
+$socio = $socio ?? false;
 ?>
 <div class="documentazione-index">
     <h1><i class="fa-solid fa-folder"></i> <?= Html::encode($this->title) ?></h1>
     
-    <?= $this->render("_actions", [
-        'id' => $id,
-    ]) ?>
+    <?php if(!$socio) : ?>
+        <?= $this->render("_actions", [
+            'id' => $id,
+        ]) ?>
     
-    <div data-action="create-folder" class="btn btn-success">
-        <i class="fa-solid fa-plus"></i> <?= Yii::t('app', 'Nuova cartella') ?>
-    </div>
+        <div data-action="create-folder" class="btn btn-success">
+            <i class="fa-solid fa-plus"></i> <?= Yii::t('app', 'Nuova cartella') ?>
+        </div>
+    <?php endif; ?>
     <p></p>
     
     <div id="document-container">
         <div class="folders">
         <?php foreach($cartelle as $k => $cartella) : ?>
             <div class="folder">
-                <a href="?r=documentazione/folder&id=<?= $cartella->id ?>">
+                <a href="?r=documentazione/folder&id=<?= $cartella->id ?>&socio=<?= $socio ?>">
                     <div class="icon">
                         <i class="fa-solid fa-folder"></i>
                     </div>
@@ -36,22 +41,24 @@ $id = 1;
                     </div>
                 </a>
                 
-                <div class="actions">
-                    <div class="point">
-                        <div></div>
-                        <div></div>
-                        <div></div>
-                    </div>
-                    
-                    <div class="menu">
-                        <div class="content ">
-                            <div class="trash">
-                                <i class="fa-solid fa-trash-can"></i> 
-                                <?= Html::a(Yii::t('app', 'Cancella la cartella'), ['delete-folder', 'id' => $cartella->id]) ?>
+                <?php if(!$socio) : ?>
+                    <div class="actions">
+                        <div class="point">
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                        </div>
+
+                        <div class="menu">
+                            <div class="content ">
+                                <div class="trash">
+                                    <i class="fa-solid fa-trash-can"></i> 
+                                    <?= Html::a(Yii::t('app', 'Cancella la cartella'), ['delete-folder', 'id' => $cartella->id]) ?>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                <?php endif; ?>
             </div>
             <?php endforeach; ?>
         </div>
@@ -72,26 +79,28 @@ $id = 1;
                     </div>
                 </a>
                 
-                <div class="actions">
-                    <div class="point">
-                        <div></div>
-                        <div></div>
-                        <div></div>
-                    </div>
-                    
-                    <div class="menu">
-                        <div class="content ">
-                            <div class="trash">
-                                <i class="fa-solid fa-trash-can"></i> 
-                                <?= Html::a(Yii::t('app', 'Cancella il file'), ['delete-file', 'id' => $documento->id]) ?>
-                            </div>
-                            <div class="download">
-                                <i class="fa-solid fa-download"></i> 
-                                <?= Html::a(Yii::t('app', 'Scarica il file'), $documento->link, ['download' => true]) ?>
+                <?php if(!$socio) : ?>
+                    <div class="actions">
+                        <div class="point">
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                        </div>
+
+                        <div class="menu">
+                            <div class="content ">
+                                <div class="trash">
+                                    <i class="fa-solid fa-trash-can"></i> 
+                                    <?= Html::a(Yii::t('app', 'Cancella il file'), ['delete-file', 'id' => $documento->id]) ?>
+                                </div>
+                                <div class="download">
+                                    <i class="fa-solid fa-download"></i> 
+                                    <?= Html::a(Yii::t('app', 'Scarica il file'), $documento->link, ['download' => true]) ?>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                <?php endif; ?>
             </div>
             <?php endforeach; ?>
         </div>

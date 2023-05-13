@@ -27,7 +27,8 @@ use backend\models\DocumentazioneCategorie;
 	 
 	 <?= $form->field($model, 'fileName')->textInput(['maxlength' => true])->label( Yii::t('app', 'Nome del file') )?>
      
-     <?= $form->field($model, 'visibile_socio')->dropDownList([ 'yes' => Yii::t('app', 'Si'), 'no' => Yii::t('app', 'No'), ], ['prompt' => ''])->label(Yii::t('app', 'Rendere visibile per i soci?')) ?>
+     <!--<?= $form->field($model, 'visibile_socio')->dropDownList([ 'yes' => Yii::t('app', 'Si'), 'no' => Yii::t('app', 'No'), ], ['prompt' => ''])->label(Yii::t('app', 'Rendere visibile per i soci?')) ?>-->
+     <?= $form->field($model, 'visibile_socio')->hiddenInput(['value' => "yes"])->label(false) ?>
 	 
      <?= $form->field($model, 'categoria')->hiddenInput(['value' => $id])->label(false) ?>
      
