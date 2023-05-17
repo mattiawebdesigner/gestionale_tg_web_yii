@@ -66,6 +66,11 @@ $socio = $socio ?? false;
         <?php //Visualizzo eventuali file non categorizzati ?>
         
         <h4><?= Yii::t('app', 'Files') ?></h4>
+            
+        <?php if(sizeof($documenti)==0): ?>
+        <div class="alert alert-info"><?= Yii::t('app', 'Non ci sono file') ?></div>
+        <?php endif; ?>
+
         <div class="files">
             <?php foreach($documenti as $k => $documento) : ?>
             <div class="file">
