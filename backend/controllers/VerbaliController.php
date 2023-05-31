@@ -46,6 +46,10 @@ class VerbaliController extends Controller
                             'actions' => ['index-socio','view-socio-convocazione', 'view-socio-verbale', 'content-convocazioni', 'content-verbali', 'download'],
                             'allow' => true,
                             'roles' => ['Socio'],
+                        ],
+                        [
+                            'actions' => ['content-convocazioni-app', 'view-socio-convocazione-app', 'content-verbali-app', 'view-socio-verbale-app'],
+                            'allow' => true,
                         ]
                     ],
                 ]
@@ -595,6 +599,75 @@ TESTO])
             'modifiche'         => $modifiche,
         ]);
     }
+    
+    ///////////// APP
+    
+    /**
+     * Restituisce le convocazioni di un anno particolare
+     * Utilizzato per l'APP Android iOS
+     * 
+     * @param int $anno
+     * @return Verbali
+     */
+    public function actionContentConvocazioniApp($anno) {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        
+        return Convocazioni::find()->where("data LIKE '".$anno."%'")->andWhere(['bozza' => 1])->all();
+    }
+    
+    /**
+     * Usato per l'APP
+     * 
+     * Recupera i dati della convocazione
+     * 
+     * @param type $numero_protocollo
+     * @return type
+     */
+    public function actionViewSocioConvocazioneApp($numero_protocollo){
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        
+        $model = Convocazioni::findOne(['numero_protocollo' => $numero_protocollo]);
+        
+        
+        return [$model];
+    }
+    
+    /**
+     * Usato per l'APP
+     * 
+     * Recupera tutti i verbali di un anno
+     * 
+     * @param type $anno
+     * @return type
+     */
+    public function actionContentVerbaliApp($anno) {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        
+        return Verbali::find()->where("data LIKE '".$anno."%'")->andWhere(['bozza' => 1])->all();
+    }
+
+    /**
+     * Usato per l'APP
+     * 
+     * Recupera i dati del verbale
+     * 
+     * @param int $numero_protocollo Numero Protocollo
+     * @return string
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionViewSocioVerbaleApp($numero_protocollo){
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        
+        /*$allegati = Allegati::find()->where(['id_verbale' => $numero_protocollo])->all();
+        
+        return $this->render('viewSocioVerbale', [
+            'model' => ,
+            'allegati'  => $allegati,
+        ]);*/
+        
+        return [$this->findModel($numero_protocollo)];
+    }
+
     
     /**
      * Finds the Verbali model based on its primary key value.
