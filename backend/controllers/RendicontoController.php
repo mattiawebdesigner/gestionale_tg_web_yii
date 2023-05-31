@@ -1,322 +1,1 @@
-<?php
-
-namespace backend\controllers;
- 
-use Yii;
-use backend\models\Rendiconto;
-use backend\models\RendicontoSearch;
-use backend\models\Voci;
-use yii\web\Controller;
-use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
-use yii\filters\AccessControl;
-use kartik\mpdf\Pdf;
-
-/**
- * RendicontoController implements the CRUD actions for Rendiconto model.
- */
-class RendicontoController extends Controller
-{
-    /**
-     * @inheritDoc
-     */
-    public function behaviors()
-    {
-        return array_merge(
-            parent::behaviors(),
-            [
-                'verbs' => [
-                    'class' => VerbFilter::className(),
-                    'actions' => [
-                        'delete' => ['POST'],
-                    ],
-                ],
-                'access' => [
-                    'class' => AccessControl::className(),
-                    'rules' => [
-                        [
-                            'actions' => ['login', 'error'],
-                            'allow' => true,
-                        ],
-                        [
-                            'actions' => [],//All page
-                            'allow' => true,
-                            'roles' => ['Super User', 'segreteria'],
-                        ],
-                        [
-                            'actions' => ['socio-view', 'download', 'view-socio-rendicontazioni', 'content-rendiconti'],//All page
-                            'allow' => true,
-                            'roles' => ['Socio'],
-                        ],
-                    ],
-                ],
-            ]
-        );
-    }
-
-    /**
-     * Lists all Rendiconto models.
-     *
-     * @return string
-     */
-    public function actionIndex()
-    {
-        $searchModel  = new RendicontoSearch();
-        $dataProvider = $searchModel->search($this->request->queryParams);
-
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
-    }
-
-    /**
-     * Displays a single Rendiconto model.
-     * @param int $id ID
-     * @return string
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionView($id)
-    { 
-        
-         $in = Voci::find() ->joinWith('rendicontoVocis')
-                           ->onCondition("id_voce = id")
-                          ->where(['tipologia' => 'entrata', 'id_rendiconto' => $id])
-                          ->orderBy(['data_contabile' => SORT_ASC])
-                          ->all();
-
-
-         $out = Voci::find()->joinWith('rendicontoVocis')
-                           ->onCondition("id_voce = id")
-                          ->where(['tipologia' => 'uscita', 'id_rendiconto' => $id])
-                          ->orderBy(['data_contabile' => SORT_ASC])
-                          ->all();
-
-         return $this->render('view', [
-            'model' => $this->findModel($id),
-            'in'    => $in,
-            'out'   => $out,
-            'totIn' => Voci::find()->joinWith('rendicontoVocis')
-                          ->onCondition("id_voce = id")
-                         ->where(['tipologia' => 'entrata', 'id_rendiconto' => $id])->sum('prezzo'),
-            'totOut' => Voci::find()->joinWith('rendicontoVocis')
-                          ->onCondition("id_voce = id")
-                         ->where(['tipologia' => 'uscita', 'id_rendiconto' => $id])->sum('prezzo'),
-         ]);
-
-    }
-
-    /**
-     * Creates a new Rendiconto model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return string|\yii\web\Response
-     */
-    public function actionCreate()
-    {
-        $model = new Rendiconto();
-
-        if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
-            }
-        } else {
-            $model->loadDefaultValues();
-        }
-
-        return $this->render('create', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Updates an existing Rendiconto model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $id ID
-     * @return string|\yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
-
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        }
-
-        return $this->render('update', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Deletes an existing Rendiconto model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param int $id ID
-     * @return \yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionDelete($id)
-    {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
-    }
-    
-    /**
-     * Download PDF
-     * 
-     * @param int $id
-     * @return kartik\mpdf\Pdf
-     */
-    public function actionDownload($id){
-        $model = $this->findModel($id);
-        
-        $out = Voci::find()->joinWith('rendicontoVocis')
-                          ->onCondition("id_voce = id")
-                         ->where(['id_rendiconto' => $id])
-                          ->orderBy(['data_contabile' => SORT_ASC])
-                         ->all();
-        
-        $cssInline = <<<CSS
-            table{
-                width: 100%;
-            }
-            table, td{
-                border: 0px solid #E04926;
-                border-collapse: collapse;
-            }
-            th{
-                color: #F77736;
-            }
-            td, th{
-                padding: 10px;
-            }
-            img{
-                width: 50px;
-            }
-CSS;
-        
-        $heading = $this->renderPartial('_pdf-heading');
-        $content = $this->renderPartial('_pdf',[
-            'model' => $model,
-            'out'   => $out,
-            'totIn' => Voci::find()->joinWith('rendicontoVocis')
-                          ->onCondition("id_voce = id")
-                         ->where(['tipologia' => 'entrata', 'id_rendiconto' => $id])->sum('prezzo'),
-            'totOut' => Voci::find()->joinWith('rendicontoVocis')
-                          ->onCondition("id_voce = id")
-                         ->where(['tipologia' => 'uscita', 'id_rendiconto' => $id])->sum('prezzo'),
-        ]);
-        $footer = $this->renderPartial('_pdf-footer');
-        
-        
-        // setup kartik\mpdf\Pdf component
-        $pdf = new Pdf([
-            'filename' => $model->nome.".pdf",
-            'marginLeft' => 5,
-            'marginRight' => 5,
-            'marginTop' => 50,
-            'marginBottom' => 50,
-            // set to use core fonts only
-            'mode' => Pdf::MODE_CORE, 
-            // A4 paper format
-            'format' => Pdf::FORMAT_A4, 
-            // portrait orientation
-            'orientation' => Pdf::ORIENT_PORTRAIT, 
-            // stream to browser inline
-            'destination' => Pdf::DEST_DOWNLOAD, 
-            // your html content input
-            'content' => $content,  
-            // format content from your own css file if needed or use the
-            // enhanced bootstrap css built by Krajee for mPDF formatting 
-            'cssFile' => '@vendor/kartik-v/yii2-mpdf/src/assets/kv-mpdf-bootstrap.min.css',
-            // any css to be embedded if required
-            'cssInline' => $cssInline, 
-             // set mPDF properties on the fly
-            'options' => [
-                'title' => Yii::$app->name,
-            ],
-             // call mPDF methods on the fly
-            'methods' => [
-                'SetHTMLHeader' => $heading,
-                'SetHTMLFooter' => $footer,
-            ]
-        ]);
-
-        // return the pdf output as per the destination setting
-        return $pdf->render();
-    }
-    
-    /**
-     * 
-     * @return type
-     */
-    public function actionSocioView() {
-        $model = \backend\models\Anno::find()->orderBy(['anno' => SORT_DESC])->all();
-        
-        return $this->render('socio-view', [
-            'model' => $model,
-        ]);
-    }
-    
-    /**
-     * Get JSON rendiconti
-     * 
-     * @param int $anno
-     * @return mixed
-     */
-    public function actionContentRendiconti($anno){
-        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        
-        return Rendiconto::find()->where(['anno' => $anno])->all();
-    }
-    
-    /**
-     * 
-     * @param int $id
-     */
-    public function actionViewSocioRendicontazioni($id) {
-        
-        
-         $in = Voci::find() ->joinWith('rendicontoVocis')
-                           ->onCondition("id_voce = id")
-                          ->where(['tipologia' => 'entrata', 'id_rendiconto' => $id])
-                          ->orderBy(['data_contabile' => SORT_ASC])
-                          ->all();
-
-
-         $out = Voci::find()->joinWith('rendicontoVocis')
-                           ->onCondition("id_voce = id")
-                          ->where(['tipologia' => 'uscita', 'id_rendiconto' => $id])
-                          ->orderBy(['data_contabile' => SORT_ASC])
-                          ->all();
-
-         return $this->render('view-rendiconto-socio', [
-            'model' => $this->findModel($id),
-            'in'    => $in,
-            'out'   => $out,
-            'totIn' => Voci::find()->joinWith('rendicontoVocis')
-                          ->onCondition("id_voce = id")
-                         ->where(['tipologia' => 'entrata', 'id_rendiconto' => $id])->sum('prezzo'),
-            'totOut' => Voci::find()->joinWith('rendicontoVocis')
-                          ->onCondition("id_voce = id")
-                         ->where(['tipologia' => 'uscita', 'id_rendiconto' => $id])->sum('prezzo'),
-         ]);
-    }
-    
-    /**
-     * Finds the Rendiconto model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $id ID
-     * @return Rendiconto the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    protected function findModel($id)
-    {
-        if (($model = Rendiconto::findOne(['id' => $id])) !== null) {
-            return $model;
-        }
-
-        throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
-    }
-}
+<?phpnamespace backend\controllers; use Yii;use backend\models\Rendiconto;use backend\models\RendicontoSearch;use backend\models\Voci;use yii\web\Controller;use yii\web\NotFoundHttpException;use yii\filters\VerbFilter;use yii\filters\AccessControl;use kartik\mpdf\Pdf;/** * RendicontoController implements the CRUD actions for Rendiconto model. */class RendicontoController extends Controller{    /**     * @inheritDoc     */    public function behaviors()    {        return array_merge(            parent::behaviors(),            [                'verbs' => [                    'class' => VerbFilter::className(),                    'actions' => [                        'delete' => ['POST'],                    ],                ],                'access' => [                    'class' => AccessControl::className(),                    'rules' => [                        [                            'actions' => ['login', 'error'],                            'allow' => true,                        ],                        [                            'actions' => [],//All page                            'allow' => true,                            'roles' => ['Super User', 'segreteria'],                        ],                        [                            'actions' => ['socio-view', 'download', 'view-socio-rendicontazioni', 'content-rendiconti'],//All page                            'allow' => true,                            'roles' => ['Socio'],                        ],                        [                            'actions' => ['socio-view-app', 'content-rendiconti-app', 'view-socio-rendicontazioni-app'],//All page                            'allow' => true,                        ],                    ],                ],            ]        );    }    /**     * Lists all Rendiconto models.     *     * @return string     */    public function actionIndex()    {        $searchModel  = new RendicontoSearch();        $dataProvider = $searchModel->search($this->request->queryParams);        return $this->render('index', [            'searchModel' => $searchModel,            'dataProvider' => $dataProvider,        ]);    }    /**     * Displays a single Rendiconto model.     * @param int $id ID     * @return string     * @throws NotFoundHttpException if the model cannot be found     */    public function actionView($id)    {                  $in = Voci::find() ->joinWith('rendicontoVocis')                           ->onCondition("id_voce = id")                          ->where(['tipologia' => 'entrata', 'id_rendiconto' => $id])                          ->orderBy(['data_contabile' => SORT_ASC])                          ->all();         $out = Voci::find()->joinWith('rendicontoVocis')                           ->onCondition("id_voce = id")                          ->where(['tipologia' => 'uscita', 'id_rendiconto' => $id])                          ->orderBy(['data_contabile' => SORT_ASC])                          ->all();         return $this->render('view', [            'model' => $this->findModel($id),            'in'    => $in,            'out'   => $out,            'totIn' => Voci::find()->joinWith('rendicontoVocis')                          ->onCondition("id_voce = id")                         ->where(['tipologia' => 'entrata', 'id_rendiconto' => $id])->sum('prezzo'),            'totOut' => Voci::find()->joinWith('rendicontoVocis')                          ->onCondition("id_voce = id")                         ->where(['tipologia' => 'uscita', 'id_rendiconto' => $id])->sum('prezzo'),         ]);    }    /**     * Creates a new Rendiconto model.     * If creation is successful, the browser will be redirected to the 'view' page.     * @return string|\yii\web\Response     */    public function actionCreate()    {        $model = new Rendiconto();        if ($this->request->isPost) {            if ($model->load($this->request->post()) && $model->save()) {                return $this->redirect(['view', 'id' => $model->id]);            }        } else {            $model->loadDefaultValues();        }        return $this->render('create', [            'model' => $model,        ]);    }    /**     * Updates an existing Rendiconto model.     * If update is successful, the browser will be redirected to the 'view' page.     * @param int $id ID     * @return string|\yii\web\Response     * @throws NotFoundHttpException if the model cannot be found     */    public function actionUpdate($id)    {        $model = $this->findModel($id);        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {            return $this->redirect(['view', 'id' => $model->id]);        }        return $this->render('update', [            'model' => $model,        ]);    }    /**     * Deletes an existing Rendiconto model.     * If deletion is successful, the browser will be redirected to the 'index' page.     * @param int $id ID     * @return \yii\web\Response     * @throws NotFoundHttpException if the model cannot be found     */    public function actionDelete($id)    {        $this->findModel($id)->delete();        return $this->redirect(['index']);    }        /**     * Download PDF     *      * @param int $id     * @return kartik\mpdf\Pdf     */    public function actionDownload($id){        $model = $this->findModel($id);                $out = Voci::find()->joinWith('rendicontoVocis')                          ->onCondition("id_voce = id")                         ->where(['id_rendiconto' => $id])                          ->orderBy(['data_contabile' => SORT_ASC])                         ->all();                $cssInline = <<<CSS            table{                width: 100%;            }            table, td{                border: 0px solid #E04926;                border-collapse: collapse;            }            th{                color: #F77736;            }            td, th{                padding: 10px;            }            img{                width: 50px;            }CSS;                $heading = $this->renderPartial('_pdf-heading');        $content = $this->renderPartial('_pdf',[            'model' => $model,            'out'   => $out,            'totIn' => Voci::find()->joinWith('rendicontoVocis')                          ->onCondition("id_voce = id")                         ->where(['tipologia' => 'entrata', 'id_rendiconto' => $id])->sum('prezzo'),            'totOut' => Voci::find()->joinWith('rendicontoVocis')                          ->onCondition("id_voce = id")                         ->where(['tipologia' => 'uscita', 'id_rendiconto' => $id])->sum('prezzo'),        ]);        $footer = $this->renderPartial('_pdf-footer');                        // setup kartik\mpdf\Pdf component        $pdf = new Pdf([            'filename' => $model->nome.".pdf",            'marginLeft' => 5,            'marginRight' => 5,            'marginTop' => 50,            'marginBottom' => 50,            // set to use core fonts only            'mode' => Pdf::MODE_CORE,             // A4 paper format            'format' => Pdf::FORMAT_A4,             // portrait orientation            'orientation' => Pdf::ORIENT_PORTRAIT,             // stream to browser inline            'destination' => Pdf::DEST_DOWNLOAD,             // your html content input            'content' => $content,              // format content from your own css file if needed or use the            // enhanced bootstrap css built by Krajee for mPDF formatting             'cssFile' => '@vendor/kartik-v/yii2-mpdf/src/assets/kv-mpdf-bootstrap.min.css',            // any css to be embedded if required            'cssInline' => $cssInline,              // set mPDF properties on the fly            'options' => [                'title' => Yii::$app->name,            ],             // call mPDF methods on the fly            'methods' => [                'SetHTMLHeader' => $heading,                'SetHTMLFooter' => $footer,            ]        ]);        // return the pdf output as per the destination setting        return $pdf->render();    }        /**     *      * @return type     */    public function actionSocioView() {        $model = \backend\models\Anno::find()->orderBy(['anno' => SORT_DESC])->all();        return $this->render('socio-view', [            'model' => $model,        ]);    }        /**     * Get JSON rendiconti.     * Usato per:chiamata JSON sul sito     *      * @param int $anno     * @return mixed     */    public function actionContentRendiconti($anno){        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;        return Rendiconto::find()->where(['anno' => $anno])->all();    }     /**     *      * @param int $id     */    public function actionViewSocioRendicontazioni($id) {         $in = Voci::find() ->joinWith('rendicontoVocis')                           ->onCondition("id_voce = id")                          ->where(['tipologia' => 'entrata', 'id_rendiconto' => $id])                          ->orderBy(['data_contabile' => SORT_ASC])                          ->all();                  $out = Voci::find()->joinWith('rendicontoVocis')                           ->onCondition("id_voce = id")                          ->where(['tipologia' => 'uscita', 'id_rendiconto' => $id])                          ->orderBy(['data_contabile' => SORT_ASC])                          ->all();                  return $this->render('view-rendiconto-socio', [            'model' => $this->findModel($id),            'in'    => $in,            'out'   => $out,            'totIn' => Voci::find()->joinWith('rendicontoVocis')                          ->onCondition("id_voce = id")                         ->where(['tipologia' => 'entrata', 'id_rendiconto' => $id])->sum('prezzo'),            'totOut' => Voci::find()->joinWith('rendicontoVocis')                          ->onCondition("id_voce = id")                         ->where(['tipologia' => 'uscita', 'id_rendiconto' => $id])->sum('prezzo'),         ]);    }    /**     * Usato per l'APP     *      * @return type     */    public function actionSocioViewApp(){        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;                $model = \backend\models\Anno::find()->orderBy(['anno' => SORT_DESC])->asArray()->all();                return $model;    }        /**     * Usato per l'APP     *      * @param type $id     */    public function actionViewSocioRendicontazioniApp($id){        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;                $in = Voci::find() ->joinWith('rendicontoVocis')                           ->onCondition("id_voce = id")                          ->where(['tipologia' => 'entrata', 'id_rendiconto' => $id])                          ->orderBy(['data_contabile' => SORT_ASC])                          ->asArray()                          ->all();                  $out = Voci::find()->joinWith('rendicontoVocis')                           ->onCondition("id_voce = id")                          ->where(['tipologia' => 'uscita', 'id_rendiconto' => $id])                          ->orderBy(['data_contabile' => SORT_ASC])                          ->asArray()                          ->all();                 /*$return = [             [ 'uscite' => $out,'ingressi' => $in]        ];*/                 $return = array_merge($in, $out);                 return $return;    }        /**     * Get JSON rendiconti.     * Usato per:chiamata JSON sull'APP     *      * @param int $anno     * @return mixed     */    public function actionContentRendicontiApp($anno){        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;        return Rendiconto::find()->where(['anno' => $anno])->all();    }    /**     * Finds the Rendiconto model based on its primary key value.     * If the model is not found, a 404 HTTP exception will be thrown.     * @param int $id ID     * @return Rendiconto the loaded model     * @throws NotFoundHttpException if the model cannot be found     */    protected function findModel($id)    {        if (($model = Rendiconto::findOne(['id' => $id])) !== null) {            return $model;        }        throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));    }}
