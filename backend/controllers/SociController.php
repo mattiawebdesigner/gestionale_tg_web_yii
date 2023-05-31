@@ -54,6 +54,10 @@ class SociController extends Controller
                             'allow' => true,
                             'roles' => ['Socio'],
                         ],
+                        [
+                            'actions' => ['index-socio-app'],
+                            'allow' => true,
+                        ]
                     ],
                 ],
             ]
@@ -219,7 +223,7 @@ class SociController extends Controller
      * 
      * @return type
      */
-    public function actionMagazzinoSocio() {
+    /*public function actionMagazzinoSocio() {
         
         $searchModel = new \backend\models\ProdottoSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
@@ -229,7 +233,7 @@ class SociController extends Controller
             'dataProvider' => $dataProvider,
         ]);
         
-    }
+    }*/
     
     public function actionGetSociAnno($anno){
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
@@ -251,6 +255,25 @@ class SociController extends Controller
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
+    }
+    
+    /**
+     * Show all partner
+     * 
+     * @return type
+     */
+    public function actionIndexSocioApp() {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        
+        $model = Soci::find()->joinWith('annos')
+                    ->where(['anno_sociale.anno' => date('Y')])
+                    ->andWhere(['sostenitore' => 'no'])
+                    ->andWhere(['validita' => 'si'])
+                    ->orderBy(["cognome" => SORT_ASC, "nome" => SORT_ASC])
+                    ->all();
+        
+        return $model;
+        
     }
     
     /**
