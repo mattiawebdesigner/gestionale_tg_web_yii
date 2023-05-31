@@ -59,7 +59,19 @@ $this->params['breadcrumbs'][] = $this->title;
                     <?php foreach($in as $key => $value) : ?>
                         <tr>
                             <td><?= date('d-m-Y', strtotime($value->data_contabile)) ?></td>
-                            <td><?= $value->voce ?></td>
+                            <td>
+                                <p><?= $value->voce ?></p>
+                                
+                                <?php $rules = Yii::$app->authManager->getRolesByUser(Yii::$app->user->getId()); ?>
+                                
+                                <p class="text-muted small">
+                                    <?php if(array_key_exists("Super User", $rules) || array_key_exists("segreteria", $rules)): ?>
+                                    <?= Yii::t('app', 'Data di inserimento: {data}', [
+                                        'data' => date('d-m-Y H:i:s', strtotime($value->data_inserimento)),
+                                    ]) ?>
+                                    <?php endif; ?>
+                                </p>
+                            </td>
                             <td><?= $value->prezzo ?> &euro;</td>
                         </tr>
                     <?php endforeach; ?>
@@ -79,7 +91,19 @@ $this->params['breadcrumbs'][] = $this->title;
                     <?php foreach($out as $key => $value) : ?>
                         <tr>
                             <td><?= date('d-m-Y', strtotime($value->data_contabile)) ?></td>
-                            <td><?= $value->voce ?></td>
+                            <td>
+                                <p><?= $value->voce ?></p>
+                                
+                                <?php $rules = Yii::$app->authManager->getRolesByUser(Yii::$app->user->getId()); ?>
+                                
+                                <p class="text-muted small">
+                                    <?php if(array_key_exists("Super User", $rules) || array_key_exists("segreteria", $rules)): ?>
+                                    <?= Yii::t('app', 'Data di inserimento: {data}', [
+                                        'data' => date('d-m-Y H:i:s', strtotime($value->data_inserimento)),
+                                    ]) ?>
+                                    <?php endif; ?>
+                                </p>
+                            </td>
                             <td><?= $value->prezzo ?> &euro;</td>
                         </tr>
                     <?php endforeach; ?>
