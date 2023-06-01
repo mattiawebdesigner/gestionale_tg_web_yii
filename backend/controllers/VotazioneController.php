@@ -6,6 +6,7 @@ use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 use kartik\mpdf\Pdf;
 use backend\models\Votazione;
 use backend\models\VotazioneSearch;
@@ -27,6 +28,24 @@ class VotazioneController extends Controller
                     'class' => VerbFilter::className(),
                     'actions' => [
                         'delete' => ['POST'],
+                    ],
+                ],
+                'access' => [
+                    'class' => AccessControl::className(),
+                    'rules' => [
+                        [
+                            'actions' => ['login', 'error'],
+                            'allow' => true,
+                        ],
+                        [
+                            'actions' => [],//All page
+                            'allow' => true,
+                            'roles' => ['Socio', 'Super User'],
+                        ],
+                        [
+                            'actions' => ['index-socio-app'],
+                            'allow' => true,
+                        ]
                     ],
                 ],
             ]
@@ -394,6 +413,23 @@ CSS;
                 ->andWhere(['>', 'DATEDIFF(NOW(), soci.data_di_nascita)' , 365*18])//calcolo se sono maggiorenni
                 ->orderBy(['cognome' => 'ASC', 'nome' => 'ASC'])
                 ->all();
+    }
+    
+    //APP
+    
+
+    /**
+     * Usato per l'APP Android e iOS.
+     * 
+     * Elenco delle votazione (per i soci).
+     *
+     * @return string
+     */
+    public function actionIndexSocioApp()
+    {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        
+        return Votazione::find()->orderBy(['anno' => SORT_DESC])->all();
     }
     
     /**
