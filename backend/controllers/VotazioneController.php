@@ -43,7 +43,7 @@ class VotazioneController extends Controller
                             'roles' => ['Socio', 'Super User'],
                         ],
                         [
-                            'actions' => ['index-socio-app'],
+                            'actions' => ['index-socio-app', 'view-socio-app'],
                             'allow' => true,
                         ]
                     ],
@@ -430,6 +430,51 @@ CSS;
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         
         return Votazione::find()->orderBy(['anno' => SORT_DESC])->all();
+    }
+    
+    /**
+     * Usato per l'app Android e iOS.
+     * Restituisce i dati di una votazione
+     * 
+     * @param type $id
+     */
+    public function actionViewSocioApp($id){
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        
+        $votazione          = $this->findVotazioneModel($id);
+        $soci               = $this->getSociConDirittoDiVoto($id);
+        $votazione_has_voti = $soci = (new \yii\db\Query())
+                            ->select("*, COUNT(*) tot_voti")
+                            ->from('{{%votazione_has_voti}} vhv')
+                            ->innerJoin('{{%voti}} v', 'vhv.id_voto = v.id')
+                            ->innerJoin('{{%soci}} s', 's.id = v.id_socio')
+                            ->where(['vhv.id_votazione' => $id])
+                            ->groupBy('v.id_socio')
+                            ->all();
+        $rosa_eletti    = $soci = (new \yii\db\Query())
+                            ->select("*, COUNT(*) tot_voti")
+                            ->from('{{%votazione_has_voti}} vhv')
+                            ->innerJoin('{{%voti}} v', 'vhv.id_voto = v.id')
+                            ->innerJoin('{{%soci}} s', 's.id = v.id_socio')
+                            ->where(['vhv.id_votazione' => $id])
+                            ->groupBy('v.id_socio')
+                            ->orderBy("tot_voti DESC")
+                            ->limit(5)
+                            ->all();
+        
+        return [[
+            'votazione_has_voti'    => $votazione_has_voti,
+            'votazione'             => $votazione,
+            'soci'                  => $soci,
+            'rosa_eletti'           => $rosa_eletti,
+        ]];
+        
+        /*return $this->render('view-socio',[
+            'votazione'             => $votazione,
+            'soci'                  => $soci,
+            'votazione_has_voti'    => $votazione_has_voti,
+            'rosa_eletti'           => $rosa_eletti,
+        ]);*/
     }
     
     /**
