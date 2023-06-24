@@ -56,9 +56,13 @@ use dosamigos\tinymce\TinyMce;
                     'plugins' => [
                         "advlist autolink lists link charmap print preview anchor",
                         "searchreplace visualblocks code fullscreen",
-                        "insertdatetime media table contextmenu paste"
+                        "insertdatetime media table contextmenu paste",
+                        "lists",
+                        "table",
                     ],
-                    'toolbar' => "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
+                    'toolbar1' => "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | lists advlist",
+                    'toolbar2' => "table tabledelete | tableprops tablerowprops tablecellprops | tableinsertrowbefore tableinsertrowafter tabledeleterow | tableinsertcolbefore tableinsertcolafter tabledeletecol",
+                    'toolbar3' =>  "pagebreak | charmap code | fullscreen preview | visualblocks print",
                 ]
             ])->label(false);?>
         </div>
