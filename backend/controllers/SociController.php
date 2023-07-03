@@ -12,6 +12,9 @@ use yii\filters\VerbFilter;
 use kartik\mpdf\Pdf;
 use backend\models\AnnoSociale;
 use backend\models\SocioAnnoSociale;
+use backend\models\Attivita;
+use backend\models\AttivitaSearch;
+use backend\models\Nominativo;
 
 /**
  * SociController implements the CRUD actions for Soci model.

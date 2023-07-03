@@ -46,4 +46,4 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <?php
 $this->registerCssFile("@web/css/fontawesome-free-6.0.0-beta2-web/css/all.min.css");
-$this->registerCssFile("@web/css/pagination.css");
+$this->registerCssFile('@web/css/pagination.css',['depends' => yii\bootstrap4\BootstrapAsset::class]);

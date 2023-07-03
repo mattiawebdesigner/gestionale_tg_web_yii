@@ -35,49 +35,49 @@ use yii\widgets\ActiveForm;
         
         <div class="btn btn-info open-iframe"><?= Yii::t('app', 'Galleria immagini') ?></div>
 	</div>
-	
+        
 	<?= GridView::widget([
-	    'dataProvider' => $attivita,
-	    'filterModel' => $searchAttivita,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-            
-            [
-                'class' => 'yii\grid\CheckboxColumn',
-                'checkboxOptions' => function($model, $key, $index, $column) use ($myAttivita){
-                    $find = false;
-                    
-                    if($myAttivita <> null){
-                        $myAttivita = $myAttivita->all();
-                        foreach ($myAttivita as $key => $value){
-                            if($value->id == $model->id){
-                                $find = true;
-                                break;
+	    'dataProvider'  => $attivita,
+	    //'filterModel'   => $searchAttivita,
+            'columns' => [
+                ['class' => 'yii\grid\SerialColumn'],
+
+                [
+                    'class' => 'yii\grid\CheckboxColumn',
+                    'checkboxOptions' => function($model, $key, $index, $column) use ($myAttivita){
+                        $find = false;
+
+                        if($myAttivita <> null){
+                            $myAttivita = $myAttivita->all();
+                            foreach ($myAttivita as $key => $value){
+                                if($value->id == $model->id){
+                                    $find = true;
+                                    break;
+                                }
                             }
                         }
-                    }
-                    
-                    return [
-                        'value'     => $model->id,
-                        'checked'   => $find,
-                    ];
-                }
-            ],
 
-            'nome',
-            'luogo',
-            'data_attivita',
-            'foto' => [
-                'label' => Yii::t('app', 'Foto di copertina'),
-                'attribute' => 'foto',
-                'format' => 'html',
-                'value' => function ($model) {
-                    
-                    return Html::img($model->foto, ['style' => 'width: 150px;']);
-                }
+                        return [
+                            'value'     => $model->id,
+                            'checked'   => $find,
+                        ];
+                    }
+                ],
+
+                'nome',
+                'luogo',
+                'data_attivita',
+                'foto' => [
+                    'label' => Yii::t('app', 'Foto di copertina'),
+                    'attribute' => 'foto',
+                    'format' => 'html',
+                    'value' => function ($model) {
+
+                        return Html::img($model->foto, ['style' => 'width: 150px;']);
+                    }
+                ],
             ],
-        ],
-    ]); ?>
+        ]); ?>
 
     <?php ActiveForm::end(); ?>
 
