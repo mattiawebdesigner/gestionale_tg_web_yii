@@ -47,7 +47,7 @@ echo json_encode($v);*/
                     
                             <?php $n = $s->nome; ?>
                     
-                            <input type="text" name="impostazione[<?= $i->impostazione ?>][<?= $k ?>][<?= $s->nome ?>]?>" value="<?= $v->$n ?>" class="form-control" />
+                            <input type="text" name="impostazione[<?= $i->impostazione ?>][<?= $k ?>][<?= $s->nome ?>]?>" placeholder="<?= $s->nome ?>" value="<?= $v->$n ?>" class="form-control" />
                         <?php endforeach; ?>
                     </div>
                     
