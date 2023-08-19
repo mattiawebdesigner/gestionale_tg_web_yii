@@ -44,6 +44,9 @@
     } 
 }
 
+.btn-iloveteatro{background-color: var(--color-iloveteatro);color: white;}
+
+.text-underline{border-bottom: 2px solid var(--color-iloveteatro);}
 .show-mobile-menu{display: none;}
 .breadcrumb{display: none;}
 .flex{display: flex;}
@@ -75,9 +78,15 @@ body:before{
     background-image: none;
 }
 
-h1{
+h1,h2,h3,h4,h5,h6{
     color: var(--color-iloveteatro);
+}
+h1{
     font-weight: 700;
+}
+h4{
+    margin-top: 20px;
+    margin-bottom: 10px;
 }
 
 /*main::-webkit-scrollbar {
