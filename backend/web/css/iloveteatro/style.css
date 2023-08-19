@@ -44,6 +44,7 @@
     } 
 }
 
+.show-mobile-menu{display: none;}
 .breadcrumb{display: none;}
 .flex{display: flex;}
 .flex-flow-wrap{flex-flow: wrap;}
@@ -154,12 +155,10 @@ main > .container{
 #mainmenu.bg-iloveteatro a:link, #mainmenu.bg-iloveteatro a{
     color: var(--color-iloveteatro);
 }
-#mainmenu .pittogramma{
-    display: none;
-    width: 100%;
-    justify-content: center;
+header .pittogramma{
+    width: 55px;
 }
-#mainmenu .pittogramma img{
+header .pittogramma img{
     width: 50px;
 }
 #mainmenu .logo{
@@ -288,22 +287,39 @@ footer.footer{
     }
 }
 @media (max-width: 600px){
+    body.h-100{
+        height: auto !important;
+    }
+    body > div{
+        display: flex;
+        flex-direction: column;
+    }
     main{
         width: 600px;
-    }
-    #mainmenu{
-        width: 100px;
-    }
-    #mainmenu-collapse .nav-item > a > span, #mainmenu-collapse .profile > a > span{
-        display: none;
-    }
-    #mainmenu .pittogramma{
-        display: flex;
+        margin-left: 0;
+        width: 100%;
     }
     #mainmenu .logo{
         display: none;
     }
-    #mainmenu .nav-item i{
-        font-size: 2.5em;
+    .show-mobile-menu{
+        display: block;
+    }
+    .show-mobile-menu > i{
+        position: absolute;
+        top: 14px;
+        left: 16px;
+        font-size: 1.4em;
+    }
+    #mainmenu.navbar{
+        display: none;
+        z-index: 99;
+        width: 80%;
+    }
+    #mainmenu.navbar, #mainmenu .dropdown-item{
+        font-size: 1.4em;
+    }
+    #sections .section{
+        width: 100%;
     }
 }

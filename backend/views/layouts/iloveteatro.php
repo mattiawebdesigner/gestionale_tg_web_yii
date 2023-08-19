@@ -24,14 +24,19 @@ AppAsset::register($this);
     <?php $this->head() ?>
 
     <?php $this->registerCssFile('@web/css/iloveteatro/style.css', ['depends' => \yii\bootstrap4\BootstrapAsset::class]); ?>
+    <?php $this->registerJsFile('@web/js/iloveteatro/menu.js', ['depends' => \yii\web\JqueryAsset::class]); ?>
 </head>
 <body class="d-flex flex-column h-100">
 <?php $this->beginBody() ?>
 
 <div class="d-flex min-height-100p height-auto o-hidden">
 <header>
+    <div class="show-mobile-menu">
+        <i class="fa-solid fa-bars"></i>
+        <?= Html::img(Yii::$app->params['pittogramma_iloveteatro'], ['class' => 'pittogramma']); ?>
+    </div>
         <?php
-
+        
         NavBar::begin([
             'options' => [
                 'id' => 'mainmenu',
@@ -41,7 +46,7 @@ AppAsset::register($this);
 
 
         $menuItems[] = ['label' => Html::img(Yii::$app->params['logo_iloveteatro']), 'url' => '#', 'options'=>['class'=>'logo']];
-        $menuItems[] = ['label' => Html::img(Yii::$app->params['pittogramma_iloveteatro']), 'url' => '#', 'options'=>['class'=>'pittogramma']];
+        //$menuItems[] = ['label' => Html::img(Yii::$app->params['pittogramma_iloveteatro']), 'url' => '#', 'options'=>['class'=>'pittogramma']];
         
         $menuItems[] = ['label' => '<i class="fas fa-external-link-alt"></i> <span>I Love Teatro</span>', 'url' => '/iloveteatro/', 'linkOptions' => array(
                          'target' => '_blank'
