@@ -15,6 +15,7 @@ use Yii;
  * @property int $spettacolo
  * @property int $posto
  * @property int $pagato
+ * @property int $data_registrazione
  */
 class IltPrenotazioni extends \yii\db\ActiveRecord
 {
@@ -37,6 +38,7 @@ class IltPrenotazioni extends \yii\db\ActiveRecord
         return [
             [['spettacolo', 'nome', 'cognome', 'email', 'cellulare', 'posto', 'pagato'], 'required'],
             [['nome', 'cognome', 'email', 'cellulare',], 'string'],
+            [['data_registrazione'], 'date']
         ];
     }
 
@@ -54,6 +56,7 @@ class IltPrenotazioni extends \yii\db\ActiveRecord
             'cellulare' => Yii::t('app', 'Cellulare'),
             'posto' => Yii::t('app', 'Posto'),
             'pagato' => Yii::t('app', 'Il ticket è stato pagato?'),
+            'data_registrazione' => Yii::t('app', 'Data della prenotazione'),
         ];
     }
 }
