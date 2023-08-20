@@ -2,8 +2,6 @@
     Created on : 3 mar 2022, 18:17:44
     Author     : Mattia Leonardo Angelillo
 */
-
-
 .prenotazioni{
     flex-wrap: wrap;
     justify-content: start;
@@ -17,8 +15,7 @@
     box-shadow: 0 0 3px #000;
     position: relative;
 }
-
-.prenotazioni .eye,.prenotazioni .paided-ticket, .prenotazioni .paided-no-ticket, .prenotazioni .show-ticket{
+.prenotazioni .eye{
     position: absolute;
     right: -18px;
     top: -21px;
