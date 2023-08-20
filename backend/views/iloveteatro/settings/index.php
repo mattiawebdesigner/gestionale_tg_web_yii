@@ -42,16 +42,31 @@ echo json_encode($v);*/
                 $nOfRow = 0;
                 foreach ($j_d as $k => $v) : ?>
                     <div>
-                        #<?= ++ $nOfRow ?>
+                        #<?= $nOfRow+1 ?>
                         <?php foreach($struttura as $s) : ?>
                     
                             <?php $n = $s->nome; ?>
                     
-                            <input type="text" name="impostazione[<?= $i->impostazione ?>][<?= $k ?>][<?= $s->nome ?>]?>" placeholder="<?= $s->nome ?>" value="<?= $v->$n ?>" class="form-control" />
-                        <?php endforeach; ?>
+                            <input type="text" name="impostazione[<?= $i->impostazione ?>][<?= $nOfRow ?>][<?= $s->nome ?>]?>" placeholder="<?= $s->nome ?>" value="<?= $v->$n ?>" class="form-control" />
+                        <?php 
+                            endforeach; 
+                            
+                            $nOfRow ++;
+                        ?>
                     </div>
                     
                 <?php endforeach; ?>
+                    
+                    <div>
+                        <?php //Campo vuoto per nuovo inserimento ?>
+                            
+                        <?php foreach($struttura as $s) : ?>
+                    
+                            <?php $n = $s->nome; ?>
+                    
+                            <input type="text" name="impostazione[<?= $i->impostazione ?>][<?= $nOfRow ?>][<?= $s->nome ?>]?>" placeholder="<?= $s->nome ?>" value="" class="form-control" />
+                        <?php endforeach; ?>
+                    </div>
                 </div>
             </div>
         <?php endforeach; ?>
