@@ -1,5 +1,6 @@
 <?php
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 
 $title = Yii::t('app', 'Impostazioni');
@@ -48,18 +49,24 @@ echo json_encode($v);*/
                             <?php $n = $s->nome; ?>
                     
                             <input type="text" name="impostazione[<?= $i->impostazione ?>][<?= $nOfRow ?>][<?= $s->nome ?>]?>" placeholder="<?= $s->nome ?>" value="<?= $v->$n ?>" class="form-control" />
-                        <?php 
-                            endforeach; 
-                            
-                            $nOfRow ++;
-                        ?>
+                        <?php endforeach; ?>
+                        <div>
+                            <a href="<?= Url::toRoute(['iloveteatro/settings', 'action'=>'delete', 'row'=>$nOfRow, 'id'=>$i->id]) ?>">
+                                <i class="fa fa-trash-alt"></i>
+                            </a>
+                        </div>
                     </div>
                     
-                <?php endforeach; ?>
+                <?php
+                    $nOfRow ++;
+                    
+                    endforeach; 
+                ?>
                     
                     <div>
                         <?php //Campo vuoto per nuovo inserimento ?>
                             
+                        #<?= $nOfRow+1 ?>
                         <?php foreach($struttura as $s) : ?>
                     
                             <?php $n = $s->nome; ?>
