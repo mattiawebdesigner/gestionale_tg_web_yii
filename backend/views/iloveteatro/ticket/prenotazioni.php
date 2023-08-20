@@ -71,13 +71,13 @@ $this->title = Yii::t('app', 'Prenotazioni: {spettacolo}', [
                 <div><?= Yii::t('app', 'Telefono') ?>: <strong><?= $prenotazione->cellulare ?></strong></div>
                 <hr />
                 <div>
-                    <?= Yii::t('app', 'Prenotazioni pagate') ?>: <strong class="c-darkgreen"><?= \app\models\IltPrenotazioni::find()->where(['email' => $prenotazione->email, 'pagato' => \app\models\IltPrenotazioni::PAGATO])->count(); ?></strong>
+                    <?= Yii::t('app', 'Prenotazioni pagate') ?>: <strong class="c-darkgreen"><?= \app\models\IltPrenotazioni::find()->where(['email' => $prenotazione->email, 'spettacolo' => $prenotazione->spettacolo, 'pagato' => \app\models\IltPrenotazioni::PAGATO])->count(); ?></strong>
                 </div>
                 <div>
-                    <?= Yii::t('app', 'Prenotazioni da pagare') ?>: <strong class="c-iloveteatro"><?= \app\models\IltPrenotazioni::find()->where(['email' => $prenotazione->email, 'pagato' => \app\models\IltPrenotazioni::NON_PAGATO])->count(); ?></strong>
+                    <?= Yii::t('app', 'Prenotazioni da pagare') ?>: <strong class="c-iloveteatro"><?= \app\models\IltPrenotazioni::find()->where(['email' => $prenotazione->email, 'spettacolo' => $prenotazione->spettacolo, 'pagato' => \app\models\IltPrenotazioni::NON_PAGATO])->count(); ?></strong>
                 </div>
                 <div>
-                    <?= Yii::t('app', 'Totali prenotazioni') ?>: <strong><?= \app\models\IltPrenotazioni::find()->where(['email' => $prenotazione->email])->count(); ?></strong>
+                    <?= Yii::t('app', 'Totali prenotazioni') ?>: <strong><?= \app\models\IltPrenotazioni::find()->where(['email' => $prenotazione->email, 'spettacolo' => $prenotazione->spettacolo])->count(); ?></strong>
                 </div>
                 <?php if(!is_null($prenotazione->data_registrazione)) : ?>
                     <div><?= Yii::t('app', 'Data della prenotazione') ?>: <strong><?= $prenotazione->data_registrazione ?></strong></div>
