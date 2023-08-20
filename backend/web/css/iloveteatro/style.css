@@ -53,9 +53,11 @@
 .text-underline{border-bottom: 2px solid var(--color-iloveteatro);}
 .show-mobile-menu{display: none;}
 .breadcrumb{display: none;}
+
 .flex{display: flex;}
 .flex-flow-wrap{flex-flow: wrap;}
 .flex-wrap-wrap{flex-wrap: wrap;}
+
 .gap-1{gap: 30px;}
 .min-height-100p{min-height: 100%;}
 .height-auto{height: auto;}
