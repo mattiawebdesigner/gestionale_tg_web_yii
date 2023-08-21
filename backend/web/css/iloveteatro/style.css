@@ -45,7 +45,7 @@
 }
 
 .c-red{color: red;}
-.c-iloveteatro{color: var(--color-iloveteatro);}
+.c-iloveteatro, .help-block{color: var(--color-iloveteatro);}
 .c-darkgreen{color: darkgreen;}
 
 .btn-iloveteatro{background-color: var(--color-iloveteatro);color: white;}

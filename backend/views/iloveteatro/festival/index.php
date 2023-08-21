@@ -159,7 +159,7 @@ $this->title = $title . " | I Love Teatro";
     
     <?php ActiveForm::end(); ?>
     
-    
+    <?php if($type<>"create") : ?>
     <?= Html::a("<h3>".Yii::t('app', 'Regolamento')."</h3>", $newFestival->regolamenti, ['target' => '_blank']) ?>
     <br /><br />
     
@@ -174,6 +174,7 @@ $this->title = $title . " | I Love Teatro";
             <?php endforeach; ?>
         <?php endif; ?>
     </div>
+    <?php endif; ?>
 </div>
 
 <?php
