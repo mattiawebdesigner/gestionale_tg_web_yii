@@ -41,7 +41,7 @@ $this->title = $title . " | I Love Teatro";
         ])->label(false) ?>
     
         <?= $form->field($newFestival, 'anno')->textInput([
-                'value' => date('Y'), 
+                'value' => $newFestival->anno?:date('Y'), 
                 'class' => 'form-control subtitle-1',
                 'placeholder' => 'Anno del festival',
             ])->label(false) ?>
