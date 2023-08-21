@@ -35,7 +35,7 @@ class IltSpettacolo extends \yii\db\ActiveRecord
         return [
             [['spettacolo', 'data', 'ora_porta', 'ora_sipario'], 'required'],
             [['spettacolo', 'banner', 'locandina', 'sinossi'], 'string'],
-            [['festival'], 'int'],
+            [['festival'], 'integer'],
         ];
     }
 
