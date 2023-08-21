@@ -64,7 +64,7 @@ AppAsset::register($this);
                     . Html::beginForm(['/site/logout'], 'post', ['class' => 'form-inline dropdown-menu'])
                     . Html::a(Yii::t('app', 'Profilo'),
                                 ['/utenti/profile', 'id' => Yii::$app->user->id],
-                                ['class' => 'nav-link']
+                                ['class' => 'nav-link', 'target' => '_blank']
                             )
                     . Html::submitButton(
                         'Logout',
