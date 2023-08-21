@@ -41,7 +41,7 @@ $this->title = $model->spettacolo;
                 ]) ?>
         </div>
         
-        <div class="">
+        <div class="w-100">
             <?= $form->field($model, 'data')->textInput([
                 'placeholder' => Yii::t('app', 'Data dello spettacolo'),
                 'type' => 'date'
