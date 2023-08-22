@@ -51,8 +51,12 @@ main .container{
 .btn a{color: #fff;}
 .btn a:hover{text-decoration: none;}
 .btn-link a{color: var(--color-blue);}
-.btn-outline-secondary{  
+.btn-outline-secondary{  }
+
+.actions{
+    margin-bottom: 10px;
 }
+
 .f-right{
     float: right;
 }

@@ -34,7 +34,7 @@ class IltSpettacolo extends \yii\db\ActiveRecord
     {
         return [
             [['spettacolo', 'data', 'ora_porta', 'ora_sipario'], 'required'],
-            [['spettacolo', 'banner', 'locandina', 'sinossi'], 'string'],
+            [['spettacolo', 'banner', 'locandina', 'sinossi', 'piantina'], 'string'],
             [['festival'], 'integer'],
         ];
     }
@@ -54,6 +54,7 @@ class IltSpettacolo extends \yii\db\ActiveRecord
             'locandina' => Yii::t('app', 'Locandina dello spettacolo'),
             'sinossi' => Yii::t('app', 'Sinossi dello spettacolo'),
             'festival' => Yii::t('app', 'Festival'),
+            'piantina' => Yii::t('app', 'Piantina'),
         ];
     }
 }

@@ -1,0 +1,121 @@
+/**
+* Stile della piantina del teatro
+*/
+/* 
+    Created on : 22 ago 2023, 12:43:40
+    Author     : Mattia Leonardo Angelillo
+*/
+#palco{
+    width: 250px;
+    height: 50px;
+    margin: 0 auto;
+    border: 1px solid;
+}
+
+#theatre-place{
+    position: relative;
+    width: 998px;
+    height: 748px;
+    background-image: url(../../iloveteatro/piantine/piantina_teatro_rossini_gioia_del_colle.gif);
+    background-repeat: no-repeat;
+    background-size: 100%;
+}
+#theatre-place .platea{
+    width: 300px;
+    position: absolute;
+    top: 384px;
+    left: 339px;
+}
+#theatre-place .fila-nome{
+    font-weight: 900;
+}
+#theatre-place h3{
+    text-align: center;
+}
+#theatre-place .flex{
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 17px;
+}
+#theatre-place .flex-column-reverse{
+    flex-direction: column-reverse;
+}
+#theatre-place .seat{
+    width: 6px;
+    height: 6px;
+    border: 1px solid;
+    border-radius: 100%;
+    line-height: 30px;
+    text-align: center;
+    font-weight: 900;
+    background-color: #000;
+}
+#theatre-place .seat.nn{
+    width: 150px;
+    height: 40px;
+}
+#theatre-reservations > form{
+    display: none;
+}
+
+
+/******************************
+Prenotazioni
+******************************/
+#prenotazioni{
+    display: flex;
+}
+#prenotazioni .flex{
+    display: flex;
+}
+#prenotazioni.gap-1, #prenotazioni .gap-1{
+    gap: 10px;
+}
+#prenotazioni > .prenotazione{
+    border: 1px solid;
+    flex: 1 1 0;
+    width: 0;
+    padding: 10px;
+}
+#prenotazioni > .prenotazione h1, 
+#prenotazioni > .prenotazione h2, 
+#prenotazioni > .prenotazione h3, 
+#prenotazioni > .prenotazione h4,
+#prenotazioni > .prenotazione h5, 
+#prenotazioni > .prenotazione h6{
+    margin: 0;
+    padding: 0;
+}
+#prenotazioni > .prenotazione .posto{
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+/******************************
+Box per la prenotazione dei
+posti non numerati
+*****************************/
+#prenotazione-posti-nn{    
+    position: absolute;
+    top: 20px;
+    left: 150px;
+    border: 1px solid;
+    width: 350px;
+    display: flex;
+    flex-direction: column;
+    background: white;
+    padding: 10px;
+    gap: 10px;
+}
+#prenotazione-posti-nn .close{
+    width: 30px;
+    height: 30px;
+    border: 2px solid;
+    border-radius: 100%;
+    text-align: center;
+    position: absolute;
+    top: -15px;
+    right: -15px;
+    background: white;
+}

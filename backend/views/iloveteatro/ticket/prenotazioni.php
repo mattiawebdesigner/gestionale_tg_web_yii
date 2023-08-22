@@ -1,5 +1,6 @@
 <?php
 use yii\helpers\Html;
+use yii\helpers\Url;
 use app\models\IltPosto;
 use yii\widgets\ActiveForm;
 
@@ -13,7 +14,6 @@ $this->title = Yii::t('app', 'Prenotazioni: {spettacolo}', [
     <div class="cover b-image-cover b-image-norepeat b-image-center-center" style="background-image: url(<?= $spettacolo->banner ?>)"></div>
     
     <p>&nbsp;</p>
-    
     <div class="info flex gap-1">
         <div><i class="fa-solid fa-door-open"></i> <?= Yii::t('app', 'Apertura porte: ') ?> <?= $spettacolo->ora_porta ?></div>
         <div><i class="fa-solid fa-person-booth"></i> <?= Yii::t('app', 'Inizio spettacolo: ') ?> <?= $spettacolo->ora_sipario ?></div>
@@ -21,6 +21,13 @@ $this->title = Yii::t('app', 'Prenotazioni: {spettacolo}', [
     </div>
     
     <p>&nbsp;</p>
+    
+    <div class="actions">
+        <?= Html::a("<i class='fa-solid fa-ticket'></i> Inserisci una prenotazione", 
+                Url::toRoute(['iloveteatro/prenotazione-ticket', 'spettacolo_id' => $spettacolo->id]),
+                ['class' => 'btn btn-warning']
+        ) ?>
+    </div>
     
     <div>
         <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
