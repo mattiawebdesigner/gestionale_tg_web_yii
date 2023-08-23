@@ -66,13 +66,22 @@ $cont = 0;
         /*echo "<pre>";
         print_r($rosa_eletti);
         echo "</pre>";*/
-        ?>
+    ?>
         
     <div class="eletti">
         <h3><?= Yii::t('app', 'Eletti') ?></h3>
         
         <?php foreach ($rosa_eletti as $k => $v) : ?>
         <div><strong>#<?= $k+1 ?></strong> <?= $v['cognome']." ".$v['nome'] ?> (<?= $v['tot_voti'] ?> voti)</div>
+        <?php endforeach; ?>
+        
+    </div>
+        
+    <div class="non_eletti">
+        <h3><?= Yii::t('app', 'Non Eletti') ?></h3>
+        
+        <?php foreach ($non_eletti as $k => $v) : ?>
+        <div><strong>#<?= $k+6 ?></strong> <?= $v['cognome']." ".$v['nome'] ?> (<?= $v['tot_voti'] ?> voti)</div>
         <?php endforeach; ?>
         
     </div>

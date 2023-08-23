@@ -352,12 +352,29 @@ CSS;
                             ->orderBy("tot_voti DESC")
                             ->limit(5)
                             ->all();
+        $non_eletti    = (new \yii\db\Query())
+                            ->select("*, COUNT(*) tot_voti")
+                            ->from('{{%votazione_has_voti}} vhv')
+                            ->innerJoin('{{%voti}} v', 'vhv.id_voto = v.id')
+                            ->innerJoin('{{%soci}} s', 's.id = v.id_socio')
+                            ->where(['vhv.id_votazione' => $id])
+                            ->groupBy('v.id_socio')
+                            ->orderBy("tot_voti DESC, cognome ASC, nome ASC")
+                            //->limit(5, sizeof($this->getSociConDirittoDiVoto($id)) )
+                            ->all();
+        unset($non_eletti[0]);
+        unset($non_eletti[1]);
+        unset($non_eletti[2]);
+        unset($non_eletti[3]);
+        unset($non_eletti[4]);
+        $non_eletti = array_values($non_eletti);
         
         return $this->render('view-socio',[
             'votazione'             => $votazione,
             'soci'                  => $soci,
             'votazione_has_voti'    => $votazione_has_voti,
             'rosa_eletti'           => $rosa_eletti,
+            'non_eletti'            => $non_eletti,
         ]);
     }
     
