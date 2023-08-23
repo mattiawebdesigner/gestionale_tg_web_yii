@@ -29,27 +29,14 @@ $this->title = Yii::t('app', 'Articoli');
 
             'titolo',
             [
-                'label' => 'Contenuto',
+                'label' => 'contenuto',
                 'attribute' => 'contenuto',
                 'value' => function(){
                     return "[...]";
                 }
             ],
-            [
-                'label' => 'Categoria',
-                'attribute' => 'categoria',
-                'value' => function ($model){
-                    return backend\models\IltCategorie::findOne(['id' => $model->categoria])->categoria;
-                }
-            ],
             'data_pubblicazione',
-            [
-                'label' => 'Fine Pubblicazione',
-                'attribute' => 'fine_pubblicazione',
-                'value' => function ($model){
-                    return isset($model->fine_pubblicazione)&&!is_null($model->fine_pubblicazione)?date("d-m-Y H:i", strtotime($model->fine_pubblicazione)):"";
-                }
-            ],
+            'fine_pubblicazione',
             
             [
                 'class' => ActionColumn::className(),
