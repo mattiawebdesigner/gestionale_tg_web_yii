@@ -333,7 +333,6 @@ CSS;
     public function actionViewSocio($id){
         
         $votazione          = $this->findVotazioneModel($id);
-        $soci               = $this->getSociConDirittoDiVoto($id);
         $votazione_has_voti = $soci = (new \yii\db\Query())
                             ->select("*, COUNT(*) tot_voti")
                             ->from('{{%votazione_has_voti}} vhv')

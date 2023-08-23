@@ -92,21 +92,4 @@ $cont = 0;
     </p>
     <?php endif; ?>
     
-    <?php //Elenco dei soci con diritto di voto ?>
-    <!--<h3><?= Yii::t('app', 'Soci con diritto di voto') ?></h3>
-    <div class="soci">
-        <table class="table table-striped">
-            <tr>
-                <th>#</th>
-                <th>Socio</th>
-            </tr>
-            
-            <?php foreach($soci as $k => $v): ?>
-            <tr>
-                <td><?= ++ $cont ?></td>
-                <td><?= $v['cognome']." ".$v['nome'] ?></td>
-            </tr>
-            <?php endforeach; ?>
-        </table>
-    </div>-->
 </div>
