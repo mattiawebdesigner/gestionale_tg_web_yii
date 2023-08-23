@@ -21,7 +21,19 @@ $cont = 0;
     
     <p> 
         <?= Html::a(Yii::t('app', '<i class="fa-solid fa-list"></i> Tutte le votazioni'), ['index-socio'], ['class' => 'btn btn-success']) ?>
-        <?= Html::a(Yii::t('app', '<i class="fa-solid fa-download"></i> Scarica soci con diritto di voto'), ['download-elenco-soci-voto', 'id' => $votazione->id], ['class' => 'btn btn-warning', 'target' => '_blank']) ?>
+        <?php foreach($info as $k => $i) : ?>
+            <?php 
+            $t = false;
+            if($i->data >= date("Y-m-d")) {
+                $t = true;
+            }else{
+                $t = false;
+            } ?>
+        <?php endforeach; ?>
+        
+        <?php if($t) : ?>
+            <?= Html::a(Yii::t('app', '<i class="fa-solid fa-download"></i> Scarica soci con diritto di voto'), ['download-elenco-soci-voto', 'id' => $votazione->id], ['class' => 'btn btn-warning', 'target' => '_blank']) ?>
+        <?php endif; ?>
     </p>
     
      
