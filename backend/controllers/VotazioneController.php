@@ -359,7 +359,6 @@ CSS;
                             ->where(['vhv.id_votazione' => $id])
                             ->groupBy('v.id_socio')
                             ->orderBy("tot_voti DESC, cognome ASC, nome ASC")
-                            //->limit(5, sizeof($this->getSociConDirittoDiVoto($id)) )
                             ->all();
         unset($non_eletti[0]);
         unset($non_eletti[1]);
