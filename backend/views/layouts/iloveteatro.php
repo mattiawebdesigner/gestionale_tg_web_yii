@@ -24,26 +24,56 @@ AppAsset::register($this);
     <?php $this->head() ?>
 
     <?php $this->registerCssFile('@web/css/iloveteatro/style.css', ['depends' => \yii\bootstrap4\BootstrapAsset::class]); ?>
+    <?php $this->registerJsFile('@web/js/iloveteatro/menu.js', ['depends' => \yii\web\JqueryAsset::class]); ?>
 </head>
 <body class="d-flex flex-column h-100">
 <?php $this->beginBody() ?>
 
 <div class="d-flex min-height-100p height-auto o-hidden">
-    <header>
+<header>
+    <div class="show-mobile-menu">
+        <i class="fa-solid fa-bars"></i>
+        <?= Html::img(Yii::$app->params['pittogramma_iloveteatro'], ['class' => 'pittogramma']); ?>
+    </div>
         <?php
-
+        
         NavBar::begin([
             'options' => [
                 'id' => 'mainmenu',
-                'class' => 'navbar navbar-expand-md navbar-dark bg-dark',
+                'class' => 'navbar navbar-expand-md navbar-iloveteatro bg-iloveteatro',
             ],
         ]);
 
 
-        $menuItems[] = ['label' => Html::img(Yii::$app->params['logo_iloveteatro']), 'url' => '#', ['options' => 'cursor-none']];
-        $menuItems[] = ['label' => '<i class="fas fa-external-link-alt"></i> I Love Teatro', 'url' => '/iloveteatro/', 'linkOptions' => array(
+        $menuItems[] = ['label' => Html::img(Yii::$app->params['logo_iloveteatro']), 'url' => '#', 'options'=>['class'=>'logo']];
+        //$menuItems[] = ['label' => Html::img(Yii::$app->params['pittogramma_iloveteatro']), 'url' => '#', 'options'=>['class'=>'pittogramma']];
+        
+        $menuItems[] = ['label' => '<i class="fas fa-external-link-alt"></i> <span>I Love Teatro</span>', 'url' => '/iloveteatro/', 'linkOptions' => array(
                          'target' => '_blank'
         )];
+        
+        if (Yii::$app->user->isGuest) {
+            $menuItems[] = ['label' => 'Login', 'url' => ['/site/login'],];
+        } else {
+            $menuItems[] = '<li class="profile dropdown nav-item">'
+                //. '<div>'
+                    . Html::a('<i class="fas fa-user"></i> <span>'.Yii::$app->user->identity->nome.'</span>', 
+                                '#',
+                                ['class' => 'dropdown-toggle nav-link', 'data-toggle' => 'dropdown']
+                            )
+                    . Html::beginForm(['/site/logout'], 'post', ['class' => 'form-inline dropdown-menu'])
+                    . Html::a(Yii::t('app', 'Profilo'),
+                                ['/utenti/profile', 'id' => Yii::$app->user->id],
+                                ['class' => 'nav-link', 'target' => '_blank']
+                            )
+                    . Html::submitButton(
+                        'Logout',
+                        ['class' => 'btn btn-link logout']
+                    )
+                    . Html::endForm()
+                //. '</div>'
+            . '</li>';
+        }
         $menuItems[] = ['label' => '<i class="far fa-building"></i> <span>'.Yii::t('app', 'Bacheca').'</span>', 'url' => ['/iloveteatro/index']];
         $menuItems[] = ['label' => '<i class="fa-solid fa-masks-theater"></i> <span>'.Yii::t('app', 'Programmazione spettacoli').'</span>', 'url' => ['/iloveteatro/programming']];
         $menuItems[] = ['label' => '<i class="fa-solid fa-ticket"></i> <span>'.Yii::t('app', 'Ticket').'</span>', 'url' => ['/iloveteatro/ticket']];
@@ -86,64 +116,14 @@ AppAsset::register($this);
         ');
         ?>
     </header>
-
+    
     <main role="main" class="flex-shrink-0 p-relative o-auto">
-        <header>
-            <?php
-
-            NavBar::begin([
-                'options' => [
-                    'id' => 'topmenu',
-                    'class' => 'navbar navbar-expand-md navbar-dark bg-dark fixed-top',
-                ],
-            ]);
-
-            $topItems[] = ['label' => Html::img(Yii::$app->params['logo']), 
-                            'url' => Yii::$app->params['site_protocol'].Yii::$app->params['sito'],'linkOptions' => [
-                                'target' => '_blank'
-                            ]
-                    ];
-            if (Yii::$app->user->isGuest) {
-                $topItems[] = ['label' => 'Login', 'url' => ['/site/login'],];
-            } else {
-                $topItems[] = '<li class="profile dropdown nav-item">'
-                    //. '<div>'
-                        . Html::a('<i class="fas fa-user"></i> '.Yii::$app->user->identity->nome, 
-                                    '#',
-                                    ['class' => 'dropdown-toggle nav-link', 'data-toggle' => 'dropdown']
-                                )
-                        . Html::beginForm(['/site/logout'], 'post', ['class' => 'form-inline dropdown-menu'])
-                        . Html::a(Yii::t('app', 'Profilo'),
-                                    ['/utenti/profile', 'id' => Yii::$app->user->id],
-                                    ['class' => 'nav-link']
-                                )
-                        . Html::submitButton(
-                            'Logout',
-                            ['class' => 'btn btn-link logout']
-                        )
-                        . Html::endForm()
-                    //. '</div>'
-                . '</li>';
-            }
-            ?>
-
-            <?php
-            echo Nav::widget([
-                'encodeLabels' => false,
-                'options' => ['class' => 'navbar-nav'],
-                'items' => $topItems,
-            ]);
-            NavBar::end();?>
-        </header>
         
-        <div class="container">
-
-            <?= Breadcrumbs::widget([
-                'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
-            ]) ?>
-            <?= Alert::widget() ?>
-            <?= $content ?>
-        </div>
+        <?= Breadcrumbs::widget([
+            'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
+        ]) ?>
+        <?= Alert::widget() ?>
+        <?= $content ?>
 
         <footer class="footer mt-auto py-3 text-muted">
             <div class="container">
