@@ -58,6 +58,8 @@
 .flex-flow-wrap{flex-flow: wrap;}
 .flex-wrap-wrap{flex-wrap: wrap;}
 
+.display-none{display: none;}
+
 .gap-1{gap: 30px;}
 .gap-2{gap: 60px;}
 .min-height-100p{min-height: 100%;}

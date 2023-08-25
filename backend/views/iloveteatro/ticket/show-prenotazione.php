@@ -51,10 +51,12 @@ if(isset($prenotazioni) && sizeof($prenotazioni) === 0):
                                     [
                                         'class'     => 'delete-js',
                                         'data-type' => $k,
-                                        //'data-fila-palco'   => $fila_palco,
-                                        //'data-posto'        => $k_posto,
+                                        'data-fila-palco'   => $fila_palco,
+                                        'data-posto'        => 'non_numerato',
                                     ]) ?>
                 </div>
+                <input type="number" min="1" max="<?= $posto->non_numerato ?>" value="<?= $posto->non_numerato ?>" class="form-control display-none" data-target="non_numerato" />
+                    
                 <?php else : ?>            
                     <?php foreach($posto->fila as $fila => $p) : ?>
                         <div>
@@ -115,20 +117,32 @@ $this->registerJs("
         
         let _target = jQuery(e.currentTarget);
         
-        _target.parents('.drop').remove();
-        
         let key_type        = _target.data('type');
         let key_fila_palco  = _target.data('fila-palco');
         let key_posto       = _target.data('posto');
         
+        _target.parents('.drop').remove();
+        
         if(key_type.includes('ordine') || key_type.includes('Ordine')){//Rimozione di un posto nei palchi
             let key_fila       = _target.data('fila');
-            delete prenotazioni[key_type]['palco'][key_fila_palco]['fila'][key_fila]['posti'][key_posto];
+            if(key_posto !== 'non_numerato'){
+                delete prenotazioni[key_type]['palco'][key_fila_palco]['fila'][key_fila]['posti'][key_posto];
+            }else{//Posto non numerato
+                $('[data-target=\'non_numerato\']').show();
+                $('[data-target=\'non_numerato\']').change(function(e){
+                    let nn = $(e.currentTarget).val();
+                    prenotazioni[key_type]['palco'][key_fila_palco]['non_numerato'] = nn;
+        
+                    $('#prenotazione_result').val(JSON.stringify(prenotazioni));
+                });
+            }
         }else{
             delete prenotazioni[key_type]['file'][key_fila_palco]['posti'][key_posto];
         }
         
         $('#prenotazione_result').val(JSON.stringify(prenotazioni));
+        
+        console.log(prenotazioni);
         
     });
 ");
