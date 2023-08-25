@@ -78,10 +78,12 @@ if(isset($prenotazioni) && sizeof($prenotazioni) === 0):
 
                 <?php endif; ?>
 
-                <hr />
             <?php endif; ?>
 
         </div>
+        
+        <hr />
+        
         <?php endforeach; ?>
         </div>
         
