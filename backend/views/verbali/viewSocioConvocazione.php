@@ -44,7 +44,7 @@ $this->params['breadcrumbs'][] = $this->title;
         </tr>
     </table>
         
-    <?php if($model->delega) : ?>
+    <?php if($model->delega === "yes") : ?>
         <h5>Invia il modulo di delega</h5>
 
         <?php $form = ActiveForm::begin([
