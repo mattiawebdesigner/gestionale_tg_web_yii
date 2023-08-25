@@ -59,7 +59,9 @@
 .flex-wrap-wrap{flex-wrap: wrap;}
 
 .gap-1{gap: 30px;}
+.gap-2{gap: 60px;}
 .min-height-100p{min-height: 100%;}
+.max-w-1{width: 240px;}
 .height-auto{height: auto;}
 .c-1{color: darkred;}
 .f-size-small{font-size: small;}

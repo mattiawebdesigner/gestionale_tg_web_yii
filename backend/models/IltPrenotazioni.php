@@ -39,7 +39,7 @@ class IltPrenotazioni extends \yii\db\ActiveRecord
             [['spettacolo', 'nome', 'cognome', 'email', 'cellulare', 'pagato'], 'required'],
             [['nome', 'cognome', 'email', 'cellulare', 'prenotazione'], 'string'],
             [['posto'], 'integer'],
-            [['data_registrazione'], 'date']
+            [['data_registrazione'], 'safe']
         ];
     }
 
