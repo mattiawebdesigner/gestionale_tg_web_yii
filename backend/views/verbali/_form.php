@@ -30,8 +30,10 @@ use dosamigos\tinymce\TinyMce;
             <span class="btn btn-warning">
                 <?= Html::a('<i class="fas fa-download"></i> ', ['download', 'numero_protocollo' => $model->numero_protocollo])  ?>
             </span>
-            <span class="btn btn-warning">
-                <?= Html::a('<i class="fa-solid fa-clock-rotate-left"></i> ', ['modifiche', 'numero_protocollo' => $model->numero_protocollo], ['target' => '_blank'])  ?>
+            <span class="btn btn-link">
+                <?= Html::a(Yii::t('app', '{icon}Modifiche al verbale', [
+                    'icon' => '<i class="fa-solid fa-clock-rotate-left"></i> ',
+                ]), ['modifiche', 'numero_protocollo' => $model->numero_protocollo], ['target' => '_blank'])  ?>
             </span>
         </div>
     </div>
@@ -54,9 +56,13 @@ use dosamigos\tinymce\TinyMce;
                     'plugins' => [
                         "advlist autolink lists link charmap print preview anchor",
                         "searchreplace visualblocks code fullscreen",
-                        "insertdatetime media table contextmenu paste"
+                        "insertdatetime media table contextmenu paste",
+                        "lists",
+                        "table",
                     ],
-                    'toolbar' => "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
+                    'toolbar1' => "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | lists advlist",
+                    'toolbar2' => "table tabledelete | tableprops tablerowprops tablecellprops | tableinsertrowbefore tableinsertrowafter tabledeleterow | tableinsertcolbefore tableinsertcolafter tabledeletecol",
+                    'toolbar3' =>  "pagebreak | charmap code | fullscreen preview | visualblocks print",
                 ]
             ])->label(false);?>
         </div>

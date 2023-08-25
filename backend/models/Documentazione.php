@@ -31,10 +31,10 @@ class Documentazione extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['link', 'mime', 'fileName', 'documentazione_categoria_id'], 'required'],
+            [['link', 'mime', 'fileName', 'categoria'], 'required'],
             [['visibile_socio'], 'string'],
             [['data_inserimento', 'ultima_modifica'], 'safe'],
-            [['documentazione_categoria_id'], 'integer'], 
+            [['categoria'], 'integer'], 
             [['link', 'fileName'], 'string', 'max' => 255],
             [['mime'], 'string', 'max' => 25],
         ];
@@ -53,7 +53,7 @@ class Documentazione extends \yii\db\ActiveRecord
             'fileName' => Yii::t('app', 'File Name'),
             'data_inserimento' => Yii::t('app', 'Data Inserimento'),
             'ultima_modifica' => Yii::t('app', 'Ultima Modifica'),
-            'documentazione_categoria_id' => Yii::t('app', 'Categoria della documentazione'), 
+            'categoria' => Yii::t('app', 'Categoria della documentazione'), 
         ];
     }
 

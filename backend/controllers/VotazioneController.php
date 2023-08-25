@@ -6,6 +6,7 @@ use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 use kartik\mpdf\Pdf;
 use backend\models\Votazione;
 use backend\models\VotazioneSearch;
@@ -27,6 +28,24 @@ class VotazioneController extends Controller
                     'class' => VerbFilter::className(),
                     'actions' => [
                         'delete' => ['POST'],
+                    ],
+                ],
+                'access' => [
+                    'class' => AccessControl::className(),
+                    'rules' => [
+                        [
+                            'actions' => ['login', 'error'],
+                            'allow' => true,
+                        ],
+                        [
+                            'actions' => [],//All page
+                            'allow' => true,
+                            'roles' => ['Socio', 'Super User'],
+                        ],
+                        [
+                            'actions' => ['index-socio-app', 'view-socio-app'],
+                            'allow' => true,
+                        ]
                     ],
                 ],
             ]
@@ -314,7 +333,6 @@ CSS;
     public function actionViewSocio($id){
         
         $votazione          = $this->findVotazioneModel($id);
-        $soci               = $this->getSociConDirittoDiVoto($id);
         $votazione_has_voti = $soci = (new \yii\db\Query())
                             ->select("*, COUNT(*) tot_voti")
                             ->from('{{%votazione_has_voti}} vhv')
@@ -333,12 +351,28 @@ CSS;
                             ->orderBy("tot_voti DESC")
                             ->limit(5)
                             ->all();
+        $non_eletti    = (new \yii\db\Query())
+                            ->select("*, COUNT(*) tot_voti")
+                            ->from('{{%votazione_has_voti}} vhv')
+                            ->innerJoin('{{%voti}} v', 'vhv.id_voto = v.id')
+                            ->innerJoin('{{%soci}} s', 's.id = v.id_socio')
+                            ->where(['vhv.id_votazione' => $id])
+                            ->groupBy('v.id_socio')
+                            ->orderBy("tot_voti DESC, cognome ASC, nome ASC")
+                            ->all();
+        unset($non_eletti[0]);
+        unset($non_eletti[1]);
+        unset($non_eletti[2]);
+        unset($non_eletti[3]);
+        unset($non_eletti[4]);
+        $non_eletti = array_values($non_eletti);
         
         return $this->render('view-socio',[
             'votazione'             => $votazione,
             'soci'                  => $soci,
             'votazione_has_voti'    => $votazione_has_voti,
             'rosa_eletti'           => $rosa_eletti,
+            'non_eletti'            => $non_eletti,
         ]);
     }
     
@@ -394,6 +428,68 @@ CSS;
                 ->andWhere(['>', 'DATEDIFF(NOW(), soci.data_di_nascita)' , 365*18])//calcolo se sono maggiorenni
                 ->orderBy(['cognome' => 'ASC', 'nome' => 'ASC'])
                 ->all();
+    }
+    
+    //APP
+    
+
+    /**
+     * Usato per l'APP Android e iOS.
+     * 
+     * Elenco delle votazione (per i soci).
+     *
+     * @return string
+     */
+    public function actionIndexSocioApp()
+    {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        
+        return Votazione::find()->orderBy(['anno' => SORT_DESC])->all();
+    }
+    
+    /**
+     * Usato per l'app Android e iOS.
+     * Restituisce i dati di una votazione
+     * 
+     * @param type $id
+     */
+    public function actionViewSocioApp($id){
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        
+        $votazione          = $this->findVotazioneModel($id);
+        $soci               = $this->getSociConDirittoDiVoto($id);
+        $votazione_has_voti = $soci = (new \yii\db\Query())
+                            ->select("*, COUNT(*) tot_voti")
+                            ->from('{{%votazione_has_voti}} vhv')
+                            ->innerJoin('{{%voti}} v', 'vhv.id_voto = v.id')
+                            ->innerJoin('{{%soci}} s', 's.id = v.id_socio')
+                            ->where(['vhv.id_votazione' => $id])
+                            ->groupBy('v.id_socio')
+                            ->all();
+        $rosa_eletti    = $soci = (new \yii\db\Query())
+                            ->select("*, COUNT(*) tot_voti")
+                            ->from('{{%votazione_has_voti}} vhv')
+                            ->innerJoin('{{%voti}} v', 'vhv.id_voto = v.id')
+                            ->innerJoin('{{%soci}} s', 's.id = v.id_socio')
+                            ->where(['vhv.id_votazione' => $id])
+                            ->groupBy('v.id_socio')
+                            ->orderBy("tot_voti DESC")
+                            ->limit(5)
+                            ->all();
+        
+        return [[
+            'votazione_has_voti'    => $votazione_has_voti,
+            'votazione'             => $votazione,
+            'soci'                  => $soci,
+            'rosa_eletti'           => $rosa_eletti,
+        ]];
+        
+        /*return $this->render('view-socio',[
+            'votazione'             => $votazione,
+            'soci'                  => $soci,
+            'votazione_has_voti'    => $votazione_has_voti,
+            'rosa_eletti'           => $rosa_eletti,
+        ]);*/
     }
     
     /**

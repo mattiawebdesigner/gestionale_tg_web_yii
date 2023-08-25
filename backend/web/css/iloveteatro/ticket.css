@@ -11,3 +11,8 @@
 .ticket-index .n-ticket-paid{
     top: 34px;
 }
+@media (min-width: 576px){
+    .preview.col-sm-3 {
+        max-width: 15%;
+    }
+}

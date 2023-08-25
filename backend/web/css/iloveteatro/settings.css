@@ -1,0 +1,12 @@
+/* 
+    Created on : 19 ago 2023, 16:35:16
+    Author     : Mattia Leonardo Angelillo
+*/
+.settings [class*="setting-"] > .container{
+    margin-left: 0;
+}
+.settings [class*="setting-"] > .container > div{
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}

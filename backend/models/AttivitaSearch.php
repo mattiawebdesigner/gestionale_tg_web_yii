@@ -34,17 +34,21 @@ class AttivitaSearch extends Attivita
      * Creates data provider instance with search query applied
      *
      * @param array $params
+     * @param mixed false Se non si vuole l'impaginazione
+     *              array Con i dati di configurazione dell'impaginazione
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
+    public function search($params, $pagination = ['pageSize' => 10])
     {
         $query = Attivita::find();
 
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
-            'query' => $query,
+            'query'         => $query,
+            'pagination'    => $pagination,
+            'sort'=> ['defaultOrder' => ['nome' => SORT_ASC]],
         ]);
 
         $this->load($params);

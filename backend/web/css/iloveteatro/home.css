@@ -3,12 +3,16 @@
     Author     : Mattia Leonardo Angelillo
 */
 #sections .section{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    
     padding: 10px;
     -moz-box-shadow: 0 0 0 2px var(--color-iloveteatro);
     -webkit-box-shadow: 0 0 0 2px var(--color-iloveteatro);
     box-shadow: 0 0 0 2px var(--color-iloveteatro);
     min-width: 200px;
-    max-width: 300px;
+    max-width: 421px;
 }
 #sections .section h4{
     color: #fff;

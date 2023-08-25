@@ -18,7 +18,7 @@ use backend\models\DocumentazioneCategorie;
                                         'id' => 'read-file' 
                                       ],
                         ])->fileInput()->label(
-            Yii::t('app', 'Seleziona un\'immagine'),
+            '<i class="fa-solid fa-file"></i> '.Yii::t('app', 'Seleziona un documento'),
             ['class' => 'file control-label'],
      ) ?>
      <div class="filename"></div>
@@ -27,12 +27,10 @@ use backend\models\DocumentazioneCategorie;
 	 
 	 <?= $form->field($model, 'fileName')->textInput(['maxlength' => true])->label( Yii::t('app', 'Nome del file') )?>
      
-     <?= $form->field($model, 'visibile_socio')->dropDownList([ 'yes' => Yii::t('app', 'Si'), 'no' => Yii::t('app', 'No'), ], ['prompt' => ''])->label(Yii::t('app', 'Rendere visibile per i soci?')) ?>
+     <!--<?= $form->field($model, 'visibile_socio')->dropDownList([ 'yes' => Yii::t('app', 'Si'), 'no' => Yii::t('app', 'No'), ], ['prompt' => ''])->label(Yii::t('app', 'Rendere visibile per i soci?')) ?>-->
+     <?= $form->field($model, 'visibile_socio')->hiddenInput(['value' => "yes"])->label(false) ?>
 	 
-   	 <?= $form->field($model, 'categoria')
-             ->dropDownList(
-                 ArrayHelper::map(DocumentazioneCategorie::find()->all(), 'id', 'categoria')
-    )->label(Yii::t('app', 'Proprietario')) ?>
+     <?= $form->field($model, 'categoria')->hiddenInput(['value' => $id])->label(false) ?>
      
      <div class="form-group">
     	 <button class="btn btn-success" type="submit"><i class="fas fa-upload"></i> <?= Yii::t('app', 'Carica il documento') ?></button>

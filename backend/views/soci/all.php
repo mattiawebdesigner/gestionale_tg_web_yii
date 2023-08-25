@@ -35,7 +35,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'class' => yii\grid\ActionColumn::className(),
                 'urlCreator' => function ($action, backend\models\Soci $model, $key, $index, $column) {
-                    return yii\helpers\Url::toRoute([$action, 'id' => $model->id, 'anno' => 100]);
+                    return yii\helpers\Url::toRoute([$action, 'id' => $model->id, 'anno' => date('Y')]);
                 },
                 'template' => '{view} {update}',
             ],
@@ -46,4 +46,4 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <?php
 $this->registerCssFile("@web/css/fontawesome-free-6.0.0-beta2-web/css/all.min.css");
-$this->registerCssFile("@web/css/pagination.css");
+$this->registerCssFile('@web/css/pagination.css',['depends' => yii\bootstrap4\BootstrapAsset::class]);

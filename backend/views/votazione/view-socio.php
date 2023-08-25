@@ -21,7 +21,19 @@ $cont = 0;
     
     <p> 
         <?= Html::a(Yii::t('app', '<i class="fa-solid fa-list"></i> Tutte le votazioni'), ['index-socio'], ['class' => 'btn btn-success']) ?>
-        <?= Html::a(Yii::t('app', '<i class="fa-solid fa-download"></i> Scarica soci con diritto di voto'), ['download-elenco-soci-voto', 'id' => $votazione->id], ['class' => 'btn btn-warning', 'target' => '_blank']) ?>
+        <?php foreach($info as $k => $i) : ?>
+            <?php 
+            $t = false;
+            if($i->data >= date("Y-m-d")) {
+                $t = true;
+            }else{
+                $t = false;
+            } ?>
+        <?php endforeach; ?>
+        
+        <?php if($t) : ?>
+            <?= Html::a(Yii::t('app', '<i class="fa-solid fa-download"></i> Scarica soci con diritto di voto'), ['download-elenco-soci-voto', 'id' => $votazione->id], ['class' => 'btn btn-warning', 'target' => '_blank']) ?>
+        <?php endif; ?>
     </p>
     
      
@@ -66,7 +78,7 @@ $cont = 0;
         /*echo "<pre>";
         print_r($rosa_eletti);
         echo "</pre>";*/
-        ?>
+    ?>
         
     <div class="eletti">
         <h3><?= Yii::t('app', 'Eletti') ?></h3>
@@ -77,27 +89,19 @@ $cont = 0;
         
     </div>
         
+    <div class="non_eletti">
+        <h3><?= Yii::t('app', 'Non Eletti') ?></h3>
+        
+        <?php foreach ($non_eletti as $k => $v) : ?>
+        <div><strong>#<?= $k+6 ?></strong> <?= $v['cognome']." ".$v['nome'] ?> (<?= $v['tot_voti'] ?> voti)</div>
+        <?php endforeach; ?>
+        
+    </div>
+        
     <?php else :?>   
     <p class="alert alert-info">
         <?= Yii::t('app', 'Non sono ancora stati inseriti voti per queste elezioni') ?>
     </p>
     <?php endif; ?>
     
-    <?php //Elenco dei soci con diritto di voto ?>
-    <!--<h3><?= Yii::t('app', 'Soci con diritto di voto') ?></h3>
-    <div class="soci">
-        <table class="table table-striped">
-            <tr>
-                <th>#</th>
-                <th>Socio</th>
-            </tr>
-            
-            <?php foreach($soci as $k => $v): ?>
-            <tr>
-                <td><?= ++ $cont ?></td>
-                <td><?= $v['cognome']." ".$v['nome'] ?></td>
-            </tr>
-            <?php endforeach; ?>
-        </table>
-    </div>-->
 </div>

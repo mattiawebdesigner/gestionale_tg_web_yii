@@ -1,0 +1,106 @@
+/*
+    CSS per la gestione dei documenti dei soci
+    
+    Created on : 26 apr 2023, 19:59:58
+    Author     : Mattia Leonardo Angelillo
+*/
+:root{
+    --color-1: #f2f6fc;
+    --color-2: #dceaff;
+    --color-3: grey;
+}
+#document-container{
+    border: 0px solid;
+}
+#document-container > div{
+    margin-bottom: 10px;
+}
+#document-container .folders, #document-container .files{
+    display: flex;
+    gap: 10px;
+}
+#document-container .folder,#document-container .file{
+    
+    border-radius: 10px;
+    padding: 10px;
+}
+#document-container .folders .folder a{
+    display: flex;
+    gap: 10px;
+}
+#document-container .file, #document-container .file a{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+#document-container .file{
+    
+    border: 1px solid var(--color-1);
+    background-color: var(--color-2);
+}
+#document-container .folder{
+    border: 1px solid var(--color-2);
+    background-color: var(--color-1);
+    
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+#document-container .actions{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+}
+#document-container .actions .menu{
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: var(--color-1);
+    width: 200px;
+    padding: 10px;
+}
+#document-container .actions .content{
+    flex-direction: column;
+}
+#document-container .actions .menu .content, #document-container .actions .menu .content > div{
+    display: flex;
+    /*align-items: center;*/
+    gap: 5px;
+}
+#document-container .actions > .point{
+    cursor: pointer;
+}
+#document-container .actions > .point:hover > div{
+    background-color: #818589;
+}
+#document-container .actions > .point > div{
+    border: 1px solid var(--color-3);
+    width: 5px;
+    height: 5px;
+    border-radius: 100%;
+    margin-bottom: 3px;
+    background-color: var(--color-3);
+}
+#new-folder{
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 99999;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0, .4);
+    /*display: flex;*/
+    justify-content: center;
+}
+#new-folder > div{
+    width: 350px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+#new-folder [data-close]{
+    font-size: 25px;
+}

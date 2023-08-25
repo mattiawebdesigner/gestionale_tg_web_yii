@@ -20,7 +20,7 @@ $odg = explode("\n", $model->ordine_del_giorno);
 <br /><br /><br /><br />
 <table>
     <tr>
-        <td><strong><?= Yii::t('app', 'Data') ?></strong> <br /><?= $model->data ?></td>
+        <td><strong><?= Yii::t('app', 'Data') ?></strong> <br /><?= date('d-m-Y', strtotime($model->data_inserimento)) ?></td>
         <td style="text-align: right"><strong><?= Yii::t('app', 'Firma') ?></strong> <br /><?= $model->firma ?></td>
     </tr>
 </table>

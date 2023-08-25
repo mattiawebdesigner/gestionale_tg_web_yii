@@ -71,3 +71,6 @@ $this->params['breadcrumbs'][] = $this->title;
     ]); ?>
 	
 </div>
+
+<?php
+$this->registerCssFile('@web/css/pagination.css',['depends' => yii\bootstrap4\BootstrapAsset::class]);

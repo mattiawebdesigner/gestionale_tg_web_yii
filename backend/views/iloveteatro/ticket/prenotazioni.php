@@ -1,5 +1,6 @@
 <?php
 use yii\helpers\Html;
+use yii\helpers\Url;
 use app\models\IltPosto;
 use yii\widgets\ActiveForm;
 
@@ -13,7 +14,6 @@ $this->title = Yii::t('app', 'Prenotazioni: {spettacolo}', [
     <div class="cover b-image-cover b-image-norepeat b-image-center-center" style="background-image: url(<?= $spettacolo->banner ?>)"></div>
     
     <p>&nbsp;</p>
-    
     <div class="info flex gap-1">
         <div><i class="fa-solid fa-door-open"></i> <?= Yii::t('app', 'Apertura porte: ') ?> <?= $spettacolo->ora_porta ?></div>
         <div><i class="fa-solid fa-person-booth"></i> <?= Yii::t('app', 'Inizio spettacolo: ') ?> <?= $spettacolo->ora_sipario ?></div>
@@ -21,6 +21,13 @@ $this->title = Yii::t('app', 'Prenotazioni: {spettacolo}', [
     </div>
     
     <p>&nbsp;</p>
+    
+    <div class="actions">
+        <?= Html::a("<i class='fa-solid fa-ticket'></i> Inserisci una prenotazione", 
+                Url::toRoute(['iloveteatro/prenotazione-ticket', 'spettacolo_id' => $spettacolo->id]),
+                ['class' => 'btn btn-warning']
+        ) ?>
+    </div>
     
     <div>
         <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
@@ -51,7 +58,43 @@ $this->title = Yii::t('app', 'Prenotazioni: {spettacolo}', [
     
     <p>&nbsp;</p>
     
-    <div class="prenotazioni flex flex-wrap-wrap gap-1">
+    
+    <div class="prenotazioni flex">
+        <?php foreach($prenotazioni as $prenotazione): ?>            
+            <div class="item">
+                
+                <div class="eye">
+                    <?= Html::a('<i class="fa-solid fa-eye"></i> ', ['show-ticket', 
+                                                                    'spettacolo_id' => $spettacolo->id,
+                                                                    'email' => $prenotazione->email,
+                                                                ], [
+                        'class' => 'btn btn-info',
+                        'title' => Yii::t('app', 'Segna la prenotazione come pagata'),
+                    ]) ?>
+                </div>
+                
+                <div><?= Yii::t('app', 'Cognome e Nome') ?>: <strong><?= $prenotazione->cognome ?> <?= $prenotazione->nome ?></strong></div>
+                <div><?= Yii::t('app', 'Email') ?>: <strong><?= $prenotazione->email ?></strong></div>
+                <div><?= Yii::t('app', 'Telefono') ?>: <strong><?= $prenotazione->cellulare ?></strong></div>
+                <hr />
+                <div>
+                    <?= Yii::t('app', 'Prenotazioni pagate') ?>: <strong class="c-darkgreen"><?= \app\models\IltPrenotazioni::find()->where(['email' => $prenotazione->email, 'spettacolo' => $prenotazione->spettacolo, 'pagato' => \app\models\IltPrenotazioni::PAGATO])->count(); ?></strong>
+                </div>
+                <div>
+                    <?= Yii::t('app', 'Prenotazioni da pagare') ?>: <strong class="c-iloveteatro"><?= \app\models\IltPrenotazioni::find()->where(['email' => $prenotazione->email, 'spettacolo' => $prenotazione->spettacolo, 'pagato' => \app\models\IltPrenotazioni::NON_PAGATO])->count(); ?></strong>
+                </div>
+                <div>
+                    <?= Yii::t('app', 'Totali prenotazioni') ?>: <strong><?= \app\models\IltPrenotazioni::find()->where(['email' => $prenotazione->email, 'spettacolo' => $prenotazione->spettacolo])->count(); ?></strong>
+                </div>
+                <?php if(!is_null($prenotazione->data_registrazione)) : ?>
+                    <div><?= Yii::t('app', 'Data della prenotazione') ?>: <strong><?= $prenotazione->data_registrazione ?></strong></div>
+                <?php endif; ?>
+            </div>
+        
+        <?php endforeach; ?>
+    </div>
+    
+    <!--<div class="prenotazioni flex flex-wrap-wrap gap-1">
         <?php foreach($prenotazioni as $prenotazione): ?>
         
             <?php
@@ -76,7 +119,7 @@ $this->title = Yii::t('app', 'Prenotazioni: {spettacolo}', [
             </div>
         
         <?php endforeach; ?>
-    </div>
+   </div> -->
 </div>
 
 <?php
