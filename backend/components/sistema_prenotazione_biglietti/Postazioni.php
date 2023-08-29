@@ -391,107 +391,123 @@ class Postazioni{
         return $out;
     }
     
-    public static function updatePiantina($prenotazioni_or, $piantina_or){
+    /**
+     * Aggiorna la piantina rimuovendo le prenotazioni selezionate.
+     * 
+     * @param array $prenotazione
+     * @param array $piantina
+     * @return boolean|array Restituisce false se la prenotazione non è corretta.
+     *                       Restituisce l'array della piantina modificata,
+     *                          se i dati della prenotazione passati sono corretti.
+     */
+    public static function updatePiantina(array $prenotazione, array $piantina){
         /*echo "<pre>";
-        print_r($prenotazioni_or);
+        print_r($prenotazione);
         echo "</pre>";*/
         
-        foreach ($piantina_or as $k_piantina => $v_piantina){            
-            //Ciclo la platea
-            if(isset($v_piantina['file'])){
-                foreach ($v_piantina['file'] as $k_fila => $v_fila){
-                    foreach ($v_fila['posti'] as $k_posto => $v_posto){
-                        
-                        foreach ($prenotazioni_or as $k_prenotazione => $v_prenotazione){
-                            if(strtolower($k_prenotazione) === "platea"){
-                                foreach ($v_prenotazione['file'] as $k_fila_p => $v_fila_p){
-                                    foreach ($v_fila_p['posti'] as $k_posto_p => $v_posto_p){
-                                        //echo "$k_posto<>$v_posto_p<br />";
-                                        //echo "($k_fila<>$k_fila_p && $k_posto <> $v_posto_p)", "<br />";
-                                        echo "$k_fila => $k_posto <> $v_posto_p<br />";
-                                        
-                                        //if(($k_fila<>$k_fila_p && $k_posto <> $v_posto_p) && isset($piantina_or['platea']['file'][$k_fila]['posti'][$k_posto]['stato'])){
-                                        if($k_posto <> $v_posto_p && isset($piantina_or['platea']['file'][$k_fila]['posti'][$k_posto]['stato'])){
-                                            echo "OK<br />";
-                                            
-                                            //unset($piantina_or['platea']['file'][$k_fila]['posti'][$k_posto]['stato']);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }else if(isset($v_piantina['palco'])){
-                //Ciclo gli ordini
-                foreach ($v_piantina['palco'] as $k_palco => $v_palco){
-                    if(isset($v_palco['fila'])){
-                        foreach ($v_palco['fila'] as $k_fila => $v_fila){
-                            foreach ($v_fila['posti'] as $k_posto => $v_posto){
-                                /*echo "<pre>";
-                                print_r($piantina_or[$k_piantina]);
-                                echo "</pre>";*/
-                                
-                                foreach($prenotazioni_or as $k_prenotazione => $v_prenotazione){                                
-                                    if($k_prenotazione <> "platea"){
-                                        
-                                        /*echo "<pre>";
-                                        print_r($v_prenotazione);
-                                        echo "</pre>";*/
-                                        
-                                        
-                                        foreach ($v_prenotazione['palco'] as $k_palco_p => $v_palco_p){
-                                            foreach ($v_palco_p['fila'] as $k_fila_p => $v_fila_p){
-                                                foreach ($v_fila_p['posti'] as $k_posto_p => $v_posto_p){
-                                                    
-                                                    //$piantina_or[$k_piantina]['palco'][$k_palco]['fila'][$k_fila]['posti'][$k_posto]['stato'] = "pippo";
-                                                    
-                                                    if(($k_palco     <> $k_palco_p
-                                                        && $k_fila  <> $k_fila_p
-                                                        && $k_posto <> $k_posto_p
-                                                        && $k_piantina === "I Ordine")
-                                                        && isset($piantina_or[$k_piantina]['palco'][$k_palco]['fila'][$k_fila]['posti'][$k_posto]['stato'])){
-                                                        //echo "OK P->$k_palco F->$k_fila p->$k_posto<br />";
-                                                        //$piantina_or[$k_piantina]['palco'][$k_palco]['fila'][$k_fila]['posti'][$k_posto]['stato'] = "PIPPO";
-                                                        unset($piantina_or[$k_piantina]['palco'][$k_palco]['fila'][$k_fila]['posti'][$k_posto]['stato']);
-                                                        
-                                                        /*echo "<pre>";
-                                                        print_r($piantina_or[$k_piantina]['palco'][$k_palco]['fila'][$k_fila]['posti'][$k_posto]);
-                                                        echo "</pre>";*/
-                                                        
-                                                    }
-                                                    
-                                                    /*if(($k_palco<>$k_palco_p && $k_fila<>$k_fila_p && $k_posto<>$k_posto_p) && isset($piantina_or[$k_piantina]['palco'][$k_palco]['fila'][$k_fila]['posti'][$k_posto]['stato'])
-                                                            && $k_piantina == "I Ordine"){
-                                                        echo "OK P: $k_palco F: $k_fila p: $k_posto<br />";
-                                                        $piantina_or[$k_piantina]['palco'][$k_palco]['fila'][$k_fila]['posti'][$k_posto]['stato'] = "pippo";
-                                                        //unset($piantina_or[$k_piantina]['palco'][$k_palco]['fila'][$k_fila]['posti'][$k_posto]['stato']);
-                                                        
-                                                        echo $k_piantina, "<br />";
-                                                        echo "($k_palco<>$k_palco_p && $k_fila<>$k_fila_p && $k_posto<>$k_posto_p)<br />";
-                                                        $piantina_or[$k_piantina]['palco'][$k_palco]['fila'][$k_fila]['posti'][$k_posto]['stato'] = "pippo";
-                                                        
-                                                        unset($piantina_or[$k_piantina]['palco'][$k_palco]['fila'][$k_fila]['posti'][$k_posto]['stato']);
-                                                         
-                                                    }*/
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                                
-                            }
+        //non è una prenotazione valida
+        if(!is_array($prenotazione)){return false;}
+        
+        foreach ($piantina as $k_piantina => $v_piantina){
+            if(strtolower($k_piantina) === "platea"){
+                $piantina = self::updatePrenotazionePlatea($v_piantina, $prenotazione, $piantina);
+            }
+        }
+        
+        
+        /*echo "<pre>";
+        print_r($piantina);
+        echo "</pre>";*/
+        
+        return $piantina;
+    }
+    
+    /**
+     * Aggiorna la piantina delle prenotazioni per la platea
+     * 
+     * @param array $platea          Dati della platea
+     * @param array $prenotazione    Dati della prenotazione
+     * @param array $piantina        Piantina da aggiornare
+     * @return array Piantina aggiornata
+     */
+    private static function updatePrenotazionePlatea(array $platea, array $prenotazione, array $piantina){
+        foreach($platea['file'] as $fila => $a_posti_fila){
+            $piantina = self::updatePosti($a_posti_fila, $fila, $prenotazione, $piantina);
+        }
+        
+        return $piantina;
+    }
+    
+    /**
+     * Aggiorna i posti
+     * 
+     * @param array $posti           Array dei posti
+     * @param string|int $fila       Fila a cui si riferiscono i posti
+     * @param array $prenotazione    Dati della prenotazione
+     * @param array $piantina        Piantina da aggiornare
+     * @return array Piantina aggiornata
+     */
+    private static function updatePosti(array $posti, $fila, array $prenotazione, array $piantina){
+        foreach ($posti['posti'] as $posto => $dati_posto){
+            if(isset($dati_posto['stato'])){
+                $piantina = self::deleteStato($prenotazione, $fila, $posto, $piantina);
+            }
+        }
+        
+        return $piantina;
+    }
+    
+    /**
+     * Cancella lo stato per le prenotazioni cancellate.
+     * Viene ripristinata la piantina liberando i posti.
+     * 
+     * @param array $prenotazione    Dati della prenotazione
+     * @param string|int $fila       Fila a cui si riferiscono i posti
+     * @param int $posto             Posto della fila
+     * @param array $piantina        Dati della prenotazione
+     * @param string $tipo           Indica il tipo della piantina (platea, I Ordine, ecc.)
+     * @return type
+     */
+    private static function deleteStato(array $prenotazione, $fila, $posto, array $piantina, string $tipo = "platea"){
+        //Salvo gli stati dei posti prenotati
+        $stati_posti_prenotati = [];
+        echo "STATO";
+        echo "<pre>";
+        print_r($prenotazione);
+        echo "</pre>";
+        
+        if(isset($prenotazione[$tipo]['file'][$fila]['posti'])){
+            foreach ($prenotazione[$tipo]['file'][$fila]['posti'] as $k_posto => $v_posto){
+                //echo "$v_posto<br />";
+                $stati_posti_prenotati[$fila][$v_posto] = $piantina[$tipo]['file'][$fila]['posti'][$posto]['stato'];
+            }
+        }
+        
+        //Cancello tutti gli stati
+        foreach ($prenotazione as $k_prenotazione => $v_prenotazione){
+            //echo "$k<br />";
+            if(strtolower($k_prenotazione) === "platea"){
+                foreach ($v_prenotazione['file'] as $fila_prenotazione => $posti_prenotazione){
+                    foreach ($posti_prenotazione['posti'] as $k_posto_prenotazione => $posto_prenotato){
+                        //echo "$fila <> $fila_prenotazione && $posto <> $posto_prenotato<br />";
+                        if(strtolower("platea")){
+                            unset($piantina[$tipo]['file'][$fila]['posti'][$posto]['stato']);
                         }
                     }
                 }
             }
         }
         
-        /*echo "<pre>";
-        print_r($piantina_or);
-        echo "</pre>";*/
+        //Ripristino gli stati per i posti prenotati
+        foreach ($stati_posti_prenotati as $fila_stato => $posti){
+            foreach ($posti as $posto_stato => $stato){
+                if($fila_stato == $fila && $posto_stato == $posto){
+                    $piantina[$tipo]['file'][$fila]['posti'][$posto]['stato'] = $stato;
+                }
+            }
+        }
         
-        return $piantina_or;
+        return $piantina;
     }
     
     
