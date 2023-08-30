@@ -544,27 +544,22 @@ class Postazioni{
         ];
     }
     
-    private static function restoreStato(array $piantina, array $stati_prentazione){
-        /*echo "<pre>";
-        print_r($stati_prentazione);
-        echo "</pre>";*/
-        
+    /**
+     * Ripristina gli stati della piantina per tutti quei ticket prenotati e non
+     * rimossi.
+     * 
+     * @param array $piantina           Piantina dello spettacolo
+     * @param array $stati_prentazione  Array contenente gli stati da ripristinare
+     *                                  nella piantina.
+     * @return array Piantina con gli stati ripristinati
+     */
+    private static function restoreStato(array $piantina, array $stati_prentazione):array{
         foreach ($stati_prentazione as $k_prenotazione => $v_prenotazione){
-            
-            echo "<pre>";
-            print_r($v_prenotazione);
-            echo "</pre>";
-            
             foreach ($v_prenotazione as $file_palchi){
                 if($piantina[$k_prenotazione]['file']){
                     foreach($file_palchi as $fila => $posti){
                         foreach ($posti as $posto => $stato){
-                            //echo $piantina[$k_prenotazione]['file'][$fila]['posti'][$posto];
                             $piantina[$k_prenotazione]['file'][$fila]['posti'][$posto]['stato'] = $stato;
-                            
-                            /*echo "<pre>";
-                            print_r($piantina[$k_prenotazione]['file'][$fila]['posti'][$posto]);
-                            echo "</pre>";*/
                         }
                     }
                 }
@@ -573,5 +568,4 @@ class Postazioni{
         
         return $piantina;
     }
-    
 }
