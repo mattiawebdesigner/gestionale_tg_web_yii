@@ -11,6 +11,7 @@ class Postazioni{
     private $posti;
     private $conn;
     private const TIPO_SEDUTA_DEFAULT = "poltrona";
+    public static $result_update_piantina = null;
     
     
     /***=========================================
@@ -183,7 +184,7 @@ class Postazioni{
                 //Ciclo posti 
                 foreach($v_fila2 as $k_pos => $v_pos) : 
                     //Ciclo sulle posizioni 
-                        foreach($v_pos as $k_posizione => $v_posizione) : 
+                        foreach($v_pos as $k_posizione => $v_posizione) :                             
                            $x = $v_posizione->x;
                            $y = $v_posizione->y;
                            $tipo_seduta = $v_posizione->tipo_seduta ?? self::TIPO_SEDUTA_DEFAULT;
@@ -234,7 +235,7 @@ class Postazioni{
     * @param array $dati Dati dell'utente che sta prenotando
     * @param int $id_spettacolo ID dello spettacolo da prenotare
     */
-    public function prenotazione($prenotazione_posti, $dati, $id_spettacolo) {
+    public function prenotazione($prenotazione_posti, $prenotazione_esistente, $dati, $id_spettacolo) {
         /*$prenotazione_posti = $_POST['prenotazione'];
         $dati = $_POST['dati'];
         $id_spettacolo = $dati['spettacolo_id'];*/
@@ -277,7 +278,9 @@ class Postazioni{
             }
         }
         
-        $prenotazione_posti_utente = json_encode($prenotazione_posti_utente);
+        
+        $prenotazione_posti_utente = !is_null($prenotazione_esistente)?json_encode(array_merge_recursive($prenotazione_esistente, $prenotazione_posti_utente)): json_encode($prenotazione_posti_utente);
+        
         
         //$prenotazione_posti_utente = json_encode($prenotazione_posti);//Verificare questo errore e sistemare di conseguenza la lettura e il resto
         $piantina_json      = json_encode($this->posti);
@@ -289,95 +292,8 @@ class Postazioni{
             'piantina'                  => $piantina_json,
             'prenotazione_posti_utente' => $prenotazione_posti_utente
         ];
-        
-        /*$update_posti_piantina_q = <<<UPDATE_Q
-UPDATE {$tbl_teatro_spettacolo} SET piantina = '{$piantina_json}' WHERE id = {$id_spettacolo};
-UPDATE_Q;
-
-            $nome           = addslashes($dati['nome']);
-            $cognome        = addslashes($dati['cognome']);
-            $email          = $dati['email'];
-            $cellulare      = $dati['cellulare'];
-            $spettacolo_id  = $dati['spettacolo_id'];
-            echo $insert_prenotazione_q = <<<Q
-INSERT INTO {$tbl_prenotazione} (id, nome, cognome, email, cellulare, prenotazione, id_spettacolo)
-VALUES (NULL, '{$nome}', '{$cognome}', '{$email}', '{$cellulare}', '{$prenotazione_posti_utente}', {$spettacolo_id});
-Q;
-
-        return $this->conn->query($update_posti_piantina_q) && $this->conn->query($insert_prenotazione_q);
-        */
     }
     
-    /**
-     * Restituisce tutte le prenotazioni di uno spettacolo
-     * 
-     * @param int $spettacolo_id Codice dello spettacolo
-     */
-    public function getPrenotazioni($spettacolo_id){
-        $tbl_prenotazioni = self::DB_TABLE_PRENOTAZIONE;
-        $tbl_spettacolo   = self::DB_TABLE_SPETTACOLO;
-        $prenotazioni_q = <<<Q
-SELECT tp.id as id_prenotazione, tp.*, ts.* 
-FROM {$tbl_prenotazioni} tp
-INNER JOIN {$tbl_spettacolo} ts ON ts.id = tp.id_spettacolo
-WHERE ts .id = {$spettacolo_id} 
--- GROUP By tp.email
-Q;
-
-        $out_prenotazioni = array();
-        if(($res = $this->conn->query($prenotazioni_q))){
-            $i = 0;
-            while(($row = $res->fetch_object())){
-                $out_prenotazioni['spettacolo']['nome']           = $row->spettacolo;
-                //$out_prenotazioni['prenotazione'][$row->email]['id_prenotazione']         = $row->id_prenotazione;
-                $out_prenotazioni['prenotazione'][$row->email]['nome']                    = $row->nome;
-                $out_prenotazioni['prenotazione'][$row->email]['cognome']                 = $row->cognome;
-                $out_prenotazioni['prenotazione'][$row->email]['cellulare']               = $row->cellulare;
-                $out_prenotazioni['prenotazione'][$row->email]['email']                   = $row->email;
-                
-                //Query per selezionare le prenotazioni
-                $out_prenotazioni['prenotazione'][$row->email]['posti'][$i] = 
-                    $this->decodePrenotazione(
-                            $row->prenotazione, 
-                            $row->id_prenotazione,
-                            $out_prenotazioni['prenotazione'][$row->email]['posti'] ?? null
-                );
-                $out_prenotazioni['prenotazione'][$row->email]['posti'][$i]['id_prenotazione'] = $row->id_prenotazione;
-        
-                $i ++;
-            }
-        }
-        
-        
-        return $out_prenotazioni;
-    }
-    
-    /**
-     * Trova tutte le prenotazioni corrispondenti ad un unico ID
-     * (le prenotazioni effettuate contestualmente)
-     * 
-     * @param int $id_prenotazione
-     */
-    public function getPrenotazioneById($id_prenotazione){
-        $tbl_prenotazioni = self::DB_TABLE_PRENOTAZIONE;
-        
-        $query = <<<PRENOTAZIONE
-SELECT * FROM {$tbl_prenotazioni} WHERE id = {$id_prenotazione};
-PRENOTAZIONE;
-
-        $prenotazione = [];
-        if(($res = $this->conn->query($query))){
-            while(($row = $res->fetch_object())){
-                $prenotazione['nome']           = $row->nome;
-                $prenotazione['cognome']        = $row->cognome;
-                $prenotazione['email']          = $row->email;
-                $prenotazione['cellulare']      = $row->cellulare;
-                $prenotazione['prenotazione']   = json_decode($row->prenotazione);
-            }
-        }
-        
-        return $prenotazione;
-    }
     
     /**
      * Restituisce la piantina di un dato spettacolo
@@ -388,165 +304,7 @@ PRENOTAZIONE;
         return $this->getSpettacolo($spettacolo_id)->piantina;
     }
     
-    /**
-     * Restituisce uno spettacolo
-     * 
-     * @param int $spettacolo_id Codice dello spettacolo
-     */
-    public function getSpettacolo($spettacolo_id){
-        $tbl_spettacolo = self::DB_TABLE_SPETTACOLO;
-        $query = <<<QUERY
-SELECT * FROM {$tbl_spettacolo} WHERE id = {$spettacolo_id};
-QUERY;
-
-        if(($res = $this->conn->query($query))){
-            return $res->fetch_object();
-        }
-        
-        return null;
-    }
     
-    /**
-     * Cancella una prenotazione
-     * 
-     * @param int $id_prenotazione Codice della prenotazione
-     * @return boolean true se la prenotazione è stata cancellata, false altrimenti
-     */
-    public function deletePrenotazione($id_prenotazione, $dati_ricerca) {
-        $piantina = json_decode($this->getPiantinaSpettacolo($dati_ricerca['id_spettacolo']));
-        
-        $prenotazione = $this->getPrenotazioneById($id_prenotazione);
-        
-        //Recupera la prenotazione specifica
-        //da cancellare, in base ai dati del tipo
-        //(platea, ordini, ecc), al palco (se presente)
-        //e alla fila
-        $prenotazione_specifica = [];
-        
-        foreach($prenotazione['prenotazione'] as $k_prenotazione => $v_prenotazione){            
-            //Ciclo in base al tipo e rimuovo i riscontri
-            foreach ($v_prenotazione->nome as $k_nome => $v_nome){
-                if($v_nome === $dati_ricerca['tipo']){
-                    if($dati_ricerca['fila'] == $v_prenotazione->fila[$k_nome]){
-                        if(isset($dati_ricerca['palco']) && !empty($dati_ricerca['palco'])){
-                            if($dati_ricerca['palco'] == $v_prenotazione->palco[$k_nome] && $dati_ricerca['fila'] == $v_prenotazione->fila[$k_nome]){
-                               unset($v_prenotazione->nome[$k_nome]);
-                               unset($v_prenotazione->palco[$k_nome]);
-                               unset($v_prenotazione->fila[$k_nome]);
-                               unset($v_prenotazione->posto[$k_nome]);
-                            }
-                        }else{///platea
-                           unset($v_prenotazione->nome[$k_nome]);
-                           unset($v_prenotazione->fila[$k_nome]);
-                           unset($v_prenotazione->posto[$k_nome]);
-                        }
-                    }
-                }
-            }
-            
-        }
-        
-        $tbl_prenotazione      = self::DB_TABLE_PRENOTAZIONE;
-        
-        $prenotazione_aggiornata_json = [];
-        foreach ($prenotazione['prenotazione'] as $k => $v){
-            foreach ($v->nome as $k1 => $v1){
-                if(isset($dati_ricerca['palco'])){
-                    $prenotazione_aggiornata_json[$k]['nome'][] = $k;
-                    $prenotazione_aggiornata_json[$k]['palco'][] = $v->palco[$k1];
-                    $prenotazione_aggiornata_json[$k]['fila'][] = $v->fila[$k1];
-                    $prenotazione_aggiornata_json[$k]['posto'][] = $v->posto[$k1];
-                }else{
-                    $prenotazione_aggiornata_json[$k]['nome'][] = $k;
-                    if(isset($v->palco)){
-                       $prenotazione_aggiornata_json[$k]['palco'][] = $v->palco[$k1];
-                    }
-                    $prenotazione_aggiornata_json[$k]['fila'][] = $v->fila[$k1];
-                    $prenotazione_aggiornata_json[$k]['posto'][] = $v->posto[$k1];
-                }
-            }
-        }
-        $prenotazione_aggiornata_json = json_encode($prenotazione_aggiornata_json);
-        
-        $query = <<<UPDATE_Q
-UPDATE {$tbl_prenotazione} SET prenotazione = '{$prenotazione_aggiornata_json}' WHERE id = {$id_prenotazione};
-UPDATE_Q;
-        
-        //Controllo se il campo prenotazione è vuoto,
-        //in quel caso elimino l'intero record
-        //return $this->conn->query($query);      
-        $q_prenotazione = "SELECT * FROM ".$tbl_prenotazione." WHERE id = {$id_prenotazione}";
-        if( ($res = $this->conn->query($query)) ){
-            if( ( $res_sel = $this->conn->query($q_prenotazione))){
-                while(($row=$res_sel->fetch_object())){
-                    $jd = json_decode($row->prenotazione);
-                    
-                    $query_delete = "DELETE FROM ".self::DB_TABLE_PRENOTAZIONE." WHERE id = ".$id_prenotazione;
-                    $esiste_jd = false;
-                    foreach ($jd as $k => $v){
-                        $esiste_jd = true;
-                        //echo $v->nome." == null || ".$v->nome." == || ".sizeof($v->nome)." == 0";
-                        //echo sizeof($v->nome)." == 0";
-                        if(is_countable($v->nome) &&    sizeof($v->nome) == 0) {
-                            $this->conn->query($query_delete);
-                        }
-                    }
-                    
-                    if(!$esiste_jd){
-                        $this->conn->query($query_delete);
-                    }
-                    
-                }
-            }
-            
-            
-            //Aggiorna la piantina col nuovo stato (free)
-            foreach ($piantina as $k_p => $v_p){
-                if($dati_ricerca['tipo'] === "platea"){
-                    foreach ($v_p->file as $k_fila => $v_fila){
-                        foreach ($v_fila->posti as $k_posto => $v_posto){
-                            if($dati_ricerca['fila'] == $k_fila && $this->controllaStato($v_posto->stato??"")){
-                                unset($v_posto->stato);
-                            }
-                        }
-                    }
-                } else {
-                    foreach ($v_p->palco as $k_palco => $v_palco){
-                        foreach ($v_palco->fila as $k_fila => $v_fila){
-                            foreach ($v_fila->posti as $k_posto => $v_posto){
-                                if($dati_ricerca['palco'] == $k_palco && $dati_ricerca['fila'] == $k_fila && $this->controllaStato($v_posto->stato??"")){
-                                   unset($v_posto->stato);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            
-            $this->aggiornaPiantinaSpettacolo($dati_ricerca['id_spettacolo'], json_encode($piantina));
-            //Fine aggiornamento stato
-            
-            return true;
-        }
-        
-        return false;
-    }
-    
-    /**
-     * 
-     * Aggiorna i posti sulla piantina dello spettacolo
-     * 
-     * @param type $id_spettacolo
-     * @return boolean true se la piantina viene aggiornata, false altrimenti
-     */
-    private function aggiornaPiantinaSpettacolo($id_spettacolo, $piantina_modificata) {
-        $tbl_spettacolo = self::DB_TABLE_SPETTACOLO;
-        $query = <<<QUERY
-UPDATE {$tbl_spettacolo} SET piantina = '{$piantina_modificata}' WHERE id = {$id_spettacolo};
-QUERY;
-
-        return $this->conn->query($query);
-    }
     
     /**
      * Verifica se lo stato è valido
@@ -633,4 +391,239 @@ QUERY;
         return $out;
     }
     
+    /**
+     * Aggiorna la piantina rimuovendo le prenotazioni selezionate.
+     * 
+     * @param array $prenotazione
+     * @param array $piantina
+     * @return boolean|array Restituisce false se la prenotazione non è corretta.
+     *                       Restituisce l'array della piantina modificata,
+     *                          se i dati della prenotazione passati sono corretti.
+     */
+    public static function updatePiantina(array $prenotazione, array $piantina){
+        //non è una prenotazione valida
+        if(!is_array($prenotazione)){return false;}
+        
+        foreach ($piantina as $k_piantina => $v_piantina){
+            if(strtolower($k_piantina) === "platea"){
+                $piantina = self::updatePrenotazionePlatea($v_piantina, $prenotazione, $piantina);
+            }else{                
+                //echo "1) updatePiantina()<br />";
+                $piantina = self::updatePrenotazioneOrdini($v_piantina, $prenotazione, $piantina, $k_piantina);
+            }
+        }
+        
+        return $piantina;
+    }
+    
+    /**
+     * Aggiorna la piantina delle prenotazioni per gli ordini.
+     * 
+     * @param array $ordine          Dati dell'ordine
+     * @param array $prenotazione    Dati della prenotazione
+     * @param array $piantina        Piantina da aggiornare
+     * @return array Piantina aggiornata
+     */
+    private static function updatePrenotazioneOrdini(array $ordine, array $prenotazione, array $piantina, string $tipo){
+        $stati_posti_prenotati = [];
+        foreach ($ordine['palco'] as $palco => $file){
+            //echo "2) updatePrenotazioneOrdini<br />";
+            if(isset($file['fila'])){//Per palchi numerati
+                //echo "2.1) Palco numerato => <b>$palco</b><br />";
+                
+                $tmp = self::updatePosti($file['fila'], null, $prenotazione, $piantina, $tipo, $palco);
+                
+                if(sizeof($tmp) > 0){
+                    $stati_posti_prenotati[$tipo][] = $tmp['stato_posti_prenotati'];
+                    $piantina                          = $tmp['piantina'];
+                }
+            }else{//Per palchi non numerati
+                //echo "2.1) Palco non numerato => <b>$palco</b><br />";
+            }
+            
+            $piantina = self::restoreStato($piantina, $stati_posti_prenotati);
+        }
+        
+        return $piantina;
+    }
+    
+    /**
+     * Aggiorna la piantina delle prenotazioni per la platea
+     * 
+     * @param array $platea          Dati della platea
+     * @param array $prenotazione    Dati della prenotazione
+     * @param array $piantina        Piantina da aggiornare
+     * @return array Piantina aggiornata
+     */
+    private static function updatePrenotazionePlatea(array $platea, array $prenotazione, array $piantina){
+        $stati_posti_prenotati = [];
+        foreach($platea['file'] as $fila => $a_posti_fila){            
+            $tmp = self::updatePosti($a_posti_fila, $fila, $prenotazione, $piantina);
+            if(sizeof($tmp) > 0){
+                $stati_posti_prenotati['platea'][] = $tmp['stato_posti_prenotati'];
+                $piantina                          = $tmp['piantina'];
+            }
+        }
+        
+        $piantina = self::restoreStato($piantina, $stati_posti_prenotati);
+        
+        echo "<pre>";
+        print_r($piantina);
+        echo "</pre>";
+        
+        return $piantina;
+    }
+    
+    /**
+     * Aggiorna i posti
+     * 
+     * @param array $posti           Array dei posti
+     * @param string|int $fila       Fila a cui si riferiscono i posti. 
+     *                               Vale null per gli ordini.
+     * @param array $prenotazione    Dati della prenotazione
+     * @param array $piantina        Piantina da aggiornare
+     * @param string $tipo           Tipo da aggiornare (platea, I Ordine, ...)
+     * @param int $palco             Numero del palco (non usato nella platea)
+     * @return array Piantina aggiornata
+     */
+    private static function updatePosti(array $posti, $fila, array $prenotazione, array $piantina, $tipo = "platea", $palco = null){
+        $res = [];
+        
+        if($fila <> null){//Platea
+            foreach ($posti['posti'] as $posto => $dati_posto){
+                if(isset($dati_posto['stato'])){
+                    $res = self::deleteStato($prenotazione, $fila, $posto, $piantina);
+                }
+            }
+        }else{//Ordini
+            foreach ($posti as $fila => $v_posti){                
+                foreach ($v_posti['posti'] as $posto => $dati_posto){
+                    if(isset($dati_posto['stato'])){
+                        //echo "3) updatePosti() <b>$tipo</b> [con stato prenotato]<br />";
+                        
+                        $res = self::deleteStato($prenotazione, $fila, $posto, $piantina, $tipo, $palco);
+                    }
+                }
+            } 
+       }
+        
+        /*echo "<pre>";
+        print_r($res);
+        echo "</pre>";*/
+        
+        return $res;
+    }
+    
+    /**
+     * Cancella lo stato per le prenotazioni cancellate.
+     * Viene ripristinata la piantina liberando i posti.
+     * 
+     * @param array $prenotazione    Dati della prenotazione
+     * @param string|int $fila       Fila a cui si riferiscono i posti
+     * @param int $posto             Posto della fila
+     * @param array $piantina        Dati della prenotazione
+     * @param mixed $tipo           Indica il tipo della piantina (platea, I Ordine, ecc.)
+     * @param mixed $palco             Numero del palco (non usato nella platea)
+     * @return type
+     */
+    private static function deleteStato(array $prenotazione, $fila, $posto, array $piantina, $tipo = "platea", $palco = null){        
+        //Salvo gli stati dei posti prenotati
+        $stati_posti_prenotati = [];        
+        if(isset($prenotazione[$tipo]['file'][$fila]['posti'])){
+            foreach ($prenotazione[$tipo]['file'][$fila]['posti'] as $k_posto => $v_posto){
+                if(isset($piantina[$tipo]['file'][$fila]['posti'][$posto]['stato'])){
+                    $stati_posti_prenotati[$tipo][$fila][$v_posto] = $piantina[$tipo]['file'][$fila]['posti'][$posto]['stato'];
+                }
+            }
+        }else if(isset ($piantina[$tipo]['palco'][$palco]['fila'][$fila]['posti'][$posto]['stato'])){//Ordini
+            //echo "4) deleteStato() <br />";
+            $stati_posti_prenotati[$tipo][][$palco][$fila][$posto] = $piantina[$tipo]['palco'][$palco]['fila'][$fila]['posti'][$posto]['stato'];
+        }
+        
+        //Rimuovo tutti gli stati
+        if(strtolower($tipo) == "platea"){
+            foreach ($piantina[$tipo]['file'][$fila]['posti'] as $k_posto => $v_posto){
+                unset($piantina[$tipo]['file'][$fila]['posti'][$k_posto]['stato']);
+            }
+        }else{//Ordini
+            foreach ($piantina[$tipo]['palco'][$palco]['fila'][$fila]['posti'] as $k_posto => $v_posto){
+                //echo "$tipo => Palco $palco Fila $fila Posto $k_posto<br />";
+                
+                unset($piantina[$tipo]['palco'][$palco]['fila'][$fila]['posti'][$k_posto]['stato']);
+            }
+        }
+        
+        
+        return [
+            'stato_posti_prenotati' => $stati_posti_prenotati,
+            'piantina'             => $piantina,
+        ];
+    }
+    
+    /**
+     * Ripristina gli stati della piantina per tutti quei ticket prenotati e non
+     * rimossi.
+     * 
+     * @param array $piantina           Piantina dello spettacolo
+     * @param array $stati_prentazione  Array contenente gli stati da ripristinare
+     *                                  nella piantina.
+     * @return array Piantina con gli stati ripristinati
+     */
+    private static function restoreStato(array $piantina, array $stati_prentazione):array{
+        //echo "5) restoreStato()<br />";
+        
+        /*echo "<pre>";
+        print_r($stati_prentazione);
+        echo "</pre>";*/
+
+        foreach ($stati_prentazione as $k_prenotazione => $v_prenotazione){
+            //echo $k_prenotazione;
+            foreach ($v_prenotazione as $file_palchi){                
+                if(isset($piantina[$k_prenotazione]['file'])){
+                    foreach($file_palchi as $fila => $posti){
+                        foreach ($posti as $posto => $stato){
+                            $piantina[$k_prenotazione]['file'][$fila]['posti'][$posto]['stato'] = $stato;
+                        }
+                    }
+                } else {
+                    /*echo "<pre>";
+                    print_r($file_palchi);
+                    echo "</pre>";*/
+                    
+                    //[I Ordine]['palco'][$palco]['fila'][$fila]['posti'][$posto]['stato']
+                    
+                    foreach ($file_palchi[$k_prenotazione] as $palchi){
+                        foreach ($palchi as $palco => $file){
+                            foreach ($file as $fila => $posti){
+                                foreach ($posti as $posto => $stato){
+                                    //echo " ==> ", $palco, " - ", $fila, " - ", $posto, "<br />";
+                                    //echo "$k_prenotazione => Palco $palco Fila $fila Posto $posto<br />";
+                                    
+                                    $piantina[$k_prenotazione]['palco'][$palco]['fila'][$fila]['posti'][$posto]['stato'] = $stato;
+                                    
+                                    //echo var_dump($piantina[$k_prenotazione]['palco'][$palco]['fila'][$fila]['posti'][$posto]['stato']);
+                                    /*echo "<pre>";
+                                    print_r($piantina[$k_prenotazione]['palco'][$palco]['fila'][$fila]['posti'][$posto]);
+                                    echo "</pre>";*/
+                                    
+                                    /*echo "<pre>";
+                                    print_r($piantina[$k_prenotazione]['palco'][$palco]['fila'][$fila]['posti'][$posto]);
+                                    echo "</pre>";*/
+                                    
+                                    
+                                    
+                                }
+                            }
+                        }
+                    }
+                    
+                    
+                    
+                }
+            }
+        }
+        
+        
+        return $piantina;
+    }
 }
