@@ -53,6 +53,8 @@ main .container{
 .btn-link a{color: var(--color-blue);}
 .btn-outline-secondary{  }
 
+.color-tg-1{color: var(--color-link-tg1);}
+
 .actions{
     margin-bottom: 10px;
 }

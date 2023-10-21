@@ -39,4 +39,9 @@ return ['label' => 'Segreteria', 'url' => '#', 'items' => [
             ['label' => Yii::t('app', 'Votazioni')],
             //['label' => Yii::t('app', 'Genera elenco soci aventi diritto al voto'), 'url' => ['/soci/elenco-votazioni']],
             ['label' => Yii::t('app', 'Gestione delle votazioni'), 'url' => ['/votazione/gestione-votazioni']],
+    
+            //Consiglio direttivo
+            ['label' => Yii::t('app', 'Consiglio Direttivo')],
+            ['label' => Yii::t('app', 'Componenti consiglio direttivo'), 'url' => ['/direttivo/index']],
+            '<hr />',            
         ]];
