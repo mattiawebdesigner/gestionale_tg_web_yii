@@ -165,12 +165,6 @@ class SociController extends Controller
                 
                 return $this->redirect(['view', 'id' => $model->id, "anno" => $anno,]);
             }
-            
-            echo "<pre>";
-            print_r($firma);
-            echo "</pre>";
-            
-            die;
         }
         
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
@@ -180,14 +174,15 @@ class SociController extends Controller
         }
 
         return $this->render('update', [
-            'model'         => $model,
-            'annoSociale'   => $annoSociale,
-            'socioAnnoSociale'   => new SocioAnnoSociale(),
+            'model'                 => $model,
+            'annoSociale'           => $annoSociale,
+            'anno'                  => $anno,
+            'socioAnnoSociale'      => new SocioAnnoSociale(),
             //Validità del socio 
             //(quota pagata => si, no altrimenti)
-            'validita'      => $socio_anno_sociale->validita,
+            'validita'              => $socio_anno_sociale->validita,
             //Firma del socio di cui si stanno visualizzando i dati
-            'firma' => $firma??false,
+            'firma'                 => $firma??false,
         ]);
     }
 
