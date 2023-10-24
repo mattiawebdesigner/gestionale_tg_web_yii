@@ -7,7 +7,7 @@ use yii\widgets\DetailView;
 /* @var $model backend\models\Soci */
 
 $this->title = $model->nome. " ". $model->cognome;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Socis'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Soci'), 'url' => ['all']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>
