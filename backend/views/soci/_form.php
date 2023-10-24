@@ -36,5 +36,24 @@ use yii\widgets\ActiveForm;
 
     <?php ActiveForm::end(); ?>
     
+    
+    <h3><?= Yii::t('app', 'Firma'); ?></h3>
+    
+    <?php if($firma) : ?>
+    <img style="max-width: 250px" src="<?= Yii::$app->params['site_protocol'].Yii::$app->params['backendWeb'].$firma->firma ?>" />
+    
+    <div>
+        <label><?= Yii::t('app', 'Modifica la firma'); ?></label>
+    </div>
+    <?php else: ?>
+    <label><?= Yii::t('app', 'Aggiungi la firma'); ?></label>
+    <?php endif; ?>
+    
+    <?php $form = ActiveForm::begin(); ?>
+        <?= $form->field($firma, 'firma')->fileInput()->label(false) ?>
+        <div class="form-group">
+            <?= Html::submitButton('<i class="fas fa-save"></i> '.Yii::t('app', 'Salva firma'), ['class' => 'btn btn-success']) ?>
+        </div>
+        <?php ActiveForm::end(); ?>
 
 </div>
