@@ -32,7 +32,22 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div>
                     <div><strong><?= Yii::t('app', 'Data di nomina') ?></strong></div>
                     <?= date('d/m/Y', strtotime($componente->data_di_nomina)) ?>
-                </div> 
+                </div>
+                
+                <div>
+                    <div><strong><?= Yii::t('app', 'Firma registrata') ?></strong></div>
+                    
+                    <?php
+                    //Recupero la firma del socio, se esiste
+                    $firma = backend\models\Firma::findOne(['socio' => $componente->socio]);
+                    if($firma): ?>
+                        <img style="max-width: 250px" src="<?= Yii::$app->params['site_protocol'].Yii::$app->params['backendWeb'].$firma->firma ?>" />
+                    <?php else: ?>
+                        <div class="alert alert-info">
+                            <?= Yii::t('app', 'Nessuna firma registrata') ?>
+                        </div>
+                    <?php endif; ?>
+                </div>
             </div>
         <?php endforeach; ?>
     </div>
