@@ -94,12 +94,14 @@ class SociController extends Controller
     public function actionView($id, $anno)
     {
         $socio = $this->findModel($id);
+        $firma = \backend\models\Firma::find()->where(['socio' => $id])->one();
         $years = \backend\models\SocioAnnoSociale::find()->where(['socio' => $id])->all();
         
         return $this->render('view', [
             'model' => $socio,
             'years' => $years,
             'anno'  => $anno,
+            'firma' => $firma??false,
         ]);
     }
 

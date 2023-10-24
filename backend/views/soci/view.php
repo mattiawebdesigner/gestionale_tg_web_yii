@@ -41,6 +41,12 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
     ]) ?>
     
+    <?php if($firma) : ?>
+        <h5><?= Yii::t('app', 'Firma registrata'); ?></h5>
+        
+        <img style="max-width: 250px" src="<?= Yii::$app->params['site_protocol'].Yii::$app->params['backendWeb'].$firma->firma ?>" />
+    <?php endif; ?>
+    
     <h5><?= Yii::t('app', 'Anni sociali') ?></h5>
     <ul>
         <?php foreach($years as $year): ?>
