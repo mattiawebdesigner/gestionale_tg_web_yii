@@ -179,7 +179,8 @@ TESTO])
     }
 
     /**
-     * Displays a single Verbali model for owner.
+     * Usato per la chiamata AJAX.
+     * Recupera le informazioni sui verbali da visualizzare
      * 
      * @param int $numero_protocollo Numero Protocollo
      * @return string
@@ -187,6 +188,7 @@ TESTO])
      */
     public function actionViewSocioVerbale($numero_protocollo){
         $allegati = Allegati::find()->where(['id_verbale' => $numero_protocollo])->all();
+        
         
         return $this->render('viewSocioVerbale', [
             'model' => $this->findModel($numero_protocollo),
@@ -219,9 +221,14 @@ TESTO])
     {
         $model      = new Verbali();
         $allegati   = new Allegati();
+        $firme      = \backend\models\Soci::find()
+                ->joinWith('firma')
+                ->where('firma.socio = soci.id')
+                ->orderBy(['cognome' => SORT_ASC, 'nome' => SORT_ASC])
+                ->all();
         
         if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
+            if ($model->load($this->request->post()) && $model->save()) {                
                 //Upload files
                 $allegati->allegato = UploadedFile::getInstances($allegati, 'allegato');
                 
@@ -251,6 +258,7 @@ TESTO])
         return $this->render('create', [
             'model'     => $model,
             'allegati'  => $allegati,
+            'firme'     => $firme,
         ]);
     }
     
@@ -300,6 +308,12 @@ TESTO])
     {
         $model      = $this->findModel($numero_protocollo);
         $allegati = new Allegati();
+        $firme      = \backend\models\Soci::find()
+                ->joinWith('firma')
+                ->where('firma.socio = soci.id')
+                ->orderBy(['cognome' => SORT_ASC, 'nome' => SORT_ASC])
+                ->all();
+        
         //Allegati attuali del verbale
         $allegatiReal   = Allegati::find()->where(['id_verbale' => $numero_protocollo])->all();
 
@@ -349,9 +363,10 @@ TESTO])
         }
         
         return $this->render('update', [
-            'model' => $model,
-            'allegati' => $allegati,
-            'allegatiReal' => $allegatiReal,
+            'model'         => $model,
+            'allegati'      => $allegati,
+            'allegatiReal'  => $allegatiReal,
+            'firme'         => $firme,
         ]);
     }
 
@@ -383,7 +398,7 @@ TESTO])
      * @param int $numero_protocollo
      * @return kartik\mpdf\Pdf
      */
-    public function actionDownload($numero_protocollo, $destination = Pdf::DEST_DOWNLOAD){
+    public function actionDownload($numero_protocollo, $destination = Pdf::DEST_DOWNLOAD ){
         $model = $this->findModel($numero_protocollo);
         
         $out = TipoVerbali::find()->joinWith('verbalis')
@@ -528,6 +543,44 @@ TESTO])
      */
     public function actionContentVerbali($anno) {
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        
+       /* $firme      = \backend\models\Soci::find()
+                ->joinWith('firma')
+                ->where('firma.socio = soci.id')
+                ->orderBy(['cognome' => SORT_ASC, 'nome' => SORT_ASC])
+                ->all();*/
+        
+        /*echo "<pre>";
+        //print_r(Verbali::find()->where("data LIKE '".$anno."%'")->andWhere(['bozza' => 1])->all());
+        print_r(
+                Verbali::find()
+                    ->select([
+                        'firma_autografa' => \backend\models\Firma::find()
+                                                ->select('firma')
+                                                ->alias('f')
+                                                ->where('f.id = v.firma')
+                    ])
+                    ->alias('v')
+                    ->all()
+        );
+        
+        /*print_r(
+            (new \yii\db\Query())
+                ->select([
+                    'firma_autografa' => (
+                        (new \yii\db\Query())
+                        ->select('f.firma')
+                        ->from('firma f')
+                        ->where('f.id = v.firma')
+                    )->all()->id,
+                    'v.*'
+                ])
+                ->from('verbali v')
+                //->where("v.firma = f.id")
+                //->orWhere("v.")
+                ->all()
+        );
+        echo "</pre>";*/
         
         return Verbali::find()->where("data LIKE '".$anno."%'")->andWhere(['bozza' => 1])->all();
     }

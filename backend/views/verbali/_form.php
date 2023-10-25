@@ -80,8 +80,16 @@ use dosamigos\tinymce\TinyMce;
             <?= $form->field($model, 'ora_inizio')->textInput(['data-input' => 'ora_inizio','type' => 'time']) ?>
 
             <?= $form->field($model, 'ora_fine')->textInput(['data-input' => 'ora_fine','type' => 'time']) ?>
+            
+            <?= $form->field($model, 'firma')
+                     ->dropDownList(
+                         ArrayHelper::map($firme, 'id', function ($socio, $defaultValue) {
 
-            <?= $form->field($model, 'firma')->textInput(['data-input' => 'firma','maxlength' => true, 'placeholder' => Yii::t('app', 'Firma')])->label(false) ?>
+                            return $socio->cognome . ' ' . $socio->nome;
+
+                        }),
+            )->label(Yii::t('app', 'Nominativo di chi firma il verbale (verrà inserita la firma)')) ?>
+            
             
             <?= $form->field($model, 'tipo')
                      ->dropDownList(

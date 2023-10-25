@@ -80,4 +80,8 @@ class Verbali extends \yii\db\ActiveRecord
     {
         return $this->hasOne(TipoVerbali::className(), ['id' => 'tipo']);
     }
+    
+    public function getFirma(){
+        return $this->hasMany(Firma::className(), ['socio' => 'numero_protocollo']);
+    }
 }
