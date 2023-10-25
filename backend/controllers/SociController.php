@@ -157,16 +157,18 @@ class SociController extends Controller
         if ($this->request->isPost && $firma->load($this->request->post())) {
             $firmaUpload = UploadedFile::getInstance($firma, 'firma');
             
-            //Dati per l'upload della firma
-            $basePath = Yii::$app->params['firmaUploadPath'];
-            $fileName = time()."_". sha1($firmaUpload->baseName).".".$firmaUpload->extension;
-            $firma->firma = Yii::$app->params['firmaUploadFolder'].$fileName;
-            $firma->socio = $id;
-            
-            if($firma->save()){
-                $firmaUpload->saveAs($basePath.$fileName);
-                
-                return $this->redirect(['view', 'id' => $model->id, "anno" => $anno,]);
+            if(!is_null($firmaUpload)){
+                //Dati per l'upload della firma
+                $basePath = Yii::$app->params['firmaUploadPath'];
+                $fileName = time()."_". sha1($firmaUpload->baseName).".".$firmaUpload->extension;
+                $firma->firma = Yii::$app->params['firmaUploadFolder'].$fileName;
+                $firma->socio = $id;
+
+                if($firma->save()){
+                    $firmaUpload->saveAs($basePath.$fileName);
+
+                    return $this->redirect(['view', 'id' => $model->id, "anno" => $anno,]);
+                }
             }
         }
         
