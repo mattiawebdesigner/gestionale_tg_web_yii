@@ -12,10 +12,6 @@ return ['label' => 'Segreteria', 'url' => '#', 'items' => [
             ['label' => Yii::t('app', 'Nuovo Componente'), 'url' => ['/nominativo/create']],
             ['label' => Yii::t('app', 'I Componenti'), 'url' => ['/nominativo/index']],
             '<hr />',
-            
-            //Documentazione
-            /*['label' => Yii::t('app', 'Documentazione'), 'url' => ['/documentazione/index']],
-            '<hr />',*/
 
             //Rendiconti
             ['label' => Yii::t('app', 'Rendicontazioni')],
@@ -27,7 +23,12 @@ return ['label' => 'Segreteria', 'url' => '#', 'items' => [
             ['label' => Yii::t('app', 'Gestione dei verbali')],
             ['label' => Yii::t('app', 'Le Convocazioni'), 'url' => ['/convocazioni/index']],
             ['label' => Yii::t('app', 'I verbali'), 'url' => ['/verbali/index']],
-            '<hr />',            
+            '<hr />',
+            
+            //Documentazione
+            ['label' => Yii::t('app', 'Documenti')],
+            ['label' => Yii::t('app', 'Documentazione'), 'url' => ['/documentazione/index']],
+            '<hr />',
 
             //Email
             /*['label' => Yii::t('app', 'Gestione mail')],

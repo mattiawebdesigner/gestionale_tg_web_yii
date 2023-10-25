@@ -9,6 +9,7 @@ use Yii;
  *
  * @property int $id
  * @property string $categoria
+ * @property int $parent
  */
 class DocumentazioneCategorie extends \yii\db\ActiveRecord
 {
@@ -26,7 +27,7 @@ class DocumentazioneCategorie extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['categoria'], 'required'],
+            [['categoria', 'parent'], 'required'],
             [['categoria'], 'string', 'max' => 50],
         ];
     }
@@ -37,8 +38,9 @@ class DocumentazioneCategorie extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('app', 'ID'),
+            'id'        => Yii::t('app', 'ID'),
             'categoria' => Yii::t('app', 'Categoria'),
+            'parent'    => Yii::t('app', 'Parent'),
         ];
     }
 
