@@ -1,5 +1,5 @@
 
-<table style="width: 300px;margin: 0 auto;">
+<table style="width: 300px;margin: 0 auto;border: 0 !important;">
     <tr>
         <td style="border: 0 !important;text-align: center;">
             <p><strong><?= Yii::$app->params['ragione sociale'] ?></strong></p>

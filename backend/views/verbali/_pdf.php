@@ -27,7 +27,27 @@ $odg = explode("\n", $model->ordine_del_giorno);
         </td>
         
         <td style="width: 50%;text-align: right;">
-            <strong><?= Yii::t('app', 'FIRMA') ?></strong> <br /><?= $model->firma ?>
+            <strong><?= Yii::t('app', 'FIRMA') ?></strong> <br />
+            
+            <br />
+                
+            <?php 
+            //Visualizza la firma, se presente
+            if(is_numeric($model->firma)): ?>
+                <img
+                     style="width:50mm"
+                    src="<?= 
+                        Yii::$app->params['site_protocol'].Yii::$app->params['backendWeb'].
+                        (backend\models\Firma::findOne(['socio' => $model->firma]))->firma
+                    ?>" 
+                />
+            <?php else : ?>
+                <?php
+                //Altrimenti visualizza il nome del firmatario
+                //usato per i vecchi verbali, prima dell'aggiornamento
+                ?>
+                <?= $model->firma ?>
+            <?php endif; ?>
         </td>
     </tr>
 </table>

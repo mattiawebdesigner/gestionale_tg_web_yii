@@ -9,13 +9,9 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
-use kartik\mpdf\Pdf;
 use backend\models\AnnoSociale;
 use backend\models\SocioAnnoSociale;
-use backend\models\Attivita;
-use backend\models\AttivitaSearch;
-use backend\models\Nominativo;
-
+use yii\web\UploadedFile;
 /**
  * SociController implements the CRUD actions for Soci model.
  */
@@ -93,12 +89,14 @@ class SociController extends Controller
     public function actionView($id, $anno)
     {
         $socio = $this->findModel($id);
+        $firma = \backend\models\Firma::find()->where(['socio' => $id])->one();
         $years = \backend\models\SocioAnnoSociale::find()->where(['socio' => $id])->all();
         
         return $this->render('view', [
             'model' => $socio,
             'years' => $years,
             'anno'  => $anno,
+            'firma' => $firma??false,
         ]);
     }
 
@@ -149,11 +147,27 @@ class SociController extends Controller
         $socio_anno_sociale = SocioAnnoSociale::find()->where(['socio' => $id])
                                                       ->andWhere(['anno' => $anno])
                                                       ->one();
-        /*echo "<pre>";
-        print_r($socio_anno_sociale->load($this->request->post()));
-        print_r($socio_anno_sociale);
-        echo "</pre>";
-        die;*/
+        $firma = \backend\models\Firma::find()->where(['socio' => $id])->one();
+        if(is_null($firma)){
+            $firma = new \backend\models\Firma();
+        }
+        
+        if ($this->request->isPost && $firma->load($this->request->post())) {
+            $firmaUpload = UploadedFile::getInstance($firma, 'firma');
+            
+            //Dati per l'upload della firma
+            $basePath = Yii::$app->params['firmaUploadPath'];
+            $fileName = time()."_". sha1($firmaUpload->baseName).".".$firmaUpload->extension;
+            $firma->firma = Yii::$app->params['firmaUploadFolder'].$fileName;
+            $firma->socio = $id;
+            
+            if($firma->save()){
+                $firmaUpload->saveAs($basePath.$fileName);
+                
+                return $this->redirect(['view', 'id' => $model->id, "anno" => $anno,]);
+            }
+        }
+        
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
             $socio_anno_sociale->load($this->request->post()) && $socio_anno_sociale->save();
             
@@ -161,14 +175,15 @@ class SociController extends Controller
         }
 
         return $this->render('update', [
-            'model'         => $model,
-            'annoSociale'   => $annoSociale,
-            'socioAnnoSociale'   => new SocioAnnoSociale(),
-            /**
-             * Validità del socio 
-             * (quota pagata => si, no altrimenti)
-             */
-            'validita'      => $socio_anno_sociale->validita,
+            'model'                 => $model,
+            'annoSociale'           => $annoSociale,
+            'anno'                  => $anno,
+            'socioAnnoSociale'      => new SocioAnnoSociale(),
+            //Validità del socio 
+            //(quota pagata => si, no altrimenti)
+            'validita'              => $socio_anno_sociale->validita,
+            //Firma del socio di cui si stanno visualizzando i dati
+            'firma'                 => $firma??false,
         ]);
     }
 

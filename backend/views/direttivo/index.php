@@ -14,8 +14,8 @@ $this->params['breadcrumbs'][] = $this->title;
             <h3 class="color-tg-1">
                 <?= $componente->ruolo ?>
             </h3>
-            <div class="flex gap-1 m-3">
-                <div>
+            <div class="flex flex-flow-row-wrap gap-1 m-3">
+                <div class="col">
                     <?php $socio = backend\models\Soci::findOne($componente->socio); ?>
 
                     <div class="dati">
@@ -25,15 +25,31 @@ $this->params['breadcrumbs'][] = $this->title;
                         <div><strong><?= Yii::t('app', 'Indirizzo:');?></strong> <?= $socio->indirizzo ?></div>
                     </div>
                 </div>
-                <div>
+                <div class="col">
                     <div><strong><?= Yii::t('app', 'Verbale di nomina') ?></strong></div> 
                     <?= Html::a(Yii::t('app', 'Prot.:'.' '.$componente->verbale_di_nomina), ['verbali/view', 'numero_protocollo' => $componente->verbale_di_nomina], ['target' => '_blank']); ?>
                 </div>
-                <div>
+                <div class="col">
                     <div><strong><?= Yii::t('app', 'Data di nomina') ?></strong></div>
                     <?= date('d/m/Y', strtotime($componente->data_di_nomina)) ?>
-                </div> 
+                </div>
+                
+                <div class="col">
+                    <div><strong><?= Yii::t('app', 'Firma registrata') ?></strong></div>
+                    
+                    <?php
+                    //Recupero la firma del socio, se esiste
+                    $firma = backend\models\Firma::findOne(['socio' => $componente->socio]);
+                    if($firma): ?>
+                        <img style="max-width: 250px" src="<?= Yii::$app->params['site_protocol'].Yii::$app->params['backendWeb'].$firma->firma ?>" />
+                    <?php else: ?>
+                        <div class="alert alert-info">
+                            <?= Yii::t('app', 'Nessuna firma registrata') ?>
+                        </div>
+                    <?php endif; ?>
+                </div>
             </div>
+        </div>
         <?php endforeach; ?>
     </div>
     

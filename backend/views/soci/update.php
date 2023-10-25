@@ -9,7 +9,7 @@ $this->title = Yii::t('app', 'Aggiornamento: {name}', [
     'name' => $model->nome . " " .$model->cognome,
 ]);
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'I soci'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' =>  $model->nome . " " .$model->cognome, 'url' => ['view', 'id' => $model->id]];
+$this->params['breadcrumbs'][] = ['label' =>  $model->nome . " " .$model->cognome, 'url' => ['view', 'id' => $model->id, 'anno' => $anno]];
 $this->params['breadcrumbs'][] = Yii::t('app', 'Aggiornamento');
 ?>
 <div class="soci-update">
@@ -20,11 +20,11 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Aggiornamento');
         'model' => $model,
         'annoSociale' => $annoSociale,
         'socioAnnoSociale'   => $socioAnnoSociale,
-        /**
-         * Validità del socio 
-         * (quota pagata => si, no altrimenti)
-         */
+        //Validità del socio 
+        //(quota pagata => si, no altrimenti)
         'validita'      => $validita,
+        //Firma del socio di cui si stanno visualizzando i dati
+        'firma' => $firma??false,
     ]) ?>
 
 </div>

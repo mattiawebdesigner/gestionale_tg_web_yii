@@ -13,7 +13,6 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use kartik\mpdf\Pdf;
 use yii\web\UploadedFile;
-use yii\filters\AccessControl;
 
 /**
  * VerbaliController implements the CRUD actions for Verbali model.
@@ -34,27 +33,7 @@ class VerbaliController extends Controller
                         'delete' => ['POST'],
                     ],
                 ],
-                'access' => [
-                    'class' => AccessControl::className(),
-                    'rules' => [
-                        [
-                            'actions' => [],//All page
-                            'allow' => true,
-                            'roles' => ['Super User', 'segreteria'],
-                        ],
-                        [
-                            'actions' => ['index-socio','view-socio-convocazione', 'view-socio-verbale', 'content-convocazioni', 'content-verbali', 'download'],
-                            'allow' => true,
-                            'roles' => ['Socio'],
-                        ],
-                        [
-                            'actions' => ['content-convocazioni-app', 'view-socio-convocazione-app', 'content-verbali-app', 'view-socio-verbale-app'],
-                            'allow' => true,
-                        ]
-                    ],
-                ]
-            ],
-            
+            ]
         );
     }
 
@@ -96,7 +75,7 @@ class VerbaliController extends Controller
                 
                 if($delega->save()){                    
                     $delegante  = \backend\models\Utenti::find()->where(['id' => $delega->delegante])->one()->cognome.' '.\backend\models\Utenti::find()->where(['id' => $delega->delegante])->one()->nome;
-                    $delegato   = \backend\models\Utenti::find()->where(['id' => $delega->delegato])->one()->cognome.' '.\backend\models\Utenti::find()->where(['id' => $delega->delegato])->one()->nome;
+                    $delegato   = \backend\models\Utenti::find()->where(['id' => $delega->delegante])->one()->cognome.' '.\backend\models\Utenti::find()->where(['id' => $delega->delegato])->one()->nome;
                     
                     //Generazione PDF
                     $heading = $this->renderPartial('_pdf-heading');
@@ -160,7 +139,7 @@ CSS;
                     Yii::$app->mailer->compose(['html' =>'layouts/html'], ['content' => <<<TESTO
                         Io sottoscritto <b>{$delegante}</b> delego <b>{$delegato}</b> per la riunione che si terrà in data <b>{$data_delega}</b>
 TESTO])
-                    ->setFrom([Yii::$app->params['noreplyEmail'] => Yii::$app->params['noreplyEmailName']])
+                    ->setFrom(["noreply-crm@teatralmentegioia.it" => "Teatralmente Gioia"])
                     ->setTo([Yii::$app->user->identity->email, Yii::$app->params['email']])
                     ->setSubject(Yii::t('app', 'Modulo di delega').' | '. Yii::t('app', 'Gestionale Teatralmente Gioia'))
                     ->attach($allegato_name)
@@ -187,9 +166,24 @@ TESTO])
      */
     public function actionViewSocioVerbale($numero_protocollo){
         $allegati = Allegati::find()->where(['id_verbale' => $numero_protocollo])->all();
+        //Recupero le firme registrate per il verbali
+        //altrimenti per i verbali dove questa funzione non 
+        //era ancora prevista verrà inserita la firma inserita
+        //(e non l'immagine della firma)
+        $model = $this->findModel($numero_protocollo);
+        if(is_numeric($model->firma)){
+            $firma = \backend\models\Firma::findOne(['socio' => $model->firma]);
+            $model->firma = [
+                'firma_autografa' => $firma->firma
+            ];
+        }else{
+            $model->firma = [
+                'firma' => $model->firma
+            ];
+        }
         
         return $this->render('viewSocioVerbale', [
-            'model' => $this->findModel($numero_protocollo),
+            'model' => $model,
             'allegati'  => $allegati,
         ]);
     }
@@ -203,9 +197,24 @@ TESTO])
     public function actionView($numero_protocollo)
     {
         $allegati = Allegati::find()->where(['id_verbale' => $numero_protocollo])->all();
+        //Recupero le firme registrate per il verbali
+        //altrimenti per i verbali dove questa funzione non 
+        //era ancora prevista verrà inserita la firma inserita
+        //(e non l'immagine della firma)
+        $model = $this->findModel($numero_protocollo);
+        if(is_numeric($model->firma)){
+            $firma = \backend\models\Firma::findOne(['socio' => $model->firma]);
+            $model->firma = [
+                'firma_autografa' => $firma->firma
+            ];
+        }else{
+            $model->firma = [
+                'firma' => $model->firma
+            ];
+        }
         
         return $this->render('view', [
-            'model'     => $this->findModel($numero_protocollo),
+            'model'     => $model,
             'allegati'  => $allegati,
         ]);
     }
@@ -302,28 +311,11 @@ TESTO])
         $allegati = new Allegati();
         //Allegati attuali del verbale
         $allegatiReal   = Allegati::find()->where(['id_verbale' => $numero_protocollo])->all();
-
-        //Dati per la storicità delle modifiche
-        $verbalePrimaDellaModifica = new \backend\models\VerbaleStorico();
-        $verbalePrimaDellaModifica->bozza            = $model->bozza;
-        $verbalePrimaDellaModifica->contenuto        = $model->contenuto;
-        $verbalePrimaDellaModifica->data             = $model->data;
-        $verbalePrimaDellaModifica->data_inserimento = $model->data_inserimento;
-        $verbalePrimaDellaModifica->firma            = $model->firma;
-        $verbalePrimaDellaModifica->numero_protocollo= $model->numero_protocollo;
-        $verbalePrimaDellaModifica->oggetto          = $model->oggetto;
-        $verbalePrimaDellaModifica->ora_fine         = $model->ora_fine;
-        $verbalePrimaDellaModifica->ora_inizio       = $model->ora_inizio;
-        $verbalePrimaDellaModifica->ordine_del_giorno= $model->ordine_del_giorno;
-        $verbalePrimaDellaModifica->tipo             = $model->tipo;
-        $verbalePrimaDellaModifica->save();
-        
-        $versioneVerbale = new \backend\models\VersioneVerbale();
-        $versioneVerbale->numero_protocollo         = $model->numero_protocollo;
-        $versioneVerbale->numero_protocollo_storico = $verbalePrimaDellaModifica->id;
-        $versioneVerbale->data_modifica             = date("Y-m-d H:i:s");
-        $versioneVerbale->utente                    = Yii::$app->user->identity->id;
-        $versioneVerbale->save();
+        $firme      = \backend\models\Soci::find()
+                ->joinWith('firma')
+                ->where('firma.socio = soci.id')
+                ->orderBy(['cognome' => SORT_ASC, 'nome' => SORT_ASC])
+                ->all();
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
             $allegati->allegato = UploadedFile::getInstances($allegati, 'allegato');
@@ -337,7 +329,7 @@ TESTO])
                 $allegati->id_verbale = $model->numero_protocollo;
                 $allegati->nome_originale = $value->baseName;
                 $allegati->nome = $fileName;
-                
+
                 if($allegati->save()){
                     $value->saveAs($basePath.$fileName);
                 }else{
@@ -349,9 +341,10 @@ TESTO])
         }
         
         return $this->render('update', [
-            'model' => $model,
-            'allegati' => $allegati,
-            'allegatiReal' => $allegatiReal,
+            'model'         => $model,
+            'allegati'      => $allegati,
+            'allegatiReal'  => $allegatiReal,
+            'firme'         => $firme,
         ]);
     }
 
@@ -454,10 +447,8 @@ CSS;
         ]);
         
         foreach ($allegati as $allegato){
-            $a       = $allegato->allegato;
-            $explode = explode(".", $a);
-            $end = end($explode);
-            if($end === "pdf"){
+            
+            if(end(explode(".", $allegato->allegato) ) === "pdf"){
                 $pdf->addPdfAttachment(Yii::$app->params['backendWebInternalPath'].$allegato->allegato);
             }
         }
@@ -529,7 +520,25 @@ TESTO])
     public function actionContentVerbali($anno) {
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         
-        return Verbali::find()->where("data LIKE '".$anno."%'")->andWhere(['bozza' => 1])->all();
+        //Recupero le firme registrate per il verbali
+        //altrimenti per i verbali dove questa funzione non 
+        //era ancora prevista verrà inserita la firma inserita
+        //(e non l'immagine della firma)
+        $verbali = Verbali::find()->where("data LIKE '".$anno."%'")->andWhere(['bozza' => 1])->all();
+        foreach ($verbali as $verbale){
+            if(is_numeric($verbale->firma)){
+                $firma = \backend\models\Firma::findOne(['socio' => $verbale->firma]);
+                $verbale->firma = [
+                    'firma_autografa' => $firma->firma
+                ];
+            }else{
+                $verbale->firma = [
+                    'firma' => $verbale->firma
+                ];
+            }
+        }
+        
+        return $verbali;
     }
     
     /**
@@ -552,122 +561,6 @@ TESTO])
             'start' => 2004,
         ]);
     }
-    
-    /**
-     * Visualizza le modifiche apportate ai verbali
-     * indicando il socio che le ha apportate
-     * 
-     * Aggiunto in data 05/04/2023
-     * 
-     * @param string $numero_protocollo Numero di protocollo del verbale
-     */
-    function actionModifiche($numero_protocollo){
-        $versioneVerbale = \backend\models\VersioneVerbale::find()
-                        ->where(['numero_protocollo' => $numero_protocollo])
-                        ->all();
-        
-        $modifiche = array();
-        for($i = 0; $i<sizeof($versioneVerbale); $i ++){
-            /*$verbaleStorico[$i] = \backend\models\VerbaleStorico::find()
-                            ->where(['id' => $versioneVerbale[$i]->numero_protocollo_storico])
-                            ->all();*/
-            $modifiche[$i] = new \stdClass();
-            
-            //Dati sulla modifica del verbale
-            $modifiche[$i]->verbaleStorico = \backend\models\VerbaleStorico::find()
-                            ->where(['id' => $versioneVerbale[$i]->numero_protocollo_storico])
-                            ->one();
-            //Dati sulla versione del verbale
-            $modifiche[$i]->versioneVerbale = new \stdClass();
-            $modifiche[$i]->versioneVerbale->numero_protocollo = $numero_protocollo;
-            $modifiche[$i]->versioneVerbale->numero_protocollo_storico = $versioneVerbale[$i]->numero_protocollo_storico;
-            $modifiche[$i]->versioneVerbale->data_modifica = $versioneVerbale[$i]->data_modifica;
-            $modifiche[$i]->versioneVerbale->utente = \backend\models\Utenti::findOne( $versioneVerbale[$i]->utente);
-        }
-        
-        
-        //$modifiche = $verbaleStorico;
-        
-        /*echo "<pre>";
-        //print_r($versioneVerbale);
-        print_r($modifiche);
-        echo "</pre>";
-        return;*/
-        
-        return $this->render("modifiche", [
-            'numero_protocollo' => $numero_protocollo,
-            'modifiche'         => $modifiche,
-        ]);
-    }
-    
-    ///////////// APP
-    
-    /**
-     * Restituisce le convocazioni di un anno particolare
-     * Utilizzato per l'APP Android iOS
-     * 
-     * @param int $anno
-     * @return Verbali
-     */
-    public function actionContentConvocazioniApp($anno) {
-        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        
-        return Convocazioni::find()->where("data LIKE '".$anno."%'")->andWhere(['bozza' => 1])->all();
-    }
-    
-    /**
-     * Usato per l'APP
-     * 
-     * Recupera i dati della convocazione
-     * 
-     * @param type $numero_protocollo
-     * @return type
-     */
-    public function actionViewSocioConvocazioneApp($numero_protocollo){
-        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        
-        $model = Convocazioni::findOne(['numero_protocollo' => $numero_protocollo]);
-        
-        
-        return [$model];
-    }
-    
-    /**
-     * Usato per l'APP
-     * 
-     * Recupera tutti i verbali di un anno
-     * 
-     * @param type $anno
-     * @return type
-     */
-    public function actionContentVerbaliApp($anno) {
-        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        
-        return Verbali::find()->where("data LIKE '".$anno."%'")->andWhere(['bozza' => 1])->all();
-    }
-
-    /**
-     * Usato per l'APP
-     * 
-     * Recupera i dati del verbale
-     * 
-     * @param int $numero_protocollo Numero Protocollo
-     * @return string
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionViewSocioVerbaleApp($numero_protocollo){
-        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        
-        /*$allegati = Allegati::find()->where(['id_verbale' => $numero_protocollo])->all();
-        
-        return $this->render('viewSocioVerbale', [
-            'model' => ,
-            'allegati'  => $allegati,
-        ]);*/
-        
-        return [$this->findModel($numero_protocollo)];
-    }
-
     
     /**
      * Finds the Verbali model based on its primary key value.

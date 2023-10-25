@@ -35,7 +35,25 @@ $this->params['breadcrumbs'][] = $this->title;
     <h5><i class="fas fa-calendar"></i> <?= $model->data ?></h5>
     <h5><i class="fas fa-clock"></i> <?= $model->ora_inizio ?></h5>
     <h5><i class="fas fa-calendar-times"></i> <?= $model->ora_fine ?></h5>
-    <h5><i class="fas fa-signature"></i> <?= $model->firma ?></h5>
+    <h5><i class="fas fa-signature"></i> 
+        <?php 
+        //Visualizza la firma, se presente
+        if(is_numeric($model->firma)): ?>
+            <img 
+                style="max-width: 250px" 
+                src="<?= 
+                    Yii::$app->params['site_protocol'].Yii::$app->params['backendWeb'].
+                    (backend\models\Firma::findOne(['socio' => $model->firma]))->firma
+                ?>" 
+            />
+        <?php else : ?>
+            <?php
+            //Altrimenti visualizza il nome del firmatario
+            //usato per i vecchi verbali, prima dell'aggiornamento
+            ?>
+            <?= $model->firma ?>
+        <?php endif; ?>
+    </h5>
 
     <p></p>
     

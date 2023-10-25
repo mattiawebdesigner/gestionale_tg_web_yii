@@ -7,7 +7,7 @@ use yii\widgets\DetailView;
 /* @var $model backend\models\Soci */
 
 $this->title = $model->nome. " ". $model->cognome;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Socis'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Soci'), 'url' => ['all']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>
@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('<i class="fas fa-table"></i> ', ['index'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('<i class="fas fa-table"></i> ', ['all'], ['class' => 'btn btn-success']) ?>
         <!--<?= Html::a('<i class="fas fa-user-plus"></i> ', ['anno-sociale/index'], ['class' => 'btn btn-info']) ?>-->
         <?= Html::a('<i class="fas fa-pen"></i> '.Yii::t('app', 'Update'), ['update', 'id' => $model->id, 'anno'=>$anno], ['class' => 'btn btn-primary']) ?>
         <?= Html::a('<i class="fas fa-trash"></i> '.Yii::t('app', 'Delete'), ['delete', 'id' => $model->id], [
@@ -40,6 +40,12 @@ $this->params['breadcrumbs'][] = $this->title;
             'data_di_nascita',
         ],
     ]) ?>
+    
+    <?php if($firma) : ?>
+        <h5><?= Yii::t('app', 'Firma registrata'); ?></h5>
+        
+        <img style="max-width: 250px" src="<?= Yii::$app->params['site_protocol'].Yii::$app->params['backendWeb'].$firma->firma ?>" />
+    <?php endif; ?>
     
     <h5><?= Yii::t('app', 'Anni sociali') ?></h5>
     <ul>

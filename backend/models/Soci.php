@@ -79,6 +79,11 @@ class Soci extends \yii\db\ActiveRecord
     {
         return $this->hasMany(SocioAnnoSociale::className(), ['socio' => 'id']);
     }
+    
+    public function getFirma()
+    {
+        return $this->hasMany(Firma::className(), ['socio' => 'id']);
+    }
 
     /**
      * {@inheritdoc}
