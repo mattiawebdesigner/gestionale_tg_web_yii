@@ -4,7 +4,7 @@
    
    <?= $this->render('section/_roll_of_honor') ?>
    
-   <?= $this->render('section/_documents') ?>
+   <!--<?= $this->render('section/_documents') ?>-->
    
 </div>
 

@@ -22,7 +22,14 @@ $this->params['breadcrumbs'][] = $this->title;
     <h5><i class="fas fa-calendar"></i> <?= $model->data ?></h5>
     <h5><i class="fas fa-clock"></i> <?= $model->ora_inizio ?></h5>
     <h5><i class="fas fa-calendar-times"></i> <?= $model->ora_fine ?></h5>
-    <h5><i class="fas fa-signature"></i> <?= $model->firma ?></h5>
+    <h5><i class="fas fa-signature"></i>
+        <?php
+        if(isset($model->firma['firma_autografa'])): ?>
+            <img style="width: 250px;" src="<?= $model->firma['firma_autografa'] ?>" />
+        <?php else: ?>
+            <?= $model->firma['firma'] ?>
+        <?php endif; ?>
+    </h5>
 
     <p></p>
     

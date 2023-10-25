@@ -550,7 +550,26 @@ TESTO])
     public function actionContentConvocazioni($anno) {
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         
-        return Convocazioni::find()->where("data LIKE '".$anno."%'")->andWhere(['bozza' => 1])->all();
+        $convocazioni = Convocazioni::find()->where("data LIKE '".$anno."%'")->andWhere(['bozza' => 1])->all();
+        
+        //Recupero le firme registrate per il verbali
+        //altrimenti per i verbali dove questa funzione non 
+        //era ancora prevista verrà inserita la firma inserita
+        //(e non l'immagine della firma)
+        foreach ($convocazioni as $convocazione){
+            if(is_numeric($convocazione->firma)){
+                $firma = \backend\models\Firma::findOne(['socio' => $convocazione->firma]);
+                $verbale->firma = [
+                    'firma_autografa' => $convocazione->firma
+                ];
+            }else{
+                $convocazione->firma = [
+                    'firma' => $convocazione->firma
+                ];
+            }
+        }
+        
+        return $convocazioni;
     }
     
     /**

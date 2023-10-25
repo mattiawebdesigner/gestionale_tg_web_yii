@@ -16,6 +16,9 @@
     -o-box-sizing: border-box;
     box-sizing: border-box;
 }
+.verbali-socio .attachment .firma > img{
+    max-width: 80%;
+}
 .verbali-socio .attachment .not-found{display: none;}
 .verbali-socio .attachment{
 }

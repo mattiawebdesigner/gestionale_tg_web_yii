@@ -6,7 +6,7 @@ use yii\helpers\Html;
 /* @var $model backend\models\Convocazioni */
 
 $this->title = Yii::t('app', 'Aggiornamento convocazione: {name}', [
-    'name' => $model->numero_protocollo,
+    'name'  => $model->numero_protocollo,
 ]);
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Convocazioni'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->numero_protocollo." ".$model->oggetto, 'url' => ['view', 'numero_protocollo' => $model->numero_protocollo]];
@@ -24,6 +24,7 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Aggiornamento');
 
     <?= $this->render('_form', [
         'model' => $model,
+        'firme' => $firme, 
     ]) ?>
 
 </div>
