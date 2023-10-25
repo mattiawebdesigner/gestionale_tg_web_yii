@@ -45,7 +45,7 @@ use yii\widgets\ActiveForm;
                 'si' => 'In regola con i pagamenti',
                 'no' => 'Non in regola con i pagamenti'
             ],
-            ['options'=>['no'=>['Selected'=>true]]]
+            ['options'=>[$socioAnnoSociale->validita=>['Selected'=>true]]]
         ) ?>
 
     <?php ActiveForm::end(); ?>

@@ -177,12 +177,12 @@ class SociController extends Controller
             
             return $this->redirect(['view', 'id' => $model->id, "anno" => $anno,]);
         }
-
+        
         return $this->render('update', [
             'model'                 => $model,
             'annoSociale'           => $annoSociale,
             'anno'                  => $anno,
-            'socioAnnoSociale'      => new SocioAnnoSociale(),
+            'socioAnnoSociale'      => $socio_anno_sociale,
             //Validità del socio 
             //(quota pagata => si, no altrimenti)
             'validita'              => $socio_anno_sociale->validita,
