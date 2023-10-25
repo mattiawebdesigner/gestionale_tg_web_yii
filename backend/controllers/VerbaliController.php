@@ -64,6 +64,20 @@ class VerbaliController extends Controller
     public function actionViewSocioConvocazione($numero_protocollo){
         $delega = new \backend\models\Delega();
         $model = Convocazioni::findOne(['numero_protocollo' => $numero_protocollo]);
+        //Recupero le firme registrate per il verbali
+        //altrimenti per i verbali dove questa funzione non 
+        //era ancora prevista verrà inserita la firma inserita
+        //(e non l'immagine della firma)
+        if(is_numeric($model->firma)){
+            $firma = \backend\models\Firma::findOne(['socio' => $model->firma]);
+            $model->firma = [
+                'firma_autografa' => $firma->firma
+            ];
+        }else{
+            $model->firma = [
+                'firma' => $model->firma
+            ];
+        }
         
         //Registrazione delega ed invio email
         if(Yii::$app->request->isPost){
@@ -550,7 +564,26 @@ TESTO])
     public function actionContentConvocazioni($anno) {
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         
-        return Convocazioni::find()->where("data LIKE '".$anno."%'")->andWhere(['bozza' => 1])->all();
+        $convocazioni = Convocazioni::find()->where("data LIKE '".$anno."%'")->andWhere(['bozza' => 1])->all();
+        
+        //Recupero le firme registrate per il verbali
+        //altrimenti per i verbali dove questa funzione non 
+        //era ancora prevista verrà inserita la firma inserita
+        //(e non l'immagine della firma)
+        foreach ($convocazioni as $convocazione){
+            if(is_numeric($convocazione->firma)){
+                $firma = \backend\models\Firma::findOne(['socio' => $convocazione->firma]);
+                $convocazione->firma = [
+                    'firma_autografa' => $firma->firma
+                ];
+            }else{
+                $convocazione->firma = [
+                    'firma' => $convocazione->firma
+                ];
+            }
+        }
+        
+        return $convocazioni;
     }
     
     /**

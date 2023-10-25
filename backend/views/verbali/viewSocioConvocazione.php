@@ -24,7 +24,14 @@ $this->params['breadcrumbs'][] = $this->title;
     
     <h4>Prot: <?= $model->numero_protocollo ?></h4>
     <h5><i class="fas fa-calendar"></i> <?= date('d-m-Y', strtotime($model->data)) ?></h5>
-    <h5><i class="fas fa-signature"></i> <?= $model->firma ?></h5
+    <h5><i class="fas fa-signature"></i>
+        <?php
+        if(isset($model->firma['firma_autografa'])): ?>
+            <img style="width: 250px;" src="<?= $model->firma['firma_autografa'] ?>" />
+        <?php else: ?>
+            <?= $model->firma['firma'] ?>
+        <?php endif; ?>
+    </h5
     
     <p></p><p></p><p></p>
     
@@ -40,7 +47,16 @@ $this->params['breadcrumbs'][] = $this->title;
     <table class="table">
         <tr>
             <td><strong><?= Yii::t('app', 'Data') ?></strong> <br /><?= date('d-m-Y', strtotime($model->data_inserimento)) ?></td>
-            <td><strong><?= Yii::t('app', 'Firma') ?></strong> <br /><?= $model->firma ?></td>
+            <td>
+                <strong><?= Yii::t('app', 'Firma') ?></strong> <br />
+            
+                <?php
+                if(isset($model->firma['firma_autografa'])): ?>
+                    <img style="width: 250px;" src="<?= $model->firma['firma_autografa'] ?>" />
+                <?php else: ?>
+                    <?= $model->firma['firma'] ?>
+                <?php endif; ?>
+            </td>
         </tr>
     </table>
         

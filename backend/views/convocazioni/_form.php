@@ -110,7 +110,14 @@ use dosamigos\tinymce\TinyMce;
 
             <?= $form->field($model, 'data')->textInput(['data-input' => 'data','type' => 'date']) ?>
 
-            <?= $form->field($model, 'firma')->textInput(['data-input' => 'firma','maxlength' => true, 'placeholder' => Yii::t('app', 'Firma')])->label(false) ?>
+            <?= $form->field($model, 'firma')
+                     ->dropDownList(
+                         ArrayHelper::map($firme, 'id', function ($socio, $defaultValue) {
+
+                            return $socio->cognome . ' ' . $socio->nome;
+
+                        }),
+            )->label(Yii::t('app', 'Nominativo di chi firma il verbale (verrà inserita la firma)')) ?>
             
             <?= $form->field($model, 'tipo')
                      ->dropDownList(

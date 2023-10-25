@@ -34,7 +34,21 @@ $this->params['breadcrumbs'][] = $this->title;
     
     <h4>Prot: <?= $model->numero_protocollo ?></h4>
     <h5><i class="fas fa-calendar"></i> <?= $model->data ?></h5>
-    <h5><i class="fas fa-signature"></i> <?= $model->firma ?></h5>
+    <h5><i class="fas fa-signature"></i> <?php 
+        //Visualizza la firma, se presente
+        if(isset($model->firma['firma_autografa'])): ?>
+            <img 
+                style="max-width: 250px" 
+                src="<?= $model->firma['firma_autografa']?>" 
+            />
+        <?php else : ?>
+            <?php
+            //Altrimenti visualizza il nome del firmatario
+            //usato per i vecchi verbali, prima dell'aggiornamento
+            ?>
+            
+            <?= $model->firma['firma'] ?>
+        <?php endif; ?> </h5>
     
     <p></p><p></p><p></p>
     
@@ -50,7 +64,23 @@ $this->params['breadcrumbs'][] = $this->title;
     <table class="table">
         <tr>
             <td><strong><?= Yii::t('app', 'Data') ?></strong> <br /><?= $model->data ?></td>
-            <td><strong><?= Yii::t('app', 'Firma') ?></strong> <br /><?= $model->firma ?></td>
+            <td><strong><?= Yii::t('app', 'Firma') ?></strong> <br />
+            <?php 
+            //Visualizza la firma, se presente
+            if(isset($model->firma['firma_autografa'])): ?>
+                <img 
+                    style="max-width: 250px" 
+                    src="<?= $model->firma['firma_autografa']?>" 
+                />
+            <?php else : ?>
+                <?php
+                //Altrimenti visualizza il nome del firmatario
+                //usato per i vecchi verbali, prima dell'aggiornamento
+                ?>
+            
+                <?= $model->firma['firma'] ?>
+            <?php endif; ?>
+            </td>
         </tr>
     </table>
     
