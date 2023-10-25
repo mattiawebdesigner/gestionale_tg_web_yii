@@ -25,7 +25,8 @@ return ['label' => 'Segreteria', 'url' => '#', 'items' => [
     
             //Verbali
             ['label' => Yii::t('app', 'Gestione dei verbali')],
-            ['label' => Yii::t('app', 'I verbali'), 'url' => ['/verbali/manage']],
+            ['label' => Yii::t('app', 'Le Convocazioni'), 'url' => ['/convocazioni/index']],
+            ['label' => Yii::t('app', 'I verbali'), 'url' => ['/verbali/index']],
             '<hr />',            
 
             //Email
