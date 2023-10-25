@@ -39,7 +39,7 @@ use yii\widgets\ActiveForm;
     
     <h3><?= Yii::t('app', 'Firma'); ?></h3>
     
-    <?php if($firma) : ?>
+    <?php if(!empty($firma->firma)) : ?>
     <img style="max-width: 250px" src="<?= Yii::$app->params['site_protocol'].Yii::$app->params['backendWeb'].$firma->firma ?>" />
     
     <div>
@@ -50,7 +50,9 @@ use yii\widgets\ActiveForm;
     <?php endif; ?>
     
     <?php $form = ActiveForm::begin(); ?>
-        <?= $form->field($firma, 'firma')->fileInput()->label(false) ?>
+        <?= $form->field($firma, 'firma')
+            ->fileInput()
+            ->label(false) ?>
         <div class="form-group">
             <?= Html::submitButton('<i class="fas fa-save"></i> '.Yii::t('app', 'Salva firma'), ['class' => 'btn btn-success']) ?>
         </div>

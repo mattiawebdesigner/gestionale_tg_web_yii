@@ -1,4 +1,4 @@
-<table style="width: 250px;margin: 0 auto;">
+<table style="width: 250px;margin: 0 auto;border: 0 !important;;">
     <tr>
         <td style="text-align: center;">
             <strong>TEATRALMENTE GIOIA A.P.S.</strong> <br /><br />

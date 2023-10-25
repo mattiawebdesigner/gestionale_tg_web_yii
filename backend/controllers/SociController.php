@@ -9,14 +9,9 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
-use kartik\mpdf\Pdf;
 use backend\models\AnnoSociale;
 use backend\models\SocioAnnoSociale;
 use yii\web\UploadedFile;
-use backend\models\Attivita;
-use backend\models\AttivitaSearch;
-use backend\models\Nominativo;
-
 /**
  * SociController implements the CRUD actions for Soci model.
  */
@@ -153,6 +148,9 @@ class SociController extends Controller
                                                       ->andWhere(['anno' => $anno])
                                                       ->one();
         $firma = \backend\models\Firma::find()->where(['socio' => $id])->one();
+        if(is_null($firma)){
+            $firma = new \backend\models\Firma();
+        }
         
         if ($this->request->isPost && $firma->load($this->request->post())) {
             $firmaUpload = UploadedFile::getInstance($firma, 'firma');
@@ -161,6 +159,7 @@ class SociController extends Controller
             $basePath = Yii::$app->params['firmaUploadPath'];
             $fileName = time()."_". sha1($firmaUpload->baseName).".".$firmaUpload->extension;
             $firma->firma = Yii::$app->params['firmaUploadFolder'].$fileName;
+            $firma->socio = $id;
             
             if($firma->save()){
                 $firmaUpload->saveAs($basePath.$fileName);

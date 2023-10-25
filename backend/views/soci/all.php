@@ -1,12 +1,11 @@
 <?php
 use yii\helpers\Html;
 use yii\grid\GridView;
-use backend\models\SocioAnnoSociale;
 
 /* @var $this yii\web\View */
 /* @var $searchModel backend\models\AnnoSocialeSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
-$this->title = Yii::t('app', 'Aggiungi socio');
+$this->title = Yii::t('app', 'Elenco dei soci');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="socio-anno-sociale">
