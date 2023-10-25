@@ -25,6 +25,20 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'data_di_nascita')->textInput(['type' => 'date']) ?>
 	
     <?= $form->field($model, 'indirizzo')->textInput(['maxlength' => true]) ?>
+	
+    <?= $form->field($model, 'luogo_di_nascita')->textInput(['maxlength' => true]) ?>
+	
+    <?= $form->field($model, 'provincia_di_nascita')->textInput(['maxlength' => true]) ?>
+	
+    <?= $form->field($model, 'CAP')->textInput(['maxlength' => true]) ?>
+	
+    <?= $form->field($model, 'citta_di_residenza')->textInput(['maxlength' => true]) ?>
+	
+    <?= $form->field($model, 'provincia_di_residenza')->textInput(['maxlength' => true]) ?>
+	
+    <?= $form->field($model, 'cellulare')->textInput(['maxlength' => true]) ?>
+	
+    <?= $form->field($model, 'codice_fiscale')->textInput(['maxlength' => true]) ?>
     
     <?= $form->field($socioAnnoSociale, 'validita', [])
             ->dropDownList([
@@ -37,6 +51,7 @@ use yii\widgets\ActiveForm;
     <?php ActiveForm::end(); ?>
     
     
+    <?php if(!isset($create)) : ?>
     <h3><?= Yii::t('app', 'Firma'); ?></h3>
     
     <?php if(!empty($firma->firma)) : ?>
@@ -57,5 +72,5 @@ use yii\widgets\ActiveForm;
             <?= Html::submitButton('<i class="fas fa-save"></i> '.Yii::t('app', 'Salva firma'), ['class' => 'btn btn-success']) ?>
         </div>
         <?php ActiveForm::end(); ?>
-
+    <?php endif; ?>
 </div>

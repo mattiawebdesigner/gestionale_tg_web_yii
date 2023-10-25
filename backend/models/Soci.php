@@ -14,6 +14,13 @@ use Yii;
  * @property string $data_registrazione
  * @property string $data_di_nascita
  * @property string|null $indirizzo	
+ * @property string $luogo_di_nascita
+ * @property string $provincia_di_nascita
+ * @property string $CAP
+ * @property string $citta_di_residenza
+ * @property string $provincia_di_residenza
+ * @property string $cellulare
+ * @property string $codice_fiscale
  *
  * @property AnnoSociale[] $annos
  * @property SocioAnnoSociale[] $socioAnnoSociales
@@ -35,11 +42,15 @@ class Soci extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['nome', 'cognome', 'data_di_nascita'], 'required'],
+            [['nome', 'cognome', 'data_di_nascita', 'luogo_di_nascita', 'provincia_di_nascita', 'CAP', 'citta_di_residenza', 'provincia_di_residenza', 'cellulare', 'cellulare'], 'required'],
             [['data_registrazione', 'data_di_nascita'], 'safe'],
             [['nome', 'cognome'], 'string', 'max' => 40],
             [['email'], 'string', 'max' => 100],
-            [['indirizzo'], 'string', 'max' => 255],
+            [['indirizzo', 'luogo_di_nascita', 'citta_di_residenza'], 'string', 'max' => 255],
+            [['provincia_di_nascita', 'provincia_di_residenza'], 'string', 'max' => 3],
+            [['CAP'], 'string', 'max' => 5],
+            [['cellulare'], 'string', 'max' => 10],
+            [['codice_fiscale'], 'string', 'max' => 16],
             [['email'], 'unique'],
         ];
     }
@@ -57,6 +68,13 @@ class Soci extends \yii\db\ActiveRecord
             'data_registrazione' => Yii::t('app', 'Data Registrazione'),
             'data_di_nascita' => Yii::t('app', 'Data Di Nascita'),
             'indirizzo' => Yii::t('app', 'Indirizzo'),
+            'luogo_di_nascita' => Yii::t('app', 'Luogo di nascita'),
+            'provincia_di_nascita' => Yii::t('app', 'Provincia di nascita'),
+            'CAP' => Yii::t('app', 'C.A.P.'),
+            'citta_di_residenza' => Yii::t('app', 'Città di residenza'),
+            'provincia_di_residenza' => Yii::t('app', 'Provincia di residenza'),
+            'cellulare' => Yii::t('app', 'Cellulare'),
+            'codice_fiscale' => Yii::t('app', 'Codice fiscale'),
         ];
     }
 
