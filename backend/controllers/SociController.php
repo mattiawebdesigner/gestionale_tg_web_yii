@@ -107,9 +107,10 @@ class SociController extends Controller
      */
     public function actionCreate($anno = 0)
     {
-        $model          = new Soci();
-        $annoSociale    = new AnnoSociale();
+        $model              = new Soci();
+        $annoSociale        = new AnnoSociale();
         $socio_anno_sociale = new SocioAnnoSociale();
+        $firma              = new \backend\models\Firma();
         
         if ($this->request->isPost) {
             
@@ -129,6 +130,7 @@ class SociController extends Controller
             'model'             => $model,
             'annoSociale'       => $annoSociale,
             'socioAnnoSociale'  => $socio_anno_sociale,
+            'firma'             => $firma,
         ]);
     }
     
