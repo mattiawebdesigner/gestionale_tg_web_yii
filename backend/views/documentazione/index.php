@@ -7,7 +7,6 @@ use yii\helpers\Html;
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = Yii::t('app', 'Documentazione');
-$this->params['breadcrumbs'][] = $this->title;
 $id = 1;
 //Flag per valutare se si sta visualizzando la index
 //di amministrazione o del socio
@@ -29,9 +28,9 @@ $socio = $socio ?? false;
     
     <div id="document-container">
         <div class="folders">
-        <?php foreach($cartelle as $k => $cartella) : ?>
+            <?php foreach($cartelle as $k => $cartella) : ?>
             <div class="folder">
-                <a href="?r=documentazione/folder&id=<?= $cartella->id ?>&socio=<?= $socio ?>">
+                <a href="?r=documentazione/folder&id=<?= $cartella->id ?>&socio=<?= $socio ?>&bid=1">
                     <div class="icon">
                         <i class="fa-solid fa-folder"></i>
                     </div>

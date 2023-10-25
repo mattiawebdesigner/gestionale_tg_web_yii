@@ -2,8 +2,6 @@
 use yii\helpers\Html;
 
 $this->title = Yii::t('app', $cartella_obj->categoria);
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Documentazione'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
 
 $socio = $socio ?? false;
 ?>
@@ -15,11 +13,54 @@ $socio = $socio ?? false;
     ]) ?>
 <?php endif; ?>
 
-<?= Html::a('<i class="fa-solid fa-arrow-left-long"></i> ' . Yii::t('app', 'Indietro'), ['documentazione/index', 'socio' => $socio]) ?>
+<?php if($bid == 1): ?>
+    <?php if($socio): ?>
+        <?= Html::a('<i class="fa-solid fa-arrow-left-long"></i> ' . Yii::t('app', 'Indietro'), ['documentazione/socio-view', 'socio' => $socio]) ?>
+    <?php else: ?>
+        <?= Html::a('<i class="fa-solid fa-arrow-left-long"></i> ' . Yii::t('app', 'Indietro'), ['documentazione/index', 'socio' => $socio]) ?>
+    <?php endif; ?>
+<?php else: ?>
+    <?= Html::a('<i class="fa-solid fa-arrow-left-long"></i> ' . Yii::t('app', 'Indietro'), ['documentazione/folder', 'id' => $bid, 'socio' => $socio]) ?>
+<?php endif; ?>
 
-<div id="document-container">
 
-    <h4><?= Yii::t('app', 'Files') ?></h4>
+<div id="document-container">    
+    <div class="folders">
+        <?php foreach($sottoCartelle as $k => $cartella) : ?>
+        <div class="folder">
+            <a href="?r=documentazione/folder&id=<?= $cartella->id ?>&socio=<?= $socio ?>">
+                <div class="icon">
+                    <i class="fa-solid fa-folder"></i>
+                </div>
+
+                <div class="name">
+                    <?= $cartella->categoria ?>
+                </div>
+            </a>
+
+            <?php if(!$socio) : ?>
+                <div class="actions">
+                    <div class="point">
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                    </div>
+
+                    <div class="menu">
+                        <div class="content ">
+                            <div class="trash">
+                                <i class="fa-solid fa-trash-can"></i> 
+                                <?= Html::a(Yii::t('app', 'Cancella la cartella'), ['delete-folder', 'id' => $cartella->id]) ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
+        </div>
+        <?php endforeach; ?>
+    </div>
+    
+    <h4><?= Yii::t('app', 'File') ?></h4>
     <?php if(sizeof($documenti) > 0) : ?>
     <div class="files">
         <?php foreach($documenti as $k => $documento) : ?>

@@ -8,7 +8,7 @@ $menuItemsSocio = [
             '<hr />',
             ['label' => Yii::t('app', 'I Soci'), 'url' => ['/soci/index-socio']],
             '<hr />',
-            ['label' => Yii::t('app', 'Documenti'), 'url' => ['/documentazione/socio-view']],
+            ['label' => Yii::t('app', 'Documentazione'), 'url' => ['/documentazione/socio-view']],
             '<hr />',
             ['label' => Yii::t('app', 'Il Materiale'), 'url' => ['/prodotto/index-socio']],
             '<hr />',
