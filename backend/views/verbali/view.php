@@ -38,12 +38,12 @@ $this->params['breadcrumbs'][] = $this->title;
     <h5><i class="fas fa-signature"></i> 
         <?php 
         //Visualizza la firma, se presente
-        if(is_numeric($model->firma)): ?>
+        if(isset($model->firma['firma_autografa'])): ?>
             <img 
                 style="max-width: 250px" 
                 src="<?= 
                     Yii::$app->params['site_protocol'].Yii::$app->params['backendWeb'].
-                    (backend\models\Firma::findOne(['socio' => $model->firma]))->firma
+                    $model->firma['firma_autografa']
                 ?>" 
             />
         <?php else : ?>
@@ -51,7 +51,7 @@ $this->params['breadcrumbs'][] = $this->title;
             //Altrimenti visualizza il nome del firmatario
             //usato per i vecchi verbali, prima dell'aggiornamento
             ?>
-            <?= $model->firma ?>
+            <?= $model->firma['firma'] ?>
         <?php endif; ?>
     </h5>
 
