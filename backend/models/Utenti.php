@@ -15,7 +15,12 @@ use Yii;
  * @property string $data_di_registrazione
  * @property string|null $data_ultima_modifica
  * @property string|null $indirizzo
+ * @property int $status
+ *               Stato dell'utente.
+ *               0 = Deleted, 9 = Inactive, 10 = Active
  * @property string $socio_id
+ * @property string $reset_auth_key
+ *                  Chiave di validazione reset password. Formato: TIMESTAMP_IDUTENTE
  */
 class Utenti extends \yii\db\ActiveRecord
 {
@@ -43,7 +48,7 @@ class Utenti extends \yii\db\ActiveRecord
             [['data_di_registrazione', 'data_ultima_modifica'], 'safe'],
             [['nome', 'cognome'], 'string', 'max' => 50],
             [['email'], 'string', 'max' => 150],
-            [['password', 'repeat_password'], 'string', 'max' => 255],
+            [['password', 'repeat_password', 'reset_auth_key'], 'string', 'max' => 255],
             [['indirizzo'], 'string', 'max' => 120],
             [['status'], 'integer'],
             ['repeat_password', 'compare', 'compareAttribute'=>'password', 'message' => Yii::t('app', 'Le password non coincidono')],
@@ -67,6 +72,7 @@ class Utenti extends \yii\db\ActiveRecord
             'socio_id' => Yii::t('app', 'Codice identificativo del socio collegato all\'account'),
             'repeat_password' => Yii::t('app', 'Ripeti la password'),
             'status' => Yii::t('app', 'Stato'),
+            'reset_auth_key' => Yii::t('app', 'Reset Auth Key'),
         ];
     }
 
