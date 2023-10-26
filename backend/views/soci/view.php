@@ -48,6 +48,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php endif; ?>
     
     <h5><?= Yii::t('app', 'Anni sociali') ?></h5>
+    
     <ul>
         <?php foreach($years as $year): ?>
         <li><?= Html::a($year->anno, ['anno-sociale/view', 'anno' => $year->anno]) ?></li>

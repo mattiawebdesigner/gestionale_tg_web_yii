@@ -86,7 +86,7 @@ class SociController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionView($id, $anno)
+    public function actionView($id, $anno = 0)
     {
         $socio = $this->findModel($id);
         $firma = \backend\models\Firma::find()->where(['socio' => $id])->one();
@@ -113,7 +113,7 @@ class SociController extends Controller
         $firma              = new \backend\models\Firma();
         
         if ($this->request->isPost) {
-            
+            die;
             if ($model->load($this->request->post()) && $model->save()) {
                 
                 if($anno === 0) {return $this->redirect(['view', 'id' => $model->id]);}
