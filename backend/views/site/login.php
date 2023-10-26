@@ -6,6 +6,7 @@
 
 use yii\bootstrap4\ActiveForm;
 use yii\bootstrap4\Html;
+use yii\helpers\Html as HtmlTag;
 
 $this->title = 'Login';
 ?>
@@ -22,6 +23,10 @@ $this->title = 'Login';
             <?= $form->field($model, 'password')->passwordInput() ?>
 
             <?= $form->field($model, 'rememberMe')->checkbox() ?>
+        
+        <p>
+            <?= HtmlTag::a(Yii::t('app', 'Password dimenticata?'), ['site/reset-password']) ?>
+        </p>
 
             <div class="form-group">
                 <?= Html::submitButton('Login', ['class' => 'btn btn-primary btn-block', 'name' => 'login-button']) ?>
