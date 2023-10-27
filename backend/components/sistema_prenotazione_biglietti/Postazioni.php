@@ -96,7 +96,7 @@ class Postazioni{
                                     $tipo_seduta = $v->tipo_seduta ?? self::TIPO_SEDUTA_DEFAULT;
                                     $visibilita = (isset($v->visibilita_ridotta) && $v->visibilita_ridotta ) ? "si" : "no";
                                     $color = self::COLOR_FREE;
-                                    $class = "seat";
+                                    $class = "seat ";
                                     if(isset($v->stato)){
                                         switch ($v->stato){
                                             case self::STATO_PAYED:
@@ -108,6 +108,7 @@ class Postazioni{
                                                 $class .= " busy";
                                                 break;
                                             case self::STATO_NOT_PAYED:
+                                                $class .= " busy";
                                                 $color = self::COLOR_BOOKED;
                                                 break;
                                         }

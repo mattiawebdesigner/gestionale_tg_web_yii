@@ -40,8 +40,4 @@ $this->registerCssFile('@web/css/iloveteatro/piantina.css');
 $this->registerCssFile('//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css');
 $this->registerJsFile('https://code.jquery.com/ui/1.13.2/jquery-ui.js', ['depends' => yii\web\JqueryAsset::class]);
 $this->registerJsFile('@web/js/iloveteatro/sistema_prenotazione_biglietti.js', ['depends' => yii\web\JqueryAsset::class]);
-$this->registerJs('
-    //$("#theatre-place").sistema_prenotazione_biglietti();
-    //$(".seat").tooltip();
-');
 ?>
