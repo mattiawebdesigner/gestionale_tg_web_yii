@@ -111,7 +111,36 @@ jQuery(".seat:not(.seat.busy):not(.seat.nn)").click((e)=>{
 });
 
 jQuery(".not-payed").click((e)=>{
-    alert();
+    var el = jQuery(e.target);
+    var nome    = el.data("nome");
+    var fila    = el.data("fila");
+    var posto   = el.data("posto");
+    var palco   = el.data("palco");
+    var form    = jQuery("#theatre-reservations-delete > form");
+
+    var prenotazioni = jQuery("#theatre-reservations-delete > table");
+    var id = (nome.replace(" ", "_"))+"-"+fila+"-"+posto;
+    if(palco !== undefined){
+        id += "-"+palco;
+    }
+
+    el.attr("data-id", id);
+    //Imposto come selezionato per la prenotazione
+    if(el.hasClass("reservation")){                    
+        remove(id, el);
+    }else{                    
+        insert(prenotazioni, id, el, nome, fila, posto, palco);
+    }
+    //--------------------------------------------
+
+    var form        = jQuery("#theatre-reservations-delete > form");
+    var tableRow    = jQuery("#theatre-reservations-delete > table tr");
+
+    if(tableRow.length === 0){
+        form.hide();
+    }else{
+        form.show();
+    }
 });
 
 /**
@@ -120,8 +149,6 @@ jQuery(".not-payed").click((e)=>{
 jQuery("#theatre-reservations > table").on("click", ".remove-reservation", (e)=>{
     var parent = jQuery(e.target).parent().parent();
     var id = parent.attr("id");
-
-
 
     remove(id, jQuery("[data-id='"+id+"']"));
 });
