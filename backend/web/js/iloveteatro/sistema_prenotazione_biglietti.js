@@ -110,6 +110,10 @@ jQuery(".seat:not(.seat.busy):not(.seat.nn)").click((e)=>{
     }
 });
 
+jQuery(".not-payed").click((e)=>{
+    alert();
+});
+
 /**
  * Pulsante di rimozione della prenotazione
  */

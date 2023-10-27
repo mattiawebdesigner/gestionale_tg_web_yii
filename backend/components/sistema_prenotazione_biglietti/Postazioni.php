@@ -108,7 +108,7 @@ class Postazioni{
                                                 $class .= " busy";
                                                 break;
                                             case self::STATO_NOT_PAYED:
-                                                $class .= " busy";
+                                                $class .= "busy not-payed";
                                                 $color = self::COLOR_BOOKED;
                                                 break;
                                         }
