@@ -55,7 +55,7 @@
     width: 150px;
     height: 40px;
 }
-#theatre-reservations > form{
+#theatre-reservations > form, #theatre-reservations-delete > form{
     display: none;
 }
 

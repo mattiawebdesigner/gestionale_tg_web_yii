@@ -33,6 +33,18 @@ $this->title = Yii::t('app', 'Nuova prenotazione: {spettacolo}', [
 
         <table class="table table-striped"></table>
     </div>
+    
+    
+    
+    <?php // Sezione per confermare la cancellazione di una prenotazione ?>
+    <div id="theatre-reservations-delete">
+        <?php $form = ActiveForm::begin(['options' => ['id' => 'reservations-form']]); ?>
+            <input type="text" name="dati[spettacolo_id]" value="<?= $model->id ?>" />
+            <input type="submit" value="<?= Yii::t('app', 'Cancella prenotazioni'); ?>" class="btn btn-iloveteatro" />
+        <?php ActiveForm::end(); ?>
+
+        <table class="table table-striped"></table>
+    </div>
 </div>
 
 <?php
@@ -40,8 +52,4 @@ $this->registerCssFile('@web/css/iloveteatro/piantina.css');
 $this->registerCssFile('//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css');
 $this->registerJsFile('https://code.jquery.com/ui/1.13.2/jquery-ui.js', ['depends' => yii\web\JqueryAsset::class]);
 $this->registerJsFile('@web/js/iloveteatro/sistema_prenotazione_biglietti.js', ['depends' => yii\web\JqueryAsset::class]);
-$this->registerJs('
-    //$("#theatre-place").sistema_prenotazione_biglietti();
-    //$(".seat").tooltip();
-');
 ?>
