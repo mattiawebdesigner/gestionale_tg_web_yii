@@ -110,6 +110,9 @@ jQuery(".seat:not(.seat.busy):not(.seat.nn)").click((e)=>{
     }
 });
 
+/**
+ * visualizza le prenotazioni da rimuovere
+ */
 jQuery(".not-payed").click((e)=>{
     var el = jQuery(e.target);
     var nome    = el.data("nome");
