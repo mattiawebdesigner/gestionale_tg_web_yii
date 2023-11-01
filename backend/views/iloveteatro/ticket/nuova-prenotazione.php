@@ -38,12 +38,14 @@ $this->title = Yii::t('app', 'Nuova prenotazione: {spettacolo}', [
     
     <?php // Sezione per confermare la cancellazione di una prenotazione ?>
     <div id="theatre-reservations-delete">
-        <?php $form = ActiveForm::begin(['options' => ['id' => 'reservations-form']]); ?>
-            <input type="text" name="dati[spettacolo_id]" value="<?= $model->id ?>" />
+        <?php $form = ActiveForm::begin(['options' => ['id' => 'reservations-delete-form']]); ?>
+            <input type="hidden" name="dati[spettacolo_id]" value="<?= $model->id ?>" />
             <input type="submit" value="<?= Yii::t('app', 'Cancella prenotazioni'); ?>" class="btn btn-iloveteatro" />
+            
+            <input type="hidden" name="reservations-delete" value="true" />
         <?php ActiveForm::end(); ?>
 
-        <table class="table table-striped"></table>
+        <table class="table table-striped"></table> 
     </div>
 </div>
 

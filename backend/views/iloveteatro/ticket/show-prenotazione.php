@@ -8,9 +8,7 @@ $this->title = Yii::t('app', 'Gestisci prenotazione: {spettacolo}', [
 ?>
 <h1><?= Html::encode( $this->title ) ?></h1>
 
-
 <div id="theatre-place">
-    <?php $postazioni->get() ?>
 </div>
 
 <?php

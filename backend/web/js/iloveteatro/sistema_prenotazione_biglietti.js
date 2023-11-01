@@ -110,6 +110,9 @@ jQuery(".seat:not(.seat.busy):not(.seat.nn)").click((e)=>{
     }
 });
 
+/**
+ * visualizza le prenotazioni da rimuovere
+ */
 jQuery(".not-payed").click((e)=>{
     var el = jQuery(e.target);
     var nome    = el.data("nome");
@@ -129,7 +132,7 @@ jQuery(".not-payed").click((e)=>{
     if(el.hasClass("reservation")){                    
         remove(id, el);
     }else{                    
-        insert(prenotazioni, id, el, nome, fila, posto, palco);
+        insert(prenotazioni, id, el, nome, fila, posto, palco, "reservations-delete-form");
     }
     //--------------------------------------------
 
@@ -185,21 +188,21 @@ function remove(id, el){
  * @param {palco} string 
  * 
  */
-function insert(prenotazioni, id, el, nome, fila, posto, palco = undefined){
+function insert(prenotazioni, id, el, nome, fila, posto, palco = undefined, formClass = "reservations-form"){
     el.attr("fill", "grey");
     el.attr("stroke", "grey");
     el.addClass("reservation busy");
 
     let insert = "<tr id='"+id+"'>" + 
-                    "<th>" + nome + " <input type='hidden' name='prenotazione["+nome+"][nome][]' form='reservations-form' value='"+nome+"' /></th>";
+                    "<th>" + nome + " <input type='hidden' name='prenotazione["+nome+"][nome][]' form='"+formClass+"' value='"+nome+"' /></th>";
     if(palco !== undefined){
-        insert += "<td>Palco: <strong>"+palco+"</strong> <input type='hidden' name='prenotazione["+nome+"][palco][]' form='reservations-form' value='"+palco+"' /></td>";
+        insert += "<td>Palco: <strong>"+palco+"</strong> <input type='hidden' name='prenotazione["+nome+"][palco][]' form='"+formClass+"' value='"+palco+"' /></td>";
     }else{
         insert += "<td></td>";
     }
 
-    insert += "<td>Fila: <strong>" + fila + "</strong> <input type='hidden' name='prenotazione["+nome+"][fila][]' form='reservations-form' value='"+fila+"' /></td> " +
-                    "<td>Posto: <strong>" + posto + "</strong> <input type='hidden' name='prenotazione["+nome+"][posto][]' form='reservations-form' value='"+posto+"' /></td>" +
+    insert += "<td>Fila: <strong>" + fila + "</strong> <input type='hidden' name='prenotazione["+nome+"][fila][]' form='"+formClass+"' value='"+fila+"' /></td> " +
+                    "<td>Posto: <strong>" + posto + "</strong> <input type='hidden' name='prenotazione["+nome+"][posto][]' form='"+formClass+"' value='"+posto+"' /></td>" +
                     "<td><span class='remove-reservation fa fa-trash-alt'></span></td>" +
                 "</tr>";
     prenotazioni.append(insert);
