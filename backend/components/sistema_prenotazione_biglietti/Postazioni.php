@@ -49,15 +49,25 @@ class Postazioni{
      */
     private const DB_TABLE_PRENOTAZIONE = "teatro_prenotazione";
 
-
     /**
      * 
-     * @param array $posti
+     * @param array $posti_piantina
+     *              Vale sia per i posti prenotati che per indicare la piantina
+     *              nel caso in cui si accede alla parte di gestione delle prenotazioni
+     *              di un cliente
+     * @param array|null $posti_prenotati
+     *                   Se settato serve a modificare i posti prenotati da tutti
+     *                   i clienti con quelli solo presenti in questo array.
      * @param mysqli $conn Connessione a mysql
      */
-    public function __construct($posti, $conn = null) {
-        $this->posti = $posti;
+    public function __construct($posti_piantina, $posti_prenotati = null, $conn = null) {
+        $this->posti = $posti_piantina;
         $this->conn  = $conn;
+        
+        if($posti_prenotati <> null){
+            self::updatePiantina($posti_prenotati, $posti_piantina);
+        }
+        
     }
     
     /**
@@ -96,7 +106,7 @@ class Postazioni{
                                     $tipo_seduta = $v->tipo_seduta ?? self::TIPO_SEDUTA_DEFAULT;
                                     $visibilita = (isset($v->visibilita_ridotta) && $v->visibilita_ridotta ) ? "si" : "no";
                                     $color = self::COLOR_FREE;
-                                    $class = "seat";
+                                    $class = "seat ";
                                     if(isset($v->stato)){
                                         switch ($v->stato){
                                             case self::STATO_PAYED:
@@ -108,6 +118,7 @@ class Postazioni{
                                                 $class .= " busy";
                                                 break;
                                             case self::STATO_NOT_PAYED:
+                                                $class .= "busy not-payed";
                                                 $color = self::COLOR_BOOKED;
                                                 break;
                                         }
@@ -227,6 +238,51 @@ class Postazioni{
         //Fine ciclo delle file 
     }
     
+    public function cancellaPrenotazione($prenotazioni_da_cancellare, $prenotazioni){
+        
+        $prenotazione_posti_utente = [];
+        foreach($prenotazioni_da_cancellare as $k_pp => $v_pp){
+            $prenotazione_posti_utente[$k_pp] = [];
+
+            if(isset($this->posti->$k_pp->file)){//Se ha solo file
+
+                foreach ($v_pp['fila'] as $k_fila => $v_fila){
+
+                    $posto = $v_pp['posto'][$k_fila];
+                    $this->posti->$k_pp->file->$v_fila->posti->$posto->stato = 0;
+
+                    //dati prenotazione utente
+                    $prenotazione_posti_utente[$k_pp]['file'][$v_fila]['posti'][] = $posto;
+                }
+            }else if(isset($this->posti->$k_pp->palco)){//se ci sono dei palchi
+                foreach ($v_pp['palco'] as $k_palco => $v_palco){
+                    $fila = $v_pp['fila'][$k_palco];
+                    if($fila == "non_numerato"){                        
+                        $this->posti->$k_pp->palco->$v_palco[0]->posti_prenotati += 1;
+                        $conteggio_prenotazione_utente_non_numerato += 1;
+                        
+                        $prenotazione_posti_utente[$k_pp]['palco'][$v_palco]['non_numerato'] = $conteggio_prenotazione_utente_non_numerato;
+                        
+                    }else{
+                        $posto = $v_pp['posto'][$k_palco];
+                        $this->posti->$k_pp->palco->$v_palco->fila->$fila->posti->$posto->stato = 0;
+
+                        //dati prenotazione utente
+                        $prenotazione_posti_utente[$k_pp]['palco'][$v_palco]['fila'][$fila]['posti'][] = $posto;
+                    }
+                }
+            }
+        }
+        
+        //$prenotazione_posti_utente = !is_null($prenotazione_esistente)?json_encode(array_merge_recursive($prenotazione_esistente, $prenotazione_posti_utente)): json_encode($prenotazione_posti_utente);
+        
+        
+        
+        echo "<pre>";
+        print_r($prenotazione_posti_utente);
+        echo "</pre>";
+    }
+
     /**
     * Salvataggio dei posti prenotati dagli utenti
     * e salva i dati dell'utente che ha prenotato
@@ -408,7 +464,6 @@ class Postazioni{
             if(strtolower($k_piantina) === "platea"){
                 $piantina = self::updatePrenotazionePlatea($v_piantina, $prenotazione, $piantina);
             }else{                
-                //echo "1) updatePiantina()<br />";
                 $piantina = self::updatePrenotazioneOrdini($v_piantina, $prenotazione, $piantina, $k_piantina);
             }
         }

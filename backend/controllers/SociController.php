@@ -113,7 +113,6 @@ class SociController extends Controller
         $firma              = new \backend\models\Firma();
         
         if ($this->request->isPost) {
-            die;
             if ($model->load($this->request->post()) && $model->save()) {
                 
                 if($anno === 0) {return $this->redirect(['view', 'id' => $model->id]);}
