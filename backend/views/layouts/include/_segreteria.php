@@ -5,6 +5,7 @@ return ['label' => 'Segreteria', 'url' => '#', 'items' => [
             ['label' =>  Yii::t('app', 'Anno Sociale'), 'url' => ['/anno-sociale/index']],
             ['label' =>  Yii::t('app', 'Soci suddivisi per anno'), 'url' => ['/soci/index']],
             ['label' =>  Yii::t('app', 'Tutti i soci'), 'url' => ['/soci/all']],
+            ['label' =>  Yii::t('app', 'Stampa elenco firme'), 'url' => ['/soci/print-show']],
             '<hr />',
     
             //Albo d'oro

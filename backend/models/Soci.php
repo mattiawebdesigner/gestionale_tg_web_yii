@@ -111,4 +111,19 @@ class Soci extends \yii\db\ActiveRecord
     {
         return new SociQuery(get_called_class());
     }
+    
+    /**
+     * Recupera i soci attivi
+     * 
+     * @param array $orderBy Criterio di ordinamento della query
+     * @return mixed
+     */
+    public static function sociAttivi(array $orderBy = ['cognome' => SORT_ASC, 'nome' => SORT_ASC]){
+        return  Soci::find()->joinWith('annos')
+                        ->where(['anno_sociale.anno' => date('Y')])
+                        ->andWhere(['sostenitore' => 'no'])
+                        ->andWhere(['validita' => 'si'])
+                        ->orderBy($orderBy)
+                        ->all();
+    }
 }
