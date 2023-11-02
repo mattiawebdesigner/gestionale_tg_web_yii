@@ -10,7 +10,7 @@ use Yii;
  * @property string $numero_protocollo
  * @property string $ordine_del_giorno
  * @property string $oggetto
- * @property string $data
+ * @property string $data_assemblea
  * @property string|null $data_inserimento
  * @property string $ultima_modifica
  * @property int $tipo
@@ -37,8 +37,8 @@ class Convocazioni extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['numero_protocollo', 'ordine_del_giorno', 'oggetto', 'data', 'tipo', 'contenuto', 'firma'], 'required'],
-            [['data', 'data_inserimento', 'ultima_modifica'], 'safe'],
+            [['numero_protocollo', 'ordine_del_giorno', 'oggetto', 'data_assemblea', 'tipo', 'contenuto', 'firma'], 'required'],
+            [['data_assemblea', 'data_inserimento', 'ultima_modifica'], 'safe'],
             [['tipo', 'bozza'], 'integer'],
             [['contenuto', 'delega'], 'string'],
             [['numero_protocollo'], 'string', 'max' => 10],
@@ -58,7 +58,7 @@ class Convocazioni extends \yii\db\ActiveRecord
             'numero_protocollo' => Yii::t('app', 'Numero Protocollo'),
             'ordine_del_giorno' => Yii::t('app', 'Ordine Del Giorno'),
             'oggetto' => Yii::t('app', 'Oggetto'),
-            'data' => Yii::t('app', 'Data'),
+            'data_assemblea' => Yii::t('app', 'Data dell\'assemblea'),
             'data_inserimento' => Yii::t('app', 'Data Inserimento'),
             'ultima_modifica' => Yii::t('app', 'Ultima Modifica'),
             'tipo' => Yii::t('app', 'Tipo'),

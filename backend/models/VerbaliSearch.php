@@ -60,7 +60,7 @@ class VerbaliSearch extends Verbali
         // grid filtering conditions
         $query->andFilterWhere([
             'numero_protocollo' => $this->numero_protocollo,
-            'data' => $this->data,
+            'data' => $this->data_assemblea,
             'ora_inizio' => $this->ora_inizio,
             'ora_fine' => $this->ora_fine,
             'data_inserimento' => $this->data_inserimento,

@@ -23,7 +23,7 @@ $this->params['breadcrumbs'][] = $this->title;
     </p>
     
     <h4>Prot: <?= $model->numero_protocollo ?></h4>
-    <h5><i class="fas fa-calendar"></i> <?= date('d-m-Y', strtotime($model->data)) ?></h5>
+    <h5><i class="fas fa-calendar"></i> <?= date('d-m-Y', strtotime($model->data_assemblea)) ?></h5>
     <h5><i class="fas fa-signature"></i>
         <?php
         if(isset($model->firma['firma_autografa'])): ?>
@@ -75,7 +75,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <?= $form->field($delega, 'delegato')->textInput()->dropDownList(
                      ArrayHelper::map(backend\models\Soci::find()->innerJoin('utenti')->select('*')->where(['<>', 'socio_id', 0])->andWhere(['status' => \backend\models\Utenti::$ACTIVE])->all() , 'id', 'nome')
                 )->label(false) ?>
-                per la riunione che si terrà in data <?= date('d-m-Y', strtotime($model->data)) ?>
+                per la riunione che si terrà in data <?= date('d-m-Y', strtotime($model->data_assemblea)) ?>
             </p>
             
             <?= Html::submitButton('<i class="far fa-save"></i> '.Yii::t('app', 'Salva e chiudi'), ['class' => 'btn btn-success']) ?>

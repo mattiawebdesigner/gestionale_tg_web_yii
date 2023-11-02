@@ -10,7 +10,7 @@ use Yii;
  * @property string $numero_protocollo
  * @property string $oggetto
  * @property string $ordine_del_giorno
- * @property string $data
+ * @property string $data_assemblea
  * @property string $ora_inizio
  * @property string $ora_fine
  * @property string $data_inserimento
@@ -39,7 +39,7 @@ class Verbali extends \yii\db\ActiveRecord
     {
         return [
             [['numero_protocollo', 'oggetto', 'ordine_del_giorno', 'data', 'ora_inizio', 'ora_fine', 'firma', 'tipo', 'contenuto'], 'required'],
-            [['data', 'ora_inizio', 'ora_fine', 'data_inserimento', 'ultima_modifica'], 'safe'],
+            [['data_assemblea', 'ora_inizio', 'ora_fine', 'data_inserimento', 'ultima_modifica'], 'safe'],
             [['tipo', 'bozza'], 'integer'],
             [['contenuto'], 'string'],
             [['numero_protocollo'], 'string', 'max' => 10],
@@ -59,7 +59,7 @@ class Verbali extends \yii\db\ActiveRecord
             'numero_protocollo' => Yii::t('app', 'Numero Protocollo'),
             'oggetto' => Yii::t('app', 'Oggetto'),
             'ordine_del_giorno' => Yii::t('app', 'Ordine Del Giorno'),
-            'data' => Yii::t('app', 'Data'),
+            'data_assemblea' => Yii::t('app', 'Data dell\'assemblea'),
             'ora_inizio' => Yii::t('app', 'Ora Inizio'),
             'ora_fine' => Yii::t('app', 'Ora Fine'),
             'data_inserimento' => Yii::t('app', 'Data Inserimento'),

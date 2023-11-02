@@ -32,7 +32,7 @@ $this->params['breadcrumbs'][] = $this->title;
     </p>
     
     <h4>Prot: <?= $model->numero_protocollo ?></h4>
-    <h5><i class="fas fa-calendar"></i> <?= $model->data ?></h5>
+    <h5><i class="fas fa-calendar"></i> <?= $model->data_assemblea ?></h5>
     <h5><i class="fas fa-clock"></i> <?= $model->ora_inizio ?></h5>
     <h5><i class="fas fa-calendar-times"></i> <?= $model->ora_fine ?></h5>
     <h5><i class="fas fa-signature"></i> 

@@ -270,10 +270,15 @@ TESTO])
         } else {
             $model->loadDefaultValues();
         }
+        
+        $firme = \backend\models\Firma::find()
+                                        ->joinWith('soci')
+                                        ->all();
 
         return $this->render('create', [
             'model'     => $model,
             'allegati'  => $allegati,
+            'firme'     => $firme,
         ]);
     }
     
@@ -325,6 +330,7 @@ TESTO])
         $allegati = new Allegati();
         //Allegati attuali del verbale
         $allegatiReal   = Allegati::find()->where(['id_verbale' => $numero_protocollo])->all();
+        
         $firme      = \backend\models\Soci::find()
                 ->joinWith('firma')
                 ->where('firma.socio = soci.id')
@@ -425,7 +431,7 @@ CSS;
         $pdf = new Pdf([
             'filename' => "Prot.".$model->numero_protocollo." ".
                                     str_replace(" ", "", $model->oggetto)." ". 
-                                    str_replace("/", "", $model->data).".pdf",
+                                    str_replace("/", "", $model->data_assemblea).".pdf",
             'marginLeft' => 10,
             'marginRight' => 10,
             'marginTop' => 50,
@@ -564,7 +570,7 @@ TESTO])
     public function actionContentConvocazioni($anno) {
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         
-        $convocazioni = Convocazioni::find()->where("data LIKE '".$anno."%'")->andWhere(['bozza' => 1])->all();
+        $convocazioni = Convocazioni::find()->where("data_assemblea LIKE '".$anno."%'")->andWhere(['bozza' => 1])->all();
         
         //Recupero le firme registrate per il verbali
         //altrimenti per i verbali dove questa funzione non 

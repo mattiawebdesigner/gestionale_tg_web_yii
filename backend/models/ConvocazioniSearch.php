@@ -19,7 +19,7 @@ class ConvocazioniSearch extends Convocazioni
         return [
             [['tipo'], 'integer'],
             [['numero_protocollo'], 'string'],
-            [['ordine_del_giorno', 'oggetto', 'data', 'data_inserimento', 'ultima_modifica', 'contenuto'], 'safe'],
+            [['ordine_del_giorno', 'oggetto', 'data_assemblea', 'data_inserimento', 'ultima_modifica', 'contenuto'], 'safe'],
         ];
     }
 
@@ -60,7 +60,7 @@ class ConvocazioniSearch extends Convocazioni
         // grid filtering conditions
         $query->andFilterWhere([
             'numero_protocollo' => $this->numero_protocollo,
-            'data' => $this->data,
+            'data' => $this->data_assemblea,
             'data_inserimento' => $this->data_inserimento,
             'ultima_modifica' => $this->ultima_modifica,
             'tipo' => $this->tipo,

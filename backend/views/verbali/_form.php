@@ -75,7 +75,7 @@ use dosamigos\tinymce\TinyMce;
 
             <?= $form->field($model, 'ordine_del_giorno')->textarea(['data-input' => 'ordine_del_giorno','rows' => 5,'maxlength' => true, 'placeholder' => Yii::t('app', 'Ordine del giorno')])->label(false) ?>
 
-            <?= $form->field($model, 'data')->textInput(['data-input' => 'data','type' => 'date']) ?>
+            <?= $form->field($model, 'data_assemblea')->textInput(['data-input' => 'data','type' => 'date']) ?>
 
             <?= $form->field($model, 'ora_inizio')->textInput(['data-input' => 'ora_inizio','type' => 'time']) ?>
 
@@ -84,9 +84,7 @@ use dosamigos\tinymce\TinyMce;
             <?= $form->field($model, 'firma')
                      ->dropDownList(
                          ArrayHelper::map($firme, 'id', function ($socio, $defaultValue) {
-
                             return $socio->cognome . ' ' . $socio->nome;
-
                         }),
             )->label(Yii::t('app', 'Nominativo di chi firma il verbale (verrà inserita la firma)')) ?>
             

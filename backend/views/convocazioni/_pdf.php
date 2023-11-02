@@ -5,6 +5,7 @@ $odg = explode("\n", $model->ordine_del_giorno);
 <p></p><p></p>
 
 <p><strong><?= Yii::t('app', 'Oggetto') ?>: </strong><?= $model->oggetto ?></p>
+<p><strong><?= Yii::t('app', 'Data dell\'assemblea') ?>: </strong><?= date('d-m-Y', strtotime($model->data_assemblea)) ?></p>
 <p></p><p></p>
 
 <h5><strong><?= Yii::t('app', 'Ordine del giorno') ?></strong></h5>
@@ -54,7 +55,7 @@ $odg = explode("\n", $model->ordine_del_giorno);
 <p style="line-height: 3.5">
     <?= Yii::t('app', 'Io sottoscritto {underscore}{underscore}{underscore} delego {underscore}{underscore}{underscore} per la riunione che si terrà in data {data}', [
         'underscore' => '________________________',
-        'data' => '<strong>'.$model->data.'</strong>'
+        'data' => '<strong>'.$model->data_assemblea.'</strong>'
     ]) ?>
 </p>
 <table>

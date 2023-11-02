@@ -59,7 +59,7 @@ class Firma extends \yii\db\ActiveRecord
      */
     public function getSoci()
     {
-        return $this->hasMany(Soci::className(), ['socio' => 'id']);
+        return $this->hasMany(Soci::className(), ['id' => 'socio']);
     }
     
 }

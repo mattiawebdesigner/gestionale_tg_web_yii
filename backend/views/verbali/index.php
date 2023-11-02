@@ -33,11 +33,35 @@ $this->params['breadcrumbs'][] = $this->title;
             'numero_protocollo',
             'oggetto',
             'ordine_del_giorno',
-            'data',
-            'ora_inizio',
+            [
+                'label' => 'Data dell\'assemblea',
+                'attribute' => 'data_assemblea',
+                'value' => function($model){
+                    return date('d-m-Y', strtotime($model->data_assemblea));
+                },
+            ],
+            [
+                'label' => 'Orario di inizio',
+                'attribute' => 'ora_inizio',
+                'value' => function($model){
+                    return date('H:i', strtotime($model->ora_inizio));
+                },
+            ],
+            [
+                'label' => 'Data di registrazione',
+                'attribute' => 'data_inserimento',
+                'value' => function($model){
+                    return date('d-m-Y H:i:s', strtotime($model->data_inserimento));
+                },
+            ],
+            [
+                'label' => 'Ultima modifica',
+                'attribute' => 'ultima_modifica',
+                'value' => function($model){
+                    return date('d-m-Y H:i:s', strtotime($model->data_inserimento));
+                },
+            ],
             //'ora_fine',
-            'data_inserimento',
-            //'ultima_modifica',
             //'firma',
             //'tipo',
             //'contenuto:ntext',
