@@ -47,10 +47,16 @@ $i = 0;
         </td>
         
         <td>
-            <?= Yii::t('app', 'Firma presidente') ?> <br /><br />
+            <?= Yii::t('app', 'Firma del presidente dell\'assemblea') ?> <br /><br />
             __________________________________________________ <br /><br />
             <?= Yii::t('app', 'Firma segretario verbalizzante') ?> <br /><br />
             __________________________________________________
         </td>
     </tr>
 </table>
+
+<br /><br />
+
+<p>
+    <?= Yii::t('app', 'N.B.: Nel caso in cui un socio segua online verrà posta la firma dal presidente dell\'assemblea per presa visione') ?>.
+</p>

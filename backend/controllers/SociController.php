@@ -88,7 +88,7 @@ class SociController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionView($id, $anno = 0)
+    public function actionView($id)
     {
         $socio = $this->findModel($id);
         $firma = \backend\models\Firma::find()->where(['socio' => $id])->one();
@@ -97,7 +97,6 @@ class SociController extends Controller
         return $this->render('view', [
             'model' => $socio,
             'years' => $years,
-            'anno'  => $anno,
             'firma' => $firma??false,
         ]);
     }
@@ -142,13 +141,12 @@ class SociController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionUpdate($id, $anno)
+    public function actionUpdate($id)
     {
         $model = $this->findModel($id);
         $annoSociale    = new AnnoSociale();
         
         $socio_anno_sociale = SocioAnnoSociale::find()->where(['socio' => $id])
-                                                      ->andWhere(['anno' => $anno])
                                                       ->one();
         $firma = \backend\models\Firma::find()->where(['socio' => $id])->one();
         if(is_null($firma)){
@@ -156,6 +154,7 @@ class SociController extends Controller
         }
         
         if ($this->request->isPost && $firma->load($this->request->post())) {
+            
             $firmaUpload = UploadedFile::getInstance($firma, 'firma');
             
             if(!is_null($firmaUpload)){
@@ -168,7 +167,7 @@ class SociController extends Controller
                 if($firma->save()){
                     $firmaUpload->saveAs($basePath.$fileName);
 
-                    return $this->redirect(['view', 'id' => $model->id, "anno" => $anno,]);
+                    return $this->redirect(['view', 'id' => $model->id,]);
                 }
             }
         }
@@ -176,13 +175,12 @@ class SociController extends Controller
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
             $socio_anno_sociale->load($this->request->post()) && $socio_anno_sociale->save();
             
-            return $this->redirect(['view', 'id' => $model->id, "anno" => $anno,]);
+            return $this->redirect(['view', 'id' => $model->id,]);
         }
         
         return $this->render('update', [
             'model'                 => $model,
             'annoSociale'           => $annoSociale,
-            'anno'                  => $anno,
             'socioAnnoSociale'      => $socio_anno_sociale,
             //Validità del socio 
             //(quota pagata => si, no altrimenti)

@@ -18,7 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <p>
         <?= Html::a('<i class="fas fa-table"></i> ', ['all'], ['class' => 'btn btn-success']) ?>
         <!--<?= Html::a('<i class="fas fa-user-plus"></i> ', ['anno-sociale/index'], ['class' => 'btn btn-info']) ?>-->
-        <?= Html::a('<i class="fas fa-pen"></i> '.Yii::t('app', 'Update'), ['update', 'id' => $model->id, 'anno'=>$anno], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a('<i class="fas fa-pen"></i> '.Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
         <?= Html::a('<i class="fas fa-trash"></i> '.Yii::t('app', 'Delete'), ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
