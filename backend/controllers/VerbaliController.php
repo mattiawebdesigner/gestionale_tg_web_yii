@@ -544,7 +544,7 @@ TESTO])
         //altrimenti per i verbali dove questa funzione non 
         //era ancora prevista verrà inserita la firma inserita
         //(e non l'immagine della firma)
-        $verbali = Verbali::find()->where("data LIKE '".$anno."%'")->andWhere(['bozza' => 1])->all();
+        $verbali = Verbali::find()->where("data_assemblea LIKE '".$anno."%'")->andWhere(['bozza' => 1])->all();
         foreach ($verbali as $verbale){
             if(is_numeric($verbale->firma)){
                 $firma = \backend\models\Firma::findOne(['socio' => $verbale->firma]);
