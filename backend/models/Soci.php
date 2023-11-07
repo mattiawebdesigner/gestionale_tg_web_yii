@@ -34,6 +34,14 @@ use Yii;
 class Soci extends \yii\db\ActiveRecord
 {
     
+    public const UPLOAD_DIR = "soci_uploads/";
+    public const DIR_DIMISSIONI = "dimissioni/";
+    
+    /**
+     * File da caricare
+     */
+    public $file;
+    
     /**
      * {@inheritdoc}
      */
@@ -77,7 +85,7 @@ class Soci extends \yii\db\ActiveRecord
             'indirizzo' => Yii::t('app', 'Indirizzo'),
             'luogo_di_nascita' => Yii::t('app', 'Luogo di nascita'),
             'provincia_di_nascita' => Yii::t('app', 'Provincia di nascita'),
-            'CAP' => Yii::t('app', 'C.A.P.'),
+            'CAP' => Yii::t('app', 'C.A.P. di residenza'),
             'citta_di_residenza' => Yii::t('app', 'Città di residenza'),
             'provincia_di_residenza' => Yii::t('app', 'Provincia di residenza'),
             'cellulare' => Yii::t('app', 'Cellulare'),
@@ -134,5 +142,28 @@ class Soci extends \yii\db\ActiveRecord
                         ->andWhere(['validita' => 'si'])
                         ->orderBy($orderBy)
                         ->all();
+    }
+    
+    /**
+     * Upload dei file
+     * 
+     * @return boolean
+     */
+    public function upload($directory)
+    {
+        if ($this->validate()) {
+            $filename = uniqid(rand(), true);//Rename namefile
+            
+            $this->file->saveAs(SELF::UPLOAD_DIR . $directory . $filename . '.' . $this->file->extension);
+            
+            return [
+                'fileName'          => Yii::$app->params['site_protocol'].Yii::$app->params['backendWeb'].self::UPLOAD_DIR.$directory.$filename.".".$this->file->extension,
+                'type'              => $this->file->type,
+                'extension'         => $this->file->extension,
+                'uploadDirectory'   => self::UPLOAD_DIR.$directory,
+            ];
+        } else {
+            return false;
+        }
     }
 }

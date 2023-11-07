@@ -304,15 +304,20 @@ CSS;
     public function actionStato($id){
         $model = $this->findModel($id);
         
-        if ($this->request->isPost) {
-            echo "OK";
+        if ($this->request->isPost && $dimissioni = $this->request->post()['Soci']) {
+            $model->data_dimissioni = $dimissioni['data_dimissioni'];
+            $model->file  = UploadedFile::getInstance($model, 'file_dimissioni');
+            
+            if(($model->file = $model->upload(Soci::DIR_DIMISSIONI))){
+                $model->file_dimissioni = $model->file['fileName'];
+                
+                if($model->save()){
+                    Yii::$app->session->setFlash('success', Yii::t('app', 'Dimissioni caricate con successo!'));
+                    
+                    return $this->redirect(['view', 'id' => $id]);
+                }
+            }
         }
-        
-        echo "<pre>";
-        print_r($model);
-        echo "</pre>";
-        
-        die;
         
         return $this->render('dimissioni', [
             'model' => $model,
