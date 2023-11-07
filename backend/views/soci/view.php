@@ -1,10 +1,21 @@
 <?php
-
+/**
+ * View per la visualizzazione dei dettagli dei soci.
+ * Visualizza:
+ * <ul>
+ *      <li>I dati anagrafici</li>
+ *      <li>Gli anni sociali del socio</li>
+ *      <li>Il file delle dimissioni, se presente</li>
+ * </ul>
+ */
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use backend\components\functions\check_file_extension;
 
 /* @var $this yii\web\View */
 /* @var $model backend\models\Soci */
+/* @var $firma backend\models\Firma */
+/* @var $years backend\models\SocioAnnoSociale */
 
 $this->title = $model->nome. " ". $model->cognome;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Soci'), 'url' => ['all']];
@@ -54,7 +65,28 @@ $this->params['breadcrumbs'][] = $this->title;
         <li><?= Html::a($year->anno, ['anno-sociale/view', 'anno' => $year->anno]) ?></li>
         <?php endforeach; ?>
     </ul>
-
+    
+    <?php if(!is_null($model->file_dimissioni)): ?>
+        <br /><br />
+        
+        <h5>
+        <?= Yii::t('app', 'Dimissioni ricevute in data {data}', [
+            'data' => date("d-m-Y", strtotime($model->data_dimissioni)),
+        ]) ?>
+        </h5>
+    
+        <?php
+        $dimissioni_file = explode(".", $model->file_dimissioni);
+        $ext = $dimissioni_file[sizeof($dimissioni_file)-1];
+        if($ext == "pdf") : ?>
+            <object data="<?= $model->file_dimissioni ?>" type="application/pdf" width="100%" height="500px">
+                <p><?= Yii::t('app', 'Impossibile aprire il file.') ?></p>
+            </object>
+        <?php else: ?>
+            <img src="<?= $model->file_dimissioni ?>" />
+        <?php endif; ?>    
+    <?php endif; ?>
+    
 </div>
 
 <?php
