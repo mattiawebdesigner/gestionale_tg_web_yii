@@ -296,6 +296,31 @@ CSS;
     }
     
     /**
+     * Gestisce le dimissioni del socio
+     * 
+     * @param type $id ID del socio
+     * @return type
+     */
+    public function actionStato($id){
+        $model = $this->findModel($id);
+        
+        if ($this->request->isPost) {
+            echo "OK";
+        }
+        
+        echo "<pre>";
+        print_r($model);
+        echo "</pre>";
+        
+        die;
+        
+        return $this->render('dimissioni', [
+            'model' => $model,
+        ]);
+    }
+
+
+    /**
      * Show all partner
      * 
      * @return type

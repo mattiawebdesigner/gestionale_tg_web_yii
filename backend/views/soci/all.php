@@ -6,6 +6,7 @@ use yii\grid\GridView;
 /* @var $searchModel backend\models\AnnoSocialeSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 $this->title = Yii::t('app', 'Elenco dei soci');
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'I soci'), 'url' => ['print-show']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="socio-anno-sociale">

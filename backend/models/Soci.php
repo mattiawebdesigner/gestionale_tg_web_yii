@@ -21,6 +21,12 @@ use Yii;
  * @property string $provincia_di_residenza
  * @property string $cellulare
  * @property string $codice_fiscale
+ * @property string $data_dimissioni
+ *                  Se il valore non è settato (NULL) il socio non ha presentato
+ *                  le dimissioni.
+ *                  Se il valore è una data sono state presentate le dimissioni.
+ * @property string $file_dimissioni
+ *                  File delle dimissioni del socio.
  *
  * @property AnnoSociale[] $annos
  * @property SocioAnnoSociale[] $socioAnnoSociales
@@ -42,11 +48,12 @@ class Soci extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['nome', 'cognome', 'data_di_nascita', 'luogo_di_nascita', 'provincia_di_nascita', 'CAP', 'citta_di_residenza', 'provincia_di_residenza', 'cellulare', 'cellulare'], 'required'],
-            [['data_registrazione', 'data_di_nascita'], 'safe'],
+            [['nome', 'cognome', 'data_di_nascita', 'luogo_di_nascita', 'provincia_di_nascita', 
+                'CAP', 'citta_di_residenza', 'provincia_di_residenza', 'cellulare', 'cellulare'], 'required'],
+            [['data_registrazione', 'data_di_nascita', 'data_dimissioni'], 'safe'],
             [['nome', 'cognome'], 'string', 'max' => 40],
             [['email'], 'string', 'max' => 100],
-            [['indirizzo', 'luogo_di_nascita', 'citta_di_residenza'], 'string', 'max' => 255],
+            [['indirizzo', 'luogo_di_nascita', 'citta_di_residenza', 'file_dimissioni'], 'string', 'max' => 255],
             [['provincia_di_nascita', 'provincia_di_residenza'], 'string', 'max' => 3],
             [['CAP'], 'string', 'max' => 5],
             [['cellulare'], 'string', 'max' => 10],
@@ -75,6 +82,8 @@ class Soci extends \yii\db\ActiveRecord
             'provincia_di_residenza' => Yii::t('app', 'Provincia di residenza'),
             'cellulare' => Yii::t('app', 'Cellulare'),
             'codice_fiscale' => Yii::t('app', 'Codice fiscale'),
+            'data_dimissioni' => Yii::t('app', 'Data delle dimissioni'),
+            'file_dimissioni' => Yii::t('app', 'Carica il file delle dimissioni'),
         ];
     }
 

@@ -1,6 +1,7 @@
 <?php
 /**
  * Pagina per la stampa dei soci.
+ * Questa pagina permette di vedere SOLO i soci attivi.
  * 
  * Questa pagina è utile per stampare l'elenco dei soci attivi.
  * L'elenco viene visualizzato a schermo e se necessario viene stampato
@@ -43,7 +44,19 @@ $this->params['breadcrumbs'][] = $this->title;
                 'urlCreator' => function ($action, backend\models\Soci $model, $key, $index, $column) {
                     return yii\helpers\Url::toRoute([$action, 'id' => $model->id, 'anno' => date('Y')]);
                 },
-                'template' => '{view} {update}',
+                'template' => '{view} {update} {stato}',
+                'buttons' => [
+                    'stato' => function($url){
+                        return  Html::a(
+                            '<i class="fa-solid fa-thermometer"></i>',
+                            $url, 
+                            [
+                                'title' => Yii::t('app', 'Setta lo stato del socio'),
+                                'data-pjax' => '0',
+                            ]
+                        );
+                    }
+                ]
             ],
         ],
     ]); ?>
