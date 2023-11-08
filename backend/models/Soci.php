@@ -139,9 +139,9 @@ class Soci extends \yii\db\ActiveRecord
         return  Soci::find()->joinWith('annos')
                         ->where(['anno_sociale.anno' => date('Y')])
                         ->andWhere(['sostenitore' => 'no'])
+                        ->andWhere(['data_dimissioni' => NULL])
                         ->andWhere(['validita' => 'si'])
-                        ->orderBy($orderBy)
-                        ->all();
+                        ->orderBy($orderBy);
     }
     
     /**

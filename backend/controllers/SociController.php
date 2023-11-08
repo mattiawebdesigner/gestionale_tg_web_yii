@@ -71,13 +71,9 @@ class SociController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel  = new SociSearch();
-        $dataProvider = $searchModel->search($this->request->queryParams);
         $annoSociale  = $model = \backend\models\AnnoSociale::find()->orderBy(['anno' => SORT_DESC])->all();
 
         return $this->render('index', [
-            'searchModel'  => $searchModel,
-            'dataProvider' => $dataProvider,
             'annoSociale'  => $annoSociale,
         ]);
     }
@@ -209,7 +205,7 @@ class SociController extends Controller
      */
     public function actionPrintShow(){
         $searchModel = new SociSearch();
-        $dataProvider = $searchModel->searchWithRelationship($this->request->queryParams);
+        $dataProvider = $searchModel->searchWithRelationshipActive($this->request->queryParams);
         
         return $this->render('print', [
             'searchModel'  => $searchModel,
@@ -221,7 +217,7 @@ class SociController extends Controller
      * Stampa il pdf
      */
     public function actionPrint(){
-        $model = Soci::sociAttivi();
+        $model = Soci::sociAttivi()->all();
         
         $cssInline = <<<CSS
             table{
@@ -332,7 +328,7 @@ CSS;
      */
     public function actionIndexSocio() {
         $searchModel = new SociSearch();
-        $dataProvider = $searchModel->searchWithRelationship($this->request->queryParams);
+        $dataProvider = $searchModel->searchWithRelationshipActive($this->request->queryParams);
         
         $searchModelSupporter  = new SociSearch();
         $dataProviderSupporter = $searchModel->searchWithRelationshipSupporter($this->request->queryParams);
@@ -367,7 +363,14 @@ CSS;
     public function actionGetSociAnno($anno){
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         
-        return Soci::find()->joinWith("socioAnnoSociales")->where(['anno' => $anno])->orderBy(['cognome' => SORT_ASC])->all();
+        //return Soci::find()->joinWith("socioAnnoSociales")->where(['anno' => $anno])->orderBy(['cognome' => SORT_ASC])->all();
+        
+        return Soci::find()->joinWith('annos')
+                        ->where(['anno_sociale.anno' => date('Y')])
+                        ->andWhere(['sostenitore' => 'no'])
+                        ->andWhere(['data_dimissioni' => NULL])
+                        ->andWhere(['validita' => 'si'])
+                        ->all();
     }
     
     
@@ -397,8 +400,8 @@ CSS;
         $model = Soci::find()->joinWith('annos')
                     ->where(['anno_sociale.anno' => date('Y')])
                     ->andWhere(['sostenitore' => 'no'])
+                    ->andWhere(['data_dimissioni' => NULL])
                     ->andWhere(['validita' => 'si'])
-                    ->orderBy(["cognome" => SORT_ASC, "nome" => SORT_ASC])
                     ->all();
         
         return $model;
