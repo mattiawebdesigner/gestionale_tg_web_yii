@@ -8,6 +8,10 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="direttivo-index">
     <h1><?= Html::encode($this->title) ?></h1>
     
+    <p>
+        <?= Html::a('<i class="fas fa-print"></i> '.Yii::t('app', 'Stampa elenco firme'), ['/direttivo/print'], ['class' => 'btn btn-success']) ?>
+    </p>
+    
     <div class="componenti">
         <?php foreach($model as $componente): ?>
         <div class="componente">
