@@ -271,9 +271,11 @@ TESTO])
             $model->loadDefaultValues();
         }
         
-        $firme = \backend\models\Firma::find()
-                                        ->joinWith('soci')
-                                        ->all();
+        $firme      = \backend\models\Soci::find()
+                ->joinWith('firma')
+                ->where('firma.socio = soci.id')
+                ->orderBy(['cognome' => SORT_ASC, 'nome' => SORT_ASC])
+                ->all();
 
         return $this->render('create', [
             'model'     => $model,
