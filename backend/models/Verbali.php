@@ -38,7 +38,7 @@ class Verbali extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['numero_protocollo', 'oggetto', 'ordine_del_giorno', 'data', 'ora_inizio', 'ora_fine', 'firma', 'tipo', 'contenuto'], 'required'],
+            [['numero_protocollo', 'oggetto', 'ordine_del_giorno', 'data_assemblea', 'ora_inizio', 'ora_fine', 'firma', 'tipo', 'contenuto'], 'required'],
             [['data_assemblea', 'ora_inizio', 'ora_fine', 'data_inserimento', 'ultima_modifica'], 'safe'],
             [['tipo', 'bozza'], 'integer'],
             [['contenuto'], 'string'],
