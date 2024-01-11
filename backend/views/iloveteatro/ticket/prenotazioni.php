@@ -84,10 +84,13 @@ $this->title = Yii::t('app', 'Prenotazioni: {spettacolo}', [
                     <?= Yii::t('app', 'Prenotazioni da pagare') ?>: <strong class="c-iloveteatro"><?= \app\models\IltPrenotazioni::find()->where(['email' => $prenotazione->email, 'spettacolo' => $prenotazione->spettacolo, 'pagato' => \app\models\IltPrenotazioni::NON_PAGATO])->count(); ?></strong>
                 </div>
                 <div>
-                    <?= Yii::t('app', 'Totali prenotazioni') ?>: <strong><?= \app\models\IltPrenotazioni::find()->where(['email' => $prenotazione->email, 'spettacolo' => $prenotazione->spettacolo])->count(); ?></strong>
+                    <?= Yii::t('app', 'Totali prenotazioni') ?>: <strong>
+                    <?= \backend\components\sistema_prenotazione_biglietti\Postazioni::nOfSeatBooked(\app\models\IltPrenotazioni::find()->where(['email' => $prenotazione->email, 'spettacolo' => $prenotazione->spettacolo])->one()->prenotazione)
+                    ?>
+                    </strong>
                 </div>
                 <?php if(!is_null($prenotazione->data_registrazione)) : ?>
-                    <div><?= Yii::t('app', 'Data della prenotazione') ?>: <strong><?= $prenotazione->data_registrazione ?></strong></div>
+                <div><?= Yii::t('app', 'Data della prenotazione') ?>: <strong><?= date('d-m-Y', strtotime($prenotazione->data_registrazione)) ?></strong></div>
                 <?php endif; ?>
             </div>
         

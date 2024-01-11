@@ -87,6 +87,128 @@ class Postazioni{
         echo '</svg>';
     }
     
+    public function cancellaPrenotazione($prenotazioni_da_cancellare, $prenotazioni){
+        
+        $prenotazione_posti_utente = [];
+        foreach($prenotazioni_da_cancellare as $k_pp => $v_pp){
+            $prenotazione_posti_utente[$k_pp] = [];
+
+            if(isset($this->posti->$k_pp->file)){//Se ha solo file
+
+                foreach ($v_pp['fila'] as $k_fila => $v_fila){
+
+                    $posto = $v_pp['posto'][$k_fila];
+                    $this->posti->$k_pp->file->$v_fila->posti->$posto->stato = 0;
+
+                    //dati prenotazione utente
+                    $prenotazione_posti_utente[$k_pp]['file'][$v_fila]['posti'][] = $posto;
+                }
+            }else if(isset($this->posti->$k_pp->palco)){//se ci sono dei palchi
+                foreach ($v_pp['palco'] as $k_palco => $v_palco){
+                    $fila = $v_pp['fila'][$k_palco];
+                    if($fila == "non_numerato"){                        
+                        $this->posti->$k_pp->palco->$v_palco[0]->posti_prenotati += 1;
+                        $conteggio_prenotazione_utente_non_numerato += 1;
+                        
+                        $prenotazione_posti_utente[$k_pp]['palco'][$v_palco]['non_numerato'] = $conteggio_prenotazione_utente_non_numerato;
+                        
+                    }else{
+                        $posto = $v_pp['posto'][$k_palco];
+                        $this->posti->$k_pp->palco->$v_palco->fila->$fila->posti->$posto->stato = 0;
+
+                        //dati prenotazione utente
+                        $prenotazione_posti_utente[$k_pp]['palco'][$v_palco]['fila'][$fila]['posti'][] = $posto;
+                    }
+                }
+            }
+        }
+        
+        //$prenotazione_posti_utente = !is_null($prenotazione_esistente)?json_encode(array_merge_recursive($prenotazione_esistente, $prenotazione_posti_utente)): json_encode($prenotazione_posti_utente);
+        
+        
+        
+        /*echo "<pre>";
+        print_r($prenotazione_posti_utente);
+        echo "</pre>";*/
+    }
+
+    /**
+    * Salvataggio dei posti prenotati dagli utenti
+    * e salva i dati dell'utente che ha prenotato
+    * 
+    * @param array $prenotazione_posti Array dei posti prenotati
+    * @param array $dati Dati dell'utente che sta prenotando
+    * @param int $id_spettacolo ID dello spettacolo da prenotare
+    */
+    public function prenotazione($prenotazione_posti, $prenotazione_esistente, $dati, $id_spettacolo) {
+        /*$prenotazione_posti = $_POST['prenotazione'];
+        $dati = $_POST['dati'];
+        $id_spettacolo = $dati['spettacolo_id'];*/
+        $conteggio_prenotazione_utente_non_numerato = 0;
+
+        //costruisco il json per la prenotazione dell'utente
+        //e modifico la piantina
+        $prenotazione_posti_utente = [];
+        foreach($prenotazione_posti as $k_pp => $v_pp){
+            $prenotazione_posti_utente[$k_pp] = [];
+
+            if(isset($this->posti->$k_pp->file)){//Se ha solo file
+
+                foreach ($v_pp['fila'] as $k_fila => $v_fila){
+
+                    $posto = $v_pp['posto'][$k_fila];
+                    $this->posti->$k_pp->file->$v_fila->posti->$posto->stato = 0;
+
+                    //dati prenotazione utente
+                    $prenotazione_posti_utente[$k_pp]['file'][$v_fila]['posti'][] = $posto;
+                }
+            }else if(isset($this->posti->$k_pp->palco)){//se ci sono dei palchi
+                foreach ($v_pp['palco'] as $k_palco => $v_palco){
+                    $fila = $v_pp['fila'][$k_palco];
+                    if($fila == "non_numerato"){                        
+                        $this->posti->$k_pp->palco->$v_palco[0]->posti_prenotati += 1;
+                        $conteggio_prenotazione_utente_non_numerato += 1;
+                        
+                        $prenotazione_posti_utente[$k_pp]['palco'][$v_palco]['non_numerato'] = $conteggio_prenotazione_utente_non_numerato;
+                        
+                    }else{
+                        $posto = $v_pp['posto'][$k_palco];
+                        $this->posti->$k_pp->palco->$v_palco->fila->$fila->posti->$posto->stato = 0;
+
+                        //dati prenotazione utente
+                        $prenotazione_posti_utente[$k_pp]['palco'][$v_palco]['fila'][$fila]['posti'][] = $posto;
+                    }
+                }
+
+            }
+        }
+        
+        
+        $prenotazione_posti_utente = !is_null($prenotazione_esistente)?json_encode(array_merge_recursive($prenotazione_esistente, $prenotazione_posti_utente)): json_encode($prenotazione_posti_utente);
+        
+        
+        //$prenotazione_posti_utente = json_encode($prenotazione_posti);//Verificare questo errore e sistemare di conseguenza la lettura e il resto
+        $piantina_json      = json_encode($this->posti);
+        
+        $tbl_teatro_spettacolo = self::DB_TABLE_SPETTACOLO;
+        $tbl_prenotazione      = self::DB_TABLE_PRENOTAZIONE;
+        
+        return [
+            'piantina'                  => $piantina_json,
+            'prenotazione_posti_utente' => $prenotazione_posti_utente
+        ];
+    }
+    
+    
+    /**
+     * Restituisce la piantina di un dato spettacolo
+     * 
+     * @param int $spettacolo_id Codice dello spettacolo
+     */
+    public function getPiantinaSpettacolo($spettacolo_id){
+        return $this->getSpettacolo($spettacolo_id)->piantina;
+    }
+    
     /**
      * Visualizza i palchi
      * 
@@ -232,135 +354,11 @@ class Postazioni{
                                    . 'fill="'.$color.'" />';
                         endforeach; 
                     //Fine ciclo posizioni 
-                endforeach; 
+                endforeach;
                 //Fine ciclo posti 
             endforeach;
         //Fine ciclo delle file 
     }
-    
-    public function cancellaPrenotazione($prenotazioni_da_cancellare, $prenotazioni){
-        
-        $prenotazione_posti_utente = [];
-        foreach($prenotazioni_da_cancellare as $k_pp => $v_pp){
-            $prenotazione_posti_utente[$k_pp] = [];
-
-            if(isset($this->posti->$k_pp->file)){//Se ha solo file
-
-                foreach ($v_pp['fila'] as $k_fila => $v_fila){
-
-                    $posto = $v_pp['posto'][$k_fila];
-                    $this->posti->$k_pp->file->$v_fila->posti->$posto->stato = 0;
-
-                    //dati prenotazione utente
-                    $prenotazione_posti_utente[$k_pp]['file'][$v_fila]['posti'][] = $posto;
-                }
-            }else if(isset($this->posti->$k_pp->palco)){//se ci sono dei palchi
-                foreach ($v_pp['palco'] as $k_palco => $v_palco){
-                    $fila = $v_pp['fila'][$k_palco];
-                    if($fila == "non_numerato"){                        
-                        $this->posti->$k_pp->palco->$v_palco[0]->posti_prenotati += 1;
-                        $conteggio_prenotazione_utente_non_numerato += 1;
-                        
-                        $prenotazione_posti_utente[$k_pp]['palco'][$v_palco]['non_numerato'] = $conteggio_prenotazione_utente_non_numerato;
-                        
-                    }else{
-                        $posto = $v_pp['posto'][$k_palco];
-                        $this->posti->$k_pp->palco->$v_palco->fila->$fila->posti->$posto->stato = 0;
-
-                        //dati prenotazione utente
-                        $prenotazione_posti_utente[$k_pp]['palco'][$v_palco]['fila'][$fila]['posti'][] = $posto;
-                    }
-                }
-            }
-        }
-        
-        //$prenotazione_posti_utente = !is_null($prenotazione_esistente)?json_encode(array_merge_recursive($prenotazione_esistente, $prenotazione_posti_utente)): json_encode($prenotazione_posti_utente);
-        
-        
-        
-        echo "<pre>";
-        print_r($prenotazione_posti_utente);
-        echo "</pre>";
-    }
-
-    /**
-    * Salvataggio dei posti prenotati dagli utenti
-    * e salva i dati dell'utente che ha prenotato
-    * 
-    * @param array $prenotazione_posti Array dei posti prenotati
-    * @param array $dati Dati dell'utente che sta prenotando
-    * @param int $id_spettacolo ID dello spettacolo da prenotare
-    */
-    public function prenotazione($prenotazione_posti, $prenotazione_esistente, $dati, $id_spettacolo) {
-        /*$prenotazione_posti = $_POST['prenotazione'];
-        $dati = $_POST['dati'];
-        $id_spettacolo = $dati['spettacolo_id'];*/
-        $conteggio_prenotazione_utente_non_numerato = 0;
-
-        //costruisco il json per la prenotazione dell'utente
-        //e modifico la piantina
-        $prenotazione_posti_utente = [];
-        foreach($prenotazione_posti as $k_pp => $v_pp){
-            $prenotazione_posti_utente[$k_pp] = [];
-
-            if(isset($this->posti->$k_pp->file)){//Se ha solo file
-
-                foreach ($v_pp['fila'] as $k_fila => $v_fila){
-
-                    $posto = $v_pp['posto'][$k_fila];
-                    $this->posti->$k_pp->file->$v_fila->posti->$posto->stato = 0;
-
-                    //dati prenotazione utente
-                    $prenotazione_posti_utente[$k_pp]['file'][$v_fila]['posti'][] = $posto;
-                }
-            }else if(isset($this->posti->$k_pp->palco)){//se ci sono dei palchi
-                foreach ($v_pp['palco'] as $k_palco => $v_palco){
-                    $fila = $v_pp['fila'][$k_palco];
-                    if($fila == "non_numerato"){                        
-                        $this->posti->$k_pp->palco->$v_palco[0]->posti_prenotati += 1;
-                        $conteggio_prenotazione_utente_non_numerato += 1;
-                        
-                        $prenotazione_posti_utente[$k_pp]['palco'][$v_palco]['non_numerato'] = $conteggio_prenotazione_utente_non_numerato;
-                        
-                    }else{
-                        $posto = $v_pp['posto'][$k_palco];
-                        $this->posti->$k_pp->palco->$v_palco->fila->$fila->posti->$posto->stato = 0;
-
-                        //dati prenotazione utente
-                        $prenotazione_posti_utente[$k_pp]['palco'][$v_palco]['fila'][$fila]['posti'][] = $posto;
-                    }
-                }
-
-            }
-        }
-        
-        
-        $prenotazione_posti_utente = !is_null($prenotazione_esistente)?json_encode(array_merge_recursive($prenotazione_esistente, $prenotazione_posti_utente)): json_encode($prenotazione_posti_utente);
-        
-        
-        //$prenotazione_posti_utente = json_encode($prenotazione_posti);//Verificare questo errore e sistemare di conseguenza la lettura e il resto
-        $piantina_json      = json_encode($this->posti);
-        
-        $tbl_teatro_spettacolo = self::DB_TABLE_SPETTACOLO;
-        $tbl_prenotazione      = self::DB_TABLE_PRENOTAZIONE;
-        
-        return [
-            'piantina'                  => $piantina_json,
-            'prenotazione_posti_utente' => $prenotazione_posti_utente
-        ];
-    }
-    
-    
-    /**
-     * Restituisce la piantina di un dato spettacolo
-     * 
-     * @param int $spettacolo_id Codice dello spettacolo
-     */
-    public function getPiantinaSpettacolo($spettacolo_id){
-        return $this->getSpettacolo($spettacolo_id)->piantina;
-    }
-    
-    
     
     /**
      * Verifica se lo stato è valido
@@ -472,6 +470,52 @@ class Postazioni{
     }
     
     /**
+     * Conta il numero di prenotazioni
+     * 
+     * @param type $prenotazione Prenotazioni effettuate
+     * @return int Numero totale di prenotazioni
+     */
+    public static function nOfSeatBooked($prenotazione){
+        $searchKey = 'file';
+        $searchKey2 = "posti";
+        $nOfSeatBooked = 0;
+        
+        $func = function ($subarray) use ($searchKey, &$func, $searchKey2, &$nOfSeatBooked) {
+            $cont = 0;
+            
+            //Controllo se il valore di $subarray è un array
+            //e non contiene la chiave cercata.
+            //In questo caso si ripassa ala funzione stessa il valore
+            //del nuovo sotto array
+            if(!isset($subarray[$searchKey]) && is_array($subarray)){
+                $func($subarray[key($subarray)]);
+            
+            //Se invece la chiave è trovata calcolo
+            //restituisco i valori (solitamente un array)
+            }else{
+                if(isset($subarray[$searchKey])){
+                    foreach($subarray[$searchKey] as $v){
+                        if(isset($v[$searchKey2])){
+                            array_filter($v, function($sa) use (&$nOfSeatBooked){
+                                foreach ($sa as $v){
+                                    $nOfSeatBooked ++; 
+                                }
+                            });
+                        }
+                    }
+                }
+                
+                return [$cont];
+            }
+            
+        };
+        
+        array_filter(json_decode($prenotazione, true), $func);
+        
+        return $nOfSeatBooked;
+    }
+    
+    /**
      * Aggiorna la piantina delle prenotazioni per gli ordini.
      * 
      * @param array $ordine          Dati dell'ordine
@@ -522,9 +566,9 @@ class Postazioni{
         
         $piantina = self::restoreStato($piantina, $stati_posti_prenotati);
         
-        echo "<pre>";
+        /*echo "<pre>";
         print_r($piantina);
-        echo "</pre>";
+        echo "</pre>";*/
         
         return $piantina;
     }
