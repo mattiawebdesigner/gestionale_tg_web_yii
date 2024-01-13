@@ -65,13 +65,8 @@ $this->title = $model->compagnia;
     <div class="flex gap-1 flex-wrap-wrap">
         <?php foreach($allegati as $allegato) : ?>
         <div>
-            <?= Html::a($allegato->nome, 
-                         Yii::$app->params['pdf_upload_path'].$allegato->allegato, 
-                    ['target' => '_blank']) ?>
-        </div>
-        <div>
-            <?= Html::a($allegato->nome, 
-                         Yii::$app->params['pdf_upload_path'].$allegato->allegato, 
+            <?= Html::a(Yii::t('app', 'Documento di iscrizione'), 
+                        $allegato->allegato, 
                     ['target' => '_blank']) ?>
         </div>
         <?php endforeach; ?>
