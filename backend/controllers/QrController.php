@@ -34,15 +34,23 @@ class QrController extends Controller
         $model = new \backend\models\QR();
         
         if($this->request->isPost) {
-            $model->logo = UploadedFile::getInstance($model, 'logo');
-            $model->logo->saveAs(Yii::$app->params['image_upload_path'] . $model->logo->baseName . '.' . $model->logo->extension);
-            
-                echo "<pre>";
-                print_r(Yii::$app->params['crm_image_upload_path'] . $model->logo->baseName . '.' . $model->logo->extension);
-                print_r($model->logo);
-                echo "</pre>";
-            
-            return;
+            if($model->load($this->request->post())){
+                $model->logo = UploadedFile::getInstance($model, 'logo');
+                $filename = md5($model->logo->baseName).md5(date('YmdHmi')). '.' . $model->logo->extension;
+                $model->logo->saveAs(Yii::$app->params['crm_qr_logo_upload_path'].$filename);
+                
+                //Genero il QR Code testuale con logo
+                $qrCode = (new QrCode($model->testo))
+                            ->setSize(600)
+                            ->setMargin(5)
+                            ->setBackgroundColor(255, 255, 255)
+                            ->setLogo(Yii::$app->params['crm_qr_logo_upload_path'].$filename)
+                            ;
+                $qrCode->writeFile(Yii::$app->params['crm_qr_generate_path']."qr_". md5(date('Ydm')).".png");
+                
+                echo "<img src='".$qrCode->writeDataUri()."' />";
+                
+            }
         }
         
         /*$format = new \Da\QrCode\Format\BookMarkFormat(['title' => 'https://open.spotify.com/track/34RMBYAfVXRfSpZBUOu63S?si=DzO9LsbXTD-V6tFw1VSR0w', 'url' => '']);
