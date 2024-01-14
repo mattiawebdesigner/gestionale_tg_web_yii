@@ -20,7 +20,8 @@
         "yiisoft/yii2-swiftmailer": "~2.0.0 || ~2.1.0",
         "2amigos/yii2-tinymce-widget": "~1.1",
         "kartik-v/yii2-mpdf": "dev-master",
-        "scotthuangzl/yii2-google-chart": "dev-master"
+        "scotthuangzl/yii2-google-chart": "dev-master",
+        "2amigos/qrcode-library": "^3.1.0"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",
