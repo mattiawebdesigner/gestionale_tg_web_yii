@@ -1,0 +1,9 @@
+/* 
+    Gestisce lo stile della pagina di generazione del QR Code.
+    
+    Created on : 17 gen 2024, 00:25:08
+    Author     : Mattia Leonardo Angelillo
+*/
+#qr .qr{
+    width: 200px;
+}

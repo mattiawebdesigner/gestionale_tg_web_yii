@@ -23,7 +23,7 @@ class QR extends \yii\base\Model
     public function rules()
     {
         return [
-            [['testo', 'logo'], 'required'],
+            [['testo'], 'required'],
             [['logo'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg'],
             [['testo'], 'string', 'max' => 255],
         ];

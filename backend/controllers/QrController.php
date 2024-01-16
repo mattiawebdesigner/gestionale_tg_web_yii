@@ -4,6 +4,7 @@ namespace backend\controllers;
 use Yii;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 use Da\QrCode\QrCode;
 use \yii\web\UploadedFile;
 
@@ -26,53 +27,69 @@ class QrController extends Controller
                         'delete' => ['POST'],
                     ],
                 ],
+                'access' => [
+                    'class' => AccessControl::className(),
+                    'rules' => [
+                        [
+                            'actions' => ['login', 'error'],
+                            'allow' => true,
+                        ],
+                        [
+                            'actions' => [],//All page
+                            'allow' => true,
+                            'roles' => ['Super User', 'Socio'],
+                        ],
+                    ],
+                ],
             ]
         );
     }
     
     public function actionIndex(){
+        ini_set("memory_limit","512M");
+        
         $model = new \backend\models\QR();
         
         if($this->request->isPost) {
             if($model->load($this->request->post())){
-                $model->logo = UploadedFile::getInstance($model, 'logo');
-                $filename = md5($model->logo->baseName).md5(date('YmdHmi')). '.' . $model->logo->extension;
-                $model->logo->saveAs(Yii::$app->params['crm_qr_logo_upload_path'].$filename);
+                if(isset($this->request->post('QR')['logo'])){
+                    $model->logo = UploadedFile::getInstance($model, 'logo');
+                    $filename = md5($model->logo->baseName).md5(date('YmdHmi')). '.' . $model->logo->extension;
+                    $model->logo->saveAs(Yii::$app->params['crm_qr_logo_upload_path'].$filename);
+
+                    //Genero il QR Code testuale con logo
+                    $qrCode = (new QrCode($model->testo))
+                                ->setSize(600)
+                                ->setMargin(5)
+                                ->setBackgroundColor(255, 255, 255)
+                                ->setLogo(Yii::$app->params['crm_qr_logo_upload_path'].$filename)
+                                ->setLogoWidth(96)
+                                ->setScaleLogoHeight(false)
+                                ;
+                }else{
+                    //Genero il QR Code testuale con logo
+                    $qrCode = (new QrCode($model->testo))
+                                ->setSize(600)
+                                ->setMargin(5)
+                                ->setBackgroundColor(255, 255, 255)
+                                ;
+                }
+                $qrImageLink = Yii::$app->params['crm_qr_generate_path']."qr_". md5(date('Ydm')).".png";
+                $qrCode->writeFile($qrImageLink);
                 
-                //Genero il QR Code testuale con logo
-                $qrCode = (new QrCode($model->testo))
-                            ->setSize(600)
-                            ->setMargin(5)
-                            ->setBackgroundColor(255, 255, 255)
-                            ->setLogo(Yii::$app->params['crm_qr_logo_upload_path'].$filename)
-                            ;
-                $qrCode->writeFile(Yii::$app->params['crm_qr_generate_path']."qr_". md5(date('Ydm')).".png");
                 
-                echo "<img src='".$qrCode->writeDataUri()."' />";
-                
+                return $this->redirect(['qr/generato', 'qrCode' => $qrImageLink]);
             }
         }
         
-        /*$format = new \Da\QrCode\Format\BookMarkFormat(['title' => 'https://open.spotify.com/track/34RMBYAfVXRfSpZBUOu63S?si=DzO9LsbXTD-V6tFw1VSR0w', 'url' => '']);
-        $qrCode = (new QrCode("https://open.spotify.com/track/34RMBYAfVXRfSpZBUOu63S?si=DzO9LsbXTD-V6tFw1VSR0w"))
-                ->setSize(250)
-                ->setMargin(5);
-                //->setLogo(__DIR__.'/../web/WeekArt/weekArt-logo.png');
-                //->setBackgroundColor(51, 153, 255);
-
-        // now we can display the qrcode in many ways
-        // saving the result to a file:
-
-        $qrCode->writeFile(__DIR__ . '/code.png'); // writer defaults to PNG when none is specified
-        */
-        
-
-        // display directly to the browser 
-        /*header('Content-Type: '.$qrCode->getContentType());
-        echo $qrCode->writeString();*/
-        
         return $this->render('index', [
             'model' => $model,
+        ]);
+    }
+    
+    public function actionGenerato($qrCode){
+        return $this->render('generato', [
+            'qrCode' => $qrCode,
         ]);
     }
 }

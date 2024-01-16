@@ -51,9 +51,14 @@ $this->title = Yii::$app->name." ".Yii::t('app', 'Gestionale');
     		
 		<?php endif; ?>
                             
+                <?php //FUNCTIONS ?>
+                    <h3><?= Yii::t('app', 'Funzioni') ?></h3> <hr />
+                    <?= $this->render('_index_functions') ?>
+                <?php //////////////////////////  ?>
+                            
                 <?php if(\backend\models\Utenti::findOne(Yii::$app->user->id)->socio_id <> 0) : ?>
-    		<h3><?= Yii::t('app', 'Area del socio') ?></h3> <hr />
-    		<?= $this->render('_index_socio') ?>
+                    <h3><?= Yii::t('app', 'Area del socio') ?></h3> <hr />
+                    <?= $this->render('_index_socio') ?>
 		<?php endif; ?>
 		
     </div>
