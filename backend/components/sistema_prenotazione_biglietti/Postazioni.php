@@ -58,14 +58,16 @@ class Postazioni{
      * @param array|null $posti_prenotati
      *                   Se settato serve a modificare i posti prenotati da tutti
      *                   i clienti con quelli solo presenti in questo array.
+     * @param boolean $nuova_prenotazione Indica se è una nuova prenotazione (true) o no (false)
+     * @param mixed $conn
      * @param mysqli $conn Connessione a mysql
      */
-    public function __construct($posti_piantina, $posti_prenotati = null, $conn = null) {
+    public function __construct($posti_piantina, $posti_prenotati = null, $nuova_prenotazione = true, $conn = null) {
         $this->posti = $posti_piantina;
         $this->conn  = $conn;
         
         if($posti_prenotati <> null){
-            self::updatePiantina($posti_prenotati, $posti_piantina);
+            self::updatePiantina($posti_prenotati, $posti_piantina, $nuova_prenotazione);
         }
         
     }
@@ -450,19 +452,25 @@ class Postazioni{
      * 
      * @param array $prenotazione
      * @param array $piantina
+     * @param boolean $nuova_prenotazione Indica se è una nuova prenotazione (true) o no (false)
+     * @param mixed $conn
      * @return boolean|array Restituisce false se la prenotazione non è corretta.
      *                       Restituisce l'array della piantina modificata,
      *                          se i dati della prenotazione passati sono corretti.
      */
-    public static function updatePiantina(array $prenotazione, array $piantina){
+    public static function updatePiantina(array $prenotazione, $piantina, $nuova_prenotazione = true){
         //non è una prenotazione valida
         if(!is_array($prenotazione)){return false;}
         
+        /*echo "<pre>";
+        print_r($prenotazione);
+        echo "</pre>";*/
+        
         foreach ($piantina as $k_piantina => $v_piantina){
             if(strtolower($k_piantina) === "platea"){
-                $piantina = self::updatePrenotazionePlatea($v_piantina, $prenotazione, $piantina);
+               $piantina = self::updatePrenotazionePlatea($v_piantina, $prenotazione, $piantina);
             }else{                
-                $piantina = self::updatePrenotazioneOrdini($v_piantina, $prenotazione, $piantina, $k_piantina);
+               $piantina = self::updatePrenotazioneOrdini($v_piantina, $prenotazione, $piantina, $k_piantina);
             }
         }
         
@@ -554,9 +562,9 @@ class Postazioni{
      * @param array $piantina        Piantina da aggiornare
      * @return array Piantina aggiornata
      */
-    private static function updatePrenotazionePlatea(array $platea, array $prenotazione, array $piantina){
+    private static function updatePrenotazionePlatea($platea, array $prenotazione, $piantina){
         $stati_posti_prenotati = [];
-        foreach($platea['file'] as $fila => $a_posti_fila){            
+        foreach($platea->file as $fila => $a_posti_fila){            
             $tmp = self::updatePosti($a_posti_fila, $fila, $prenotazione, $piantina);
             if(sizeof($tmp) > 0){
                 $stati_posti_prenotati['platea'][] = $tmp['stato_posti_prenotati'];
@@ -564,11 +572,8 @@ class Postazioni{
             }
         }
         
-        $piantina = self::restoreStato($piantina, $stati_posti_prenotati);
+        //$piantina = self::restoreStato($piantina, $stati_posti_prenotati);
         
-        /*echo "<pre>";
-        print_r($piantina);
-        echo "</pre>";*/
         
         return $piantina;
     }
@@ -576,21 +581,21 @@ class Postazioni{
     /**
      * Aggiorna i posti
      * 
-     * @param array $posti           Array dei posti
+     * @param $posti           Array dei posti
      * @param string|int $fila       Fila a cui si riferiscono i posti. 
      *                               Vale null per gli ordini.
      * @param array $prenotazione    Dati della prenotazione
-     * @param array $piantina        Piantina da aggiornare
+     * @param $piantina        Piantina da aggiornare
      * @param string $tipo           Tipo da aggiornare (platea, I Ordine, ...)
      * @param int $palco             Numero del palco (non usato nella platea)
      * @return array Piantina aggiornata
      */
-    private static function updatePosti(array $posti, $fila, array $prenotazione, array $piantina, $tipo = "platea", $palco = null){
+    private static function updatePosti($posti, $fila, array $prenotazione, $piantina, $tipo = "platea", $palco = null){
         $res = [];
         
         if($fila <> null){//Platea
-            foreach ($posti['posti'] as $posto => $dati_posto){
-                if(isset($dati_posto['stato'])){
+            foreach ($posti->posti as $posto => $dati_posto){
+                if(isset($dati_posto->stato)){
                     $res = self::deleteStato($prenotazione, $fila, $posto, $piantina);
                 }
             }
@@ -620,29 +625,35 @@ class Postazioni{
      * @param array $prenotazione    Dati della prenotazione
      * @param string|int $fila       Fila a cui si riferiscono i posti
      * @param int $posto             Posto della fila
-     * @param array $piantina        Dati della prenotazione
+     * @param $piantina        Dati della prenotazione
      * @param mixed $tipo           Indica il tipo della piantina (platea, I Ordine, ecc.)
      * @param mixed $palco             Numero del palco (non usato nella platea)
      * @return type
      */
-    private static function deleteStato(array $prenotazione, $fila, $posto, array $piantina, $tipo = "platea", $palco = null){        
+    private static function deleteStato(array $prenotazione, $fila, $posto, $piantina, $tipo = "platea", $palco = null){        
         //Salvo gli stati dei posti prenotati
         $stati_posti_prenotati = [];        
         if(isset($prenotazione[$tipo]['file'][$fila]['posti'])){
             foreach ($prenotazione[$tipo]['file'][$fila]['posti'] as $k_posto => $v_posto){
-                if(isset($piantina[$tipo]['file'][$fila]['posti'][$posto]['stato'])){
+                /*echo "<pre>";
+                print_r($piantina->$tipo->file->$fila->posti->posto->stato);
+                echo "</pre>";
+                return array();*/
+                
+                //if(isset($piantina[$tipo]['file'][$fila]['posti'][$posto]['stato'])){
+                if(isset($piantina->$tipo->file->$fila->posti->posto->stato)){
                     $stati_posti_prenotati[$tipo][$fila][$v_posto] = $piantina[$tipo]['file'][$fila]['posti'][$posto]['stato'];
                 }
             }
-        }else if(isset ($piantina[$tipo]['palco'][$palco]['fila'][$fila]['posti'][$posto]['stato'])){//Ordini
+        }else if(isset ($piantina->$tipo->palco->$palco->fila->$fila->posti->$posto->stato)){//Ordini
             //echo "4) deleteStato() <br />";
             $stati_posti_prenotati[$tipo][][$palco][$fila][$posto] = $piantina[$tipo]['palco'][$palco]['fila'][$fila]['posti'][$posto]['stato'];
         }
         
         //Rimuovo tutti gli stati
-        if(strtolower($tipo) == "platea"){
-            foreach ($piantina[$tipo]['file'][$fila]['posti'] as $k_posto => $v_posto){
-                unset($piantina[$tipo]['file'][$fila]['posti'][$k_posto]['stato']);
+        if(strtolower($tipo) == "platea"){            
+            foreach ($piantina->$tipo->file->$fila->posti as $k_posto => $v_posto){
+                unset($piantina->$tipo->file->$fila->posti->$k_posto->stato);
             }
         }else{//Ordini
             foreach ($piantina[$tipo]['palco'][$palco]['fila'][$fila]['posti'] as $k_posto => $v_posto){
@@ -668,7 +679,7 @@ class Postazioni{
      *                                  nella piantina.
      * @return array Piantina con gli stati ripristinati
      */
-    private static function restoreStato(array $piantina, array $stati_prentazione):array{
+    private static function restoreStato($piantina, array $stati_prentazione){
         //echo "5) restoreStato()<br />";
         
         /*echo "<pre>";
@@ -678,7 +689,7 @@ class Postazioni{
         foreach ($stati_prentazione as $k_prenotazione => $v_prenotazione){
             //echo $k_prenotazione;
             foreach ($v_prenotazione as $file_palchi){                
-                if(isset($piantina[$k_prenotazione]['file'])){
+                if(isset($piantina->$k_prenotazione->file)){
                     foreach($file_palchi as $fila => $posti){
                         foreach ($posti as $posto => $stato){
                             $piantina[$k_prenotazione]['file'][$fila]['posti'][$posto]['stato'] = $stato;
@@ -724,5 +735,19 @@ class Postazioni{
         
         
         return $piantina;
+    }
+    
+    /**
+     * 
+     * @param \stdClass $obj Oggetto da convertire in array
+     */
+    private static function objToArray(\stdClass $obj){
+        
+        $res = [];
+        foreach ($obj as $key => $value){
+            $res[$key] = $value;
+            
+        }
+        
     }
 }
