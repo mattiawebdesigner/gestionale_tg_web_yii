@@ -25,7 +25,7 @@ $this->title = Yii::t('app', 'Gestisci prenotazione: {spettacolo}', [
     
     <pre>
         <?php
-        print_r($prenotazioni);
+        print_r($tutte_le_prenotazioni);
         ?>
     </pre>
     
