@@ -346,27 +346,31 @@ class Postazioni{
                                 switch ($v_posizione->stato){
                                     case self::STATO_PAYED:
                                         $color_stroke   = self::COLOR_PAYED;
+                                        $class .= " busy";
                                        break;
                                     case self::STATO_CREDIT:
                                         $color_stroke = self::COLOR_CREDIT;
+                                        $class .= " busy";
                                         break;
                                 }
                             }
                         }else if(isset($v_posizione->stato) && $this->controllaStato($v_posizione->stato)){//prenotazioni di altri utenti
                             switch ($v_posizione->stato){
                                 case self::STATO_PAYED:
-                                   $color_stroke = $color_fill = self::COLOR_PAYED;
-                                   break;
+                                    $color_stroke = $color_fill = self::COLOR_PAYED;
+                                    $class .= " busy";
+                                    break;
                                 case self::STATO_CREDIT:
                                     $color_stroke = $color_fill = self::COLOR_CREDIT;
+                                    $class .= " busy";
                                     break;
                                 case self::STATO_NOT_PAYED:
                                     $color_stroke = $color_fill = self::COLOR_BOOKED;
+                                    $class .= " busy";
                                     break;
                             }
                         }
                         
-                        $class .= " busy";
                         echo '<circle class="'.$class.'" '
                                . 'data-tooltip="Fila: <strong>'.$k_fila2.'</strong><br /> Posto: <strong>'.$k_posizione.'</strong><br />Tipo seduta: <strong>'.$tipo_seduta.'</strong>" '
                                . 'title="" '
@@ -577,7 +581,7 @@ class Postazioni{
             echo '<text x="20" y="15">'.Yii::t('app', 'Posti liberi').'</text>';
             
             echo '<circle class="" r="5" stroke-width="4" cx="10" cy="30" fill="'. self::COLOR_CREDIT.'"  stroke="'. self::COLOR_CREDIT.'"/>';
-            echo '<text x="20" y="35">'.Yii::t('app', 'Posti riservati').'</text>';
+            echo '<text x="20" y="35">'.Yii::t('app', 'Posto selezionato per la prenotazione').'</text>';
             
             echo '<circle class="" r="5" stroke-width="4" cx="10" cy="50" fill="'. self::COLOR_BOOKED.'"  stroke="'. self::COLOR_BOOKED.'"/>';
             echo '<text x="20" y="55">'.Yii::t('app', 'Posti prenotati').'</text>';
