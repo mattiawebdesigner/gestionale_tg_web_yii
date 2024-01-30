@@ -10,10 +10,14 @@ namespace backend\components\sistema_prenotazione_biglietti;
 class Postazioni{
     private $posti;
     private $conn;
+    /**
+     * Posti prenotati da un cliente
+     * @var string
+     */
+    private $my_booked;
     private const TIPO_SEDUTA_DEFAULT = "poltrona";
     public static $result_update_piantina = null;
-    
-    
+
     /***=========================================
      * Colori
     *==========================================*/
@@ -25,6 +29,9 @@ class Postazioni{
     public const COLOR_PAYED   = "darkred";
     //Colore per gli accrediti
     public const COLOR_CREDIT  = "violet";
+    //Colore per le prenotazioni di uno specifico utente
+    public const COLOR_MY_BOOKED = "yellow";
+    
     
     /**==========================================
      * Stati pagamento
@@ -58,17 +65,19 @@ class Postazioni{
      * @param array|null $posti_prenotati
      *                   Se settato serve a modificare i posti prenotati da tutti
      *                   i clienti con quelli solo presenti in questo array.
+     * @param string $my_booked Posti prenotati da un cliente. Di default vale null (nessuna prenotazione di posti)
      * @param boolean $nuova_prenotazione Indica se è una nuova prenotazione (true) o no (false)
      * @param mixed $conn
      * @param mysqli $conn Connessione a mysql
      */
-    public function __construct($posti_piantina, $posti_prenotati = null, $nuova_prenotazione = true, $conn = null) {
-        $this->posti = $posti_piantina;
-        $this->conn  = $conn;
+    public function __construct($posti_piantina, /*$posti_prenotati = null, */$my_booked = null/*$nuova_prenotazione = true*/, $conn = null) {
+        $this->posti     = $posti_piantina;
+        $this->conn      = $conn;
+        $this->my_booked = $my_booked;
         
-        if($posti_prenotati <> null){
+        /*if($posti_prenotati <> null){
             self::updatePiantina($posti_prenotati, $posti_piantina, $nuova_prenotazione);
-        }
+        }*/
         
     }
     
@@ -314,52 +323,83 @@ class Postazioni{
      */
     private function getPlatea($p, $nome){
         //Ciclo sulle file
-        
-            foreach($p as $k_fila2 => $v_fila2) : 
-                //Ciclo posti 
-                foreach($v_fila2 as $k_pos => $v_pos) : 
-                    //Ciclo sulle posizioni 
-                        foreach($v_pos as $k_posizione => $v_posizione) :                             
-                           $x = $v_posizione->x;
-                           $y = $v_posizione->y;
-                           $tipo_seduta = $v_posizione->tipo_seduta ?? self::TIPO_SEDUTA_DEFAULT;
-                           $color = self::COLOR_FREE;
-                           $class = "seat";
-                           if(isset($v_posizione->stato)){
-                               switch ($v_posizione->stato){
+        foreach($p as $k_fila2 => $v_fila2) : 
+            //Ciclo posti 
+            foreach($v_fila2 as $k_pos => $v_pos) : 
+                //Ciclo sulle posizioni 
+                    foreach($v_pos as $k_posizione => $v_posizione) :                             
+                        $x = $v_posizione->x;
+                        $y = $v_posizione->y;
+                        $tipo_seduta = $v_posizione->tipo_seduta ?? self::TIPO_SEDUTA_DEFAULT;
+                        $color_fill   = self::COLOR_FREE;
+                        $color_stroke = self::COLOR_FREE;
+                        $class = "seat";
+                        
+                        //Colori per i posti prenotati da un utente
+                        if(isset($this->my_booked[$nome]['file'][$k_fila2]['posti']) && $this->verificaPostoPrenotato($this->my_booked[$nome]['file'][$k_fila2]['posti'], $k_posizione)){
+                            $color_stroke = "black";
+                            $color_fill      = self::COLOR_MY_BOOKED;
+                            
+                            if(isset($v_posizione->stato) && $this->controllaStato($v_posizione->stato)){
+                                switch ($v_posizione->stato){
                                     case self::STATO_PAYED:
-                                       $color = self::COLOR_PAYED;
-                                        $class .= " busy";
+                                        $color_stroke   = self::COLOR_PAYED;
                                        break;
                                     case self::STATO_CREDIT:
-                                        $color = self::COLOR_CREDIT;
-                                        $class .= " busy";
+                                        $color_stroke = self::COLOR_CREDIT;
                                         break;
-                                    case self::STATO_NOT_PAYED:
-                                        $class .= " busy";
-                                        $color = self::COLOR_BOOKED;
-                                        break;
-                               }
-                           }
-                           echo '<circle class="'.$class.'" '
-                                   . 'data-tooltip="Fila: <strong>'.$k_fila2.'</strong><br /> Posto: <strong>'.$k_posizione.'</strong><br />Tipo seduta: <strong>'.$tipo_seduta.'</strong>" '
-                                   . 'title="" '
-                                   //Informazioni sul posto
-                                   . 'data-nome="'.$nome.'" '
-                                   . 'data-fila="'.$k_fila2.'" '
-                                   . 'data-posto="'.$k_posizione.'" '
-                                   . 'cx="'.$x.'" '
-                                   . 'cy="'.$y.'" '
-                                   . 'r="3" '
-                                   . 'stroke="'. $color.'" '
-                                   . 'stroke-width="4" '
-                                   . 'fill="'.$color.'" />';
-                        endforeach; 
-                    //Fine ciclo posizioni 
-                endforeach;
-                //Fine ciclo posti 
+                                }
+                            }
+                        }else if(isset($v_posizione->stato) && $this->controllaStato($v_posizione->stato)){//prenotazioni di altri utenti
+                            switch ($v_posizione->stato){
+                                case self::STATO_PAYED:
+                                   $color_stroke = $color_fill = self::COLOR_PAYED;
+                                   break;
+                                case self::STATO_CREDIT:
+                                    $color_stroke = $color_fill = self::COLOR_CREDIT;
+                                    break;
+                                case self::STATO_NOT_PAYED:
+                                    $color_stroke = $color_fill = self::COLOR_BOOKED;
+                                    break;
+                            }
+                        }
+                        
+                        $class .= " busy";
+                        echo '<circle class="'.$class.'" '
+                               . 'data-tooltip="Fila: <strong>'.$k_fila2.'</strong><br /> Posto: <strong>'.$k_posizione.'</strong><br />Tipo seduta: <strong>'.$tipo_seduta.'</strong>" '
+                               . 'title="" '
+                               //Informazioni sul posto
+                               . 'data-nome="'.$nome.'" '
+                               . 'data-fila="'.$k_fila2.'" '
+                               . 'data-posto="'.$k_posizione.'" '
+                               . 'cx="'.$x.'" '
+                               . 'cy="'.$y.'" '
+                               . 'r="5" '
+                               . 'stroke="'. $color_stroke.'" '
+                               . 'stroke-width="2" '
+                               . 'fill="'.$color_fill.'" />';
+                    endforeach; 
+                //Fine ciclo posizioni 
             endforeach;
-        //Fine ciclo delle file 
+            //Fine ciclo posti 
+        endforeach;
+        //Fine ciclo delle file
+    }
+    
+    /**
+     * Verifica se un posto è presente tra quelli prenotati.
+     * 
+     * @param type $posti
+     * @param type $posto
+     */
+    private function verificaPostoPrenotato($posti, $posto){
+        foreach ($posti as $k_posto => $v_posto){
+            if($v_posto == $posto){
+                return true;
+            }
+        }
+        
+        return false;
     }
     
     /**
