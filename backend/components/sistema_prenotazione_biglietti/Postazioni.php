@@ -524,7 +524,7 @@ class Postazioni{
     }
     
     /**
-     * Conta il numero di prenotazioni
+     * Conta il numero di prenotazioni totali effettuate.
      * 
      * @param type $prenotazione Prenotazioni effettuate
      * @return int Numero totale di prenotazioni

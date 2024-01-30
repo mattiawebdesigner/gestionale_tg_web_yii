@@ -42,6 +42,14 @@ $this->title = Yii::t('app', 'Prenotazioni: {spettacolo}', [
     
     <p>&nbsp;</p>
     
+    <div>
+        <strong><?= Yii::t('app', 'Totale prenotazioni: {nOfSeatBooked}', [
+            'nOfSeatBooked' => $nOfSeatBooked,
+            ]) ?></strong>
+    </div>
+    
+    <p>&nbsp;</p>
+    
     <?php if(is_null($prenotazioni) || empty($prenotazioni)): ?>
     <p class="alert alert-info">
         <?= Yii::t('app', 'Non ci sono prenotazioni disponibili') ?>
