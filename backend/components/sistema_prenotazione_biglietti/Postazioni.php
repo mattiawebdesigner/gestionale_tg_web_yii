@@ -1,6 +1,8 @@
 <?php
 namespace backend\components\sistema_prenotazione_biglietti;
 
+use Yii;
+
 /**
  * Gestisce la piantina di un teatro permettendo le seguenti azioni:
  * - Prenotazione
@@ -564,6 +566,37 @@ class Postazioni{
     }
     
     /**
+     * Visualizza la legenda della mappa
+     * 
+     * @param type $complete Se <b>true</b> visualizza la legenda completa.
+     *                       Se <b>false</b> visualizza la legenda limitata.
+     */
+    public static function legend($complete = false){
+        echo '<svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">';
+            echo '<circle class="" r="5" stroke-width="4" cx="10" cy="10" fill="'. self::COLOR_FREE.'"  stroke="'. self::COLOR_FREE.'"/>';
+            echo '<text x="20" y="15">'.Yii::t('app', 'Posti liberi').'</text>';
+            
+            echo '<circle class="" r="5" stroke-width="4" cx="10" cy="30" fill="'. self::COLOR_CREDIT.'"  stroke="'. self::COLOR_CREDIT.'"/>';
+            echo '<text x="20" y="35">'.Yii::t('app', 'Posti riservati').'</text>';
+            
+            echo '<circle class="" r="5" stroke-width="4" cx="10" cy="50" fill="'. self::COLOR_BOOKED.'"  stroke="'. self::COLOR_BOOKED.'"/>';
+            echo '<text x="20" y="55">'.Yii::t('app', 'Posti prenotati').'</text>';
+            
+            echo '<circle class="" r="5" stroke-width="4" cx="10" cy="70" fill="'. self::COLOR_PAYED.'"  stroke="'. self::COLOR_PAYED.'"/>';
+            echo '<text x="20" y="75">'.Yii::t('app', 'Posti pagati').'</text>';
+            
+            if($complete){
+                echo '<circle class="" r="5" stroke-width="4" cx="10" cy="90" fill="'. self::COLOR_MY_BOOKED.'"  stroke="black"/>';
+                echo '<text x="20" y="95">'.Yii::t('app', 'Prenotazioni del cliente').'</text>';
+
+                echo '<circle class="" r="5" stroke-width="4" cx="10" cy="110" fill="'. self::COLOR_MY_BOOKED.'"  stroke="'. self::COLOR_PAYED.'"/>';
+                echo '<text x="20" y="115">'.Yii::t('app', 'Prenotazioni del cliente pagate').'</text>';
+            }
+        echo '</svg>';
+    }
+
+
+    /**
      * Aggiorna la piantina delle prenotazioni per gli ordini.
      * 
      * @param array $ordine          Dati dell'ordine
@@ -782,12 +815,11 @@ class Postazioni{
      * @param \stdClass $obj Oggetto da convertire in array
      */
     private static function objToArray(\stdClass $obj){
-        
         $res = [];
         foreach ($obj as $key => $value){
-            $res[$key] = $value;
-            
+            $res[$key] = $value;   
         }
-        
     }
+    
+    
 }
