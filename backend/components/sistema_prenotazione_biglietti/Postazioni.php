@@ -29,7 +29,7 @@ class Postazioni{
     public const COLOR_BOOKED  = "grey";
     //Posto occupato
     public const COLOR_PAYED   = "darkred";
-    //Colore per gli accrediti
+    //Colore per gli accrediti della stampa
     public const COLOR_CREDIT  = "violet";
     //Colore per le prenotazioni di uno specifico utente
     public const COLOR_MY_BOOKED = "yellow";
@@ -40,7 +40,7 @@ class Postazioni{
     *==========================================*/
     private const STATO_PAYED       = 10;
     private const STATO_NOT_PAYED   = 0;
-    private const STATO_CREDIT      = 11;
+    private const STATO_CREDIT      = 11;//Stampa
     
     /**==========================================
      * Dati per il database
@@ -567,6 +567,91 @@ class Postazioni{
         array_filter(json_decode($prenotazione, true), $func);
         
         return $nOfSeatBooked;
+    }
+    
+    /**
+     * Restituisce gli stati dei biglietti (pagato, non pagato, stampa, ecc.).
+     * 
+     * @param string|array $posti
+     * @param type $prenotazione
+     * @return array Restituisce un array contenente gli stati dei posti
+     *               prenotati.
+     */
+    public static function nOfSeatState(string|array $posti, string|array $prenotazione) : array|false{
+        $searchKey      = 'file';
+        $searchKey2     = "posti";
+        $searchKey3     = "stato";
+        $nOfSeatPaid    = 0;
+        $nOfSeatNotPaid = 0;
+        $nOfSeatPress   = 0;
+        $tot            = 0;//Numero di prenotazioni totali
+        
+        //Se i parametri sono di tipo stringa allora li converto in array
+        //decodificando il json
+        if(is_string($posti)){
+            $posti          = json_decode($posti, true);
+        }
+        if(is_string($prenotazione)){
+            $prenotazione   = json_decode($prenotazione, true);
+        }
+        //-----------------------------------------------------------------
+        
+        echo "<pre>";
+        //print_r($posti);
+        //print_r(json_decode($prenotazione));
+        echo "</pre>";
+        
+        foreach ($posti as $k_p => $p_v){
+            if(isset($prenotazione[$k_p])){
+                //Ciclo le file
+                foreach ($posti[$k_p]['file'] as $k_fila => $posti){
+                    if(isset($prenotazione[$k_p][$searchKey][$k_fila])){
+                        foreach ($posti[$searchKey2] as $posto => $info){
+                            /*echo "<pre>";
+                            print_r('$prenotazione['.$k_p.']['.$searchKey.']['.$k_fila.']['.$searchKey2.']['.$posto.']');
+                            print_r($prenotazione[$k_p]['file'][$k_fila]['posti']);
+                            echo "<br />";
+                            print_r(array_search($posto, $prenotazione[$k_p]['file'][$k_fila]['posti']));
+                            //print_r($prenotazione[$k_p]['file'][$k_fila]['posti']);
+                            print_r($info);
+                            echo "</pre>";*/
+                            
+                            if(array_search($posto, $prenotazione[$k_p]['file'][$k_fila]['posti']) !== false){
+                                if(isset($info[$searchKey3])){
+                                    switch ($info[$searchKey3]){
+                                        case self::STATO_PAYED:
+                                            $nOfSeatPaid ++;
+                                            break;
+                                        case self::STATO_NOT_PAYED:
+                                            $nOfSeatNotPaid ++;
+                                            break;
+                                        case self::STATO_CREDIT:
+                                            $nOfSeatPress ++;
+                                            break;
+                                    }
+                                    /*echo "<pre>";
+                                    //print_r($info[$searchKey3]);
+                                    //print_r(array_search($posto, $prenotazione[$k_p]['file'][$k_fila]['posti']));
+                                    print_r($info);
+                                    //print_r($prenotazione[$k_p]['file'][$k_fila]['posti']);
+                                    echo "</pre>";*/
+                                }
+                                
+                                $tot ++;
+                            }
+                        }
+                    }
+                }
+            }
+            
+        }
+        
+        return [
+            'nOfSeatPaid'       => $nOfSeatPaid,
+            'nOfSeatNotPaid'    => $nOfSeatNotPaid,
+            'nOfSeatPress'      => $nOfSeatPress,
+            'tot'               => $tot,
+        ];
     }
     
     /**

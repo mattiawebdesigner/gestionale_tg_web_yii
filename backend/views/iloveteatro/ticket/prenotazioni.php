@@ -86,15 +86,18 @@ $this->title = Yii::t('app', 'Prenotazioni: {spettacolo}', [
                 <div><?= Yii::t('app', 'Telefono') ?>: <strong><?= $prenotazione->cellulare ?></strong></div>
                 <hr />
                 <div>
-                    <?= Yii::t('app', 'Prenotazioni pagate') ?>: <strong class="c-darkgreen"><?= \app\models\IltPrenotazioni::find()->where(['email' => $prenotazione->email, 'spettacolo' => $prenotazione->spettacolo, 'pagato' => \app\models\IltPrenotazioni::PAGATO])->count(); ?></strong>
+                    <?= Yii::t('app', 'Prenotazioni pagate') ?>: <strong class="c-darkgreen">
+                    <?= $nOfSeatState[$prenotazione->email]['nOfSeatPaid'] ?>
+                    </strong>
                 </div>
                 <div>
-                    <?= Yii::t('app', 'Prenotazioni da pagare') ?>: <strong class="c-iloveteatro"><?= \app\models\IltPrenotazioni::find()->where(['email' => $prenotazione->email, 'spettacolo' => $prenotazione->spettacolo, 'pagato' => \app\models\IltPrenotazioni::NON_PAGATO])->count(); ?></strong>
+                    <?= Yii::t('app', 'Prenotazioni da pagare') ?>: <strong class="c-iloveteatro">
+                    <?= $nOfSeatState[$prenotazione->email]['nOfSeatNotPaid'] ?>
+                    </strong>
                 </div>
                 <div>
                     <?= Yii::t('app', 'Totali prenotazioni') ?>: <strong>
-                    <?= \backend\components\sistema_prenotazione_biglietti\Postazioni::nOfSeatBooked(\app\models\IltPrenotazioni::find()->where(['email' => $prenotazione->email, 'spettacolo' => $prenotazione->spettacolo])->one()->prenotazione)
-                    ?>
+                    <?= $nOfSeatState[$prenotazione->email]['tot'] ?>
                     </strong>
                 </div>
                 <?php if(!is_null($prenotazione->data_registrazione)) : ?>
