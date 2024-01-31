@@ -1,7 +1,5 @@
 <?php
 use yii\helpers\Html;
-use yii\helpers\Url;
-use app\models\IltPosto;
 use yii\widgets\ActiveForm;
 
 $this->title = Yii::t('app', 'Nuova prenotazione: {spettacolo}', [
