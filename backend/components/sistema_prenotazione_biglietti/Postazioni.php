@@ -31,16 +31,26 @@ class Postazioni{
     public const COLOR_PAYED   = "darkred";
     //Colore per gli accrediti della stampa
     public const COLOR_CREDIT  = "violet";
+    //Colore per gli accrediti delle compagnie
+    public const COLOR_CREDIT_THEATRE  = "orange";
     //Colore per le prenotazioni di uno specifico utente
     public const COLOR_MY_BOOKED = "yellow";
     
+    /**==========================================
+     * Campi per dropdown menu
+    ==========================================*/
+    public const CREDIT_DROPDOWN = [
+        self::STATO_CREDIT          => 'Stampa',
+        self::STATO_CREDIT_THEATRE  => 'Compagnia',
+    ];
     
     /**==========================================
      * Stati pagamento
     *==========================================*/
-    private const STATO_PAYED       = 10;
-    private const STATO_NOT_PAYED   = 0;
-    private const STATO_CREDIT      = 11;//Stampa
+    private const STATO_PAYED           = 10;//Pagato
+    private const STATO_NOT_PAYED       = 0;//Non Pagato
+    private const STATO_CREDIT          = 11;//Stampa
+    private const STATO_CREDIT_THEATRE  = 12;//Compagnia teatrale
     
     /**==========================================
      * Dati per il database
@@ -64,34 +74,29 @@ class Postazioni{
      *              Vale sia per i posti prenotati che per indicare la piantina
      *              nel caso in cui si accede alla parte di gestione delle prenotazioni
      *              di un cliente
-     * @param array|null $posti_prenotati
-     *                   Se settato serve a modificare i posti prenotati da tutti
-     *                   i clienti con quelli solo presenti in questo array.
      * @param string $my_booked Posti prenotati da un cliente. Di default vale null (nessuna prenotazione di posti)
-     * @param boolean $nuova_prenotazione Indica se è una nuova prenotazione (true) o no (false)
      * @param mixed $conn
      * @param mysqli $conn Connessione a mysql
      */
-    public function __construct($posti_piantina, /*$posti_prenotati = null, */$my_booked = null/*$nuova_prenotazione = true*/, $conn = null) {
+    public function __construct($posti_piantina, $my_booked = null, $conn = null) {
         $this->posti     = $posti_piantina;
         $this->conn      = $conn;
         $this->my_booked = $my_booked;
-        
-        /*if($posti_prenotati <> null){
-            self::updatePiantina($posti_prenotati, $posti_piantina, $nuova_prenotazione);
-        }*/
         
     }
     
     /**
      * Restituisce la mappa
+     * 
+     * @param boolean $guest Indica se la mappa viene visualizzata nella pagina
+     *                       di amministrazione (false) o in quella del cliente (true).
      */
-    public function get() {
+    public function get($guest = true) {
         echo '<svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">';
             foreach($this->posti as $k_posto => $v_posto) : 
                 foreach($v_posto as $k_fila => $v_fila) : 
                     if($k_fila === "file"){
-                        $this->getPlatea ($v_fila, $k_posto);
+                        $this->getPlatea ($v_fila, $k_posto, $guest);
                     }else{
                         $this->getPalchi($v_fila, $k_posto);
                     }       
@@ -135,14 +140,6 @@ class Postazioni{
                 }
             }
         }
-        
-        //$prenotazione_posti_utente = !is_null($prenotazione_esistente)?json_encode(array_merge_recursive($prenotazione_esistente, $prenotazione_posti_utente)): json_encode($prenotazione_posti_utente);
-        
-        
-        
-        /*echo "<pre>";
-        print_r($prenotazione_posti_utente);
-        echo "</pre>";*/
     }
 
     /**
@@ -322,8 +319,11 @@ class Postazioni{
      * Restituisce la platea
      * 
      * @param array $p Dati della platea
+     * @param string $nome Nome assegnato alla platea
+     * @param string $guest Indica se la mappa viene visualizzata nella pagina
+     *                      di amministrazione (true) o in quella del cliente (false).
      */
-    private function getPlatea($p, $nome){
+    private function getPlatea($p, $nome, $guest){
         //Ciclo sulle file
         foreach($p as $k_fila2 => $v_fila2) : 
             //Ciclo posti 
@@ -352,6 +352,10 @@ class Postazioni{
                                         $color_stroke = self::COLOR_CREDIT;
                                         $class .= " busy";
                                         break;
+                                    case self::STATO_CREDIT_THEATRE:
+                                        $color_stroke = $color_fill = self::COLOR_CREDIT_THEATRE;
+                                        $class .= " busy";
+                                        break;
                                 }
                             }
                         }else if(isset($v_posizione->stato) && $this->controllaStato($v_posizione->stato)){//prenotazioni di altri utenti
@@ -360,15 +364,38 @@ class Postazioni{
                                     $color_stroke = $color_fill = self::COLOR_PAYED;
                                     $class .= " busy";
                                     break;
-                                case self::STATO_CREDIT:
-                                    $color_stroke = $color_fill = self::COLOR_CREDIT;
-                                    $class .= " busy";
-                                    break;
                                 case self::STATO_NOT_PAYED:
                                     $color_stroke = $color_fill = self::COLOR_BOOKED;
                                     $class .= " busy";
                                     break;
+                                    case self::STATO_CREDIT:
+                                        $color_stroke = $color_fill = self::COLOR_CREDIT;
+                                        $class .= " busy";
+                                        
+                                        if($guest){
+                                            //Stati dei posti non visualizzabili all'interno
+                                            //della pagina del cliente ma solo nella
+                                            //pagina di amministrazione.
+                                            //Nella pagina del cliente vengono visualizzati
+                                            //solo come posto occupato (pagato)
+                                            $color_stroke = $color_fill = self::COLOR_PAYED;
+                                        }
+                                        break;
+                                    case self::STATO_CREDIT_THEATRE:
+                                        $color_stroke = $color_fill = self::COLOR_CREDIT_THEATRE;
+                                        $class .= " busy";
+                                        
+                                        if($guest){
+                                            //Stati dei posti non visualizzabili all'interno
+                                            //della pagina del cliente ma solo nella
+                                            //pagina di amministrazione.
+                                            //Nella pagina del cliente vengono visualizzati
+                                            //solo come posto occupato (pagato)
+                                            $color_stroke = $color_fill = self::COLOR_PAYED;
+                                        }
+                                        break;
                             }
+                            
                         }
                         
                         echo '<circle class="'.$class.'" '
@@ -419,6 +446,7 @@ class Postazioni{
             case self::STATO_CREDIT:
             case self::STATO_NOT_PAYED:
             case self::STATO_PAYED:
+            case self::STATO_CREDIT_THEATRE:
                 return true;
         }
         
@@ -657,29 +685,40 @@ class Postazioni{
     /**
      * Visualizza la legenda della mappa
      * 
-     * @param type $complete Se <b>true</b> visualizza la legenda completa.
+     * 
+     * @param bool $guest Se <b>true</b> visualizza la legenda per il cliente.
+     *                       Se <b>false</b> visualizza la legenda per l'amministratore.
+     * @param bool $complete Se <b>true</b> visualizza la legenda completa.
      *                       Se <b>false</b> visualizza la legenda limitata.
      */
-    public static function legend($complete = false){
+    public static function legend(bool $guest = false, bool $complete = false){
         echo '<svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">';
             echo '<circle class="" r="5" stroke-width="4" cx="10" cy="10" fill="'. self::COLOR_FREE.'"  stroke="'. self::COLOR_FREE.'"/>';
             echo '<text x="20" y="15">'.Yii::t('app', 'Posti liberi').'</text>';
             
-            echo '<circle class="" r="5" stroke-width="4" cx="10" cy="30" fill="'. self::COLOR_CREDIT.'"  stroke="'. self::COLOR_CREDIT.'"/>';
-            echo '<text x="20" y="35">'.Yii::t('app', 'Posto selezionato per la prenotazione').'</text>';
+            echo '<circle class="" r="5" stroke-width="4" cx="10" cy="30" fill="'. self::COLOR_BOOKED.'"  stroke="'. self::COLOR_BOOKED.'"/>';
+            echo '<text x="20" y="35">'.Yii::t('app', 'Posti prenotati').'</text>';
             
-            echo '<circle class="" r="5" stroke-width="4" cx="10" cy="50" fill="'. self::COLOR_BOOKED.'"  stroke="'. self::COLOR_BOOKED.'"/>';
-            echo '<text x="20" y="55">'.Yii::t('app', 'Posti prenotati').'</text>';
-            
-            echo '<circle class="" r="5" stroke-width="4" cx="10" cy="70" fill="'. self::COLOR_PAYED.'"  stroke="'. self::COLOR_PAYED.'"/>';
-            echo '<text x="20" y="75">'.Yii::t('app', 'Posti pagati').'</text>';
+            if($guest){
+                echo '<circle class="" r="5" stroke-width="4" cx="10" cy="50" fill="'. self::COLOR_PAYED.'"  stroke="'. self::COLOR_PAYED.'"/>';
+                echo '<text x="20" y="55">'.Yii::t('app', 'Posti occupati').'</text>';
+            }else{
+                echo '<circle class="" r="5" stroke-width="4" cx="10" cy="50" fill="'. self::COLOR_PAYED.'"  stroke="'. self::COLOR_PAYED.'"/>';
+                echo '<text x="20" y="55">'.Yii::t('app', 'Posti pagati').'</text>';
+            }
             
             if($complete){
-                echo '<circle class="" r="5" stroke-width="4" cx="10" cy="90" fill="'. self::COLOR_MY_BOOKED.'"  stroke="black"/>';
-                echo '<text x="20" y="95">'.Yii::t('app', 'Prenotazioni del cliente').'</text>';
+                echo '<circle class="" r="5" stroke-width="4" cx="10" cy="70" fill="'. self::COLOR_CREDIT.'"  stroke="'. self::COLOR_CREDIT.'"/>';
+                echo '<text x="20" y="75">'.Yii::t('app', 'Posto riservato per la stampa').'</text>';
 
-                echo '<circle class="" r="5" stroke-width="4" cx="10" cy="110" fill="'. self::COLOR_MY_BOOKED.'"  stroke="'. self::COLOR_PAYED.'"/>';
-                echo '<text x="20" y="115">'.Yii::t('app', 'Prenotazioni del cliente pagate').'</text>';
+                echo '<circle class="" r="5" stroke-width="4" cx="10" cy="90" fill="'. self::COLOR_CREDIT_THEATRE.'"  stroke="'. self::COLOR_CREDIT_THEATRE.'"/>';
+                echo '<text x="20" y="95">'.Yii::t('app', 'Posto riservato per la compagnia').'</text>';
+                
+                echo '<circle class="" r="5" stroke-width="4" cx="10" cy="110" fill="'. self::COLOR_MY_BOOKED.'"  stroke="black"/>';
+                echo '<text x="20" y="115">'.Yii::t('app', 'Prenotazioni del cliente').'</text>';
+
+                echo '<circle class="" r="5" stroke-width="4" cx="10" cy="130" fill="'. self::COLOR_MY_BOOKED.'"  stroke="'. self::COLOR_PAYED.'"/>';
+                echo '<text x="20" y="135">'.Yii::t('app', 'Prenotazioni del cliente pagate').'</text>';
             }
         echo '</svg>';
     }
