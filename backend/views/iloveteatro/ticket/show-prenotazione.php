@@ -33,13 +33,13 @@ $this->title = Yii::t('app', 'Gestisci prenotazione: {spettacolo}', [
     
     <div id="theatre-place">
         <?php
-        $postazioni->get();
+        $postazioni->get(false);
         ?>
     </div>
     
     <div class="legend">
         <?php
-            \backend\components\sistema_prenotazione_biglietti\Postazioni::legend(true);
+            \backend\components\sistema_prenotazione_biglietti\Postazioni::legend(false, true);
         ?>
     </div>
     
