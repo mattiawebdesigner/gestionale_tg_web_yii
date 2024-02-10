@@ -105,41 +105,64 @@ class Postazioni{
         echo '</svg>';
     }
     
-    public function cancellaPrenotazione($prenotazioni_da_cancellare, $prenotazioni){
+    /**
+     * Cancella le prenotazioni selezionate.
+     * 
+     * @param string $prenotazioni_da_cancellare Prenotazioni da cancellare
+     * @param string $prenotazioni Tutte le prenotazioni
+     */
+    public function cancellaPrenotazione(string $prenotazioni_da_cancellare, string $prenotazioni){
+        $prenotazioni_da_cancellare = json_decode($prenotazioni_da_cancellare, true);
+        $prenotazioni               = json_decode($prenotazioni, true);
+        //$prenotazione_posti_utente = [];
         
-        $prenotazione_posti_utente = [];
+        //Modifico i posti prenotati
         foreach($prenotazioni_da_cancellare as $k_pp => $v_pp){
-            $prenotazione_posti_utente[$k_pp] = [];
-
+            //$prenotazione_posti_utente[$k_pp] = [];
             if(isset($this->posti->$k_pp->file)){//Se ha solo file
-
-                foreach ($v_pp['fila'] as $k_fila => $v_fila){
-
-                    $posto = $v_pp['posto'][$k_fila];
-                    $this->posti->$k_pp->file->$v_fila->posti->$posto->stato = 0;
-
-                    //dati prenotazione utente
-                    $prenotazione_posti_utente[$k_pp]['file'][$v_fila]['posti'][] = $posto;
-                }
-            }else if(isset($this->posti->$k_pp->palco)){//se ci sono dei palchi
-                foreach ($v_pp['palco'] as $k_palco => $v_palco){
-                    $fila = $v_pp['fila'][$k_palco];
-                    if($fila == "non_numerato"){                        
-                        $this->posti->$k_pp->palco->$v_palco[0]->posti_prenotati += 1;
-                        $conteggio_prenotazione_utente_non_numerato += 1;
-                        
-                        $prenotazione_posti_utente[$k_pp]['palco'][$v_palco]['non_numerato'] = $conteggio_prenotazione_utente_non_numerato;
-                        
-                    }else{
-                        $posto = $v_pp['posto'][$k_palco];
-                        $this->posti->$k_pp->palco->$v_palco->fila->$fila->posti->$posto->stato = 0;
-
-                        //dati prenotazione utente
-                        $prenotazione_posti_utente[$k_pp]['palco'][$v_palco]['fila'][$fila]['posti'][] = $posto;
+                foreach ($v_pp['file'] as $k_fila => $v_fila){
+                    foreach ($v_pp['file'][$k_fila]['posti'] as $p => $posto){
+                        if(isset($this->posti->$k_pp->file->$k_fila->posti->{$posto}->stato)){
+                            unset($this->posti->$k_pp->file->$k_fila->posti->{$posto}->stato);//Rimuovo lo stato che indica la prenotazione
+                        }
                     }
                 }
             }
         }
+        //--------------------------------------------
+        
+        //Cancello le prenotazioni dell'utente
+        foreach ($prenotazioni_da_cancellare as $k_p => $v_p){
+            foreach ($v_p as $file){
+                foreach ($file as $fila => $v_posti){
+                    foreach ($v_posti as $posti){
+                        foreach ($posti as $posto){
+                            //trovo la chiave del posto da rimuovere dalla prenotazione
+                            $key_to_remove = array_search($posto, $prenotazioni[$k_p]['file'][$fila]['posti']);
+                            unset($prenotazioni[$k_p]['file'][$fila]['posti'][$key_to_remove]);
+                            
+                            if(empty($prenotazioni[$k_p]['file'][$fila]['posti'])){
+                                unset($prenotazioni[$k_p]['file'][$fila]);
+                            }
+                        }
+                    }
+                }
+                
+                if(empty($prenotazioni[$k_p]['file'])){
+                    unset($prenotazioni[$k_p]['file']);
+                }
+            }
+            
+            if(empty($prenotazioni[$k_p])){
+                unset($prenotazioni[$k_p]);
+            }
+        }
+        //--------------------------------------------
+        
+        return [
+            'prenotazioni'  => (empty($prenotazioni))?null:$prenotazioni,
+            'posti'         => $this->posti,
+        ];
     }
 
     /**
@@ -340,7 +363,8 @@ class Postazioni{
                         //Colori per i posti prenotati da un utente
                         if(isset($this->my_booked[$nome]['file'][$k_fila2]['posti']) && $this->verificaPostoPrenotato($this->my_booked[$nome]['file'][$k_fila2]['posti'], $k_posizione)){
                             $color_stroke = "black";
-                            $color_fill      = self::COLOR_MY_BOOKED;
+                            $color_fill   = self::COLOR_MY_BOOKED;
+                            $class       .= " my-busy not-payed";
                             
                             if(isset($v_posizione->stato) && $this->controllaStato($v_posizione->stato)){
                                 switch ($v_posizione->stato){
@@ -692,7 +716,7 @@ class Postazioni{
      *                       Se <b>false</b> visualizza la legenda limitata.
      */
     public static function legend(bool $guest = false, bool $complete = false){
-        echo '<svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">';
+        echo '<svg width="100%" height="20%" xmlns="http://www.w3.org/2000/svg">';
             echo '<circle class="" r="5" stroke-width="4" cx="10" cy="10" fill="'. self::COLOR_FREE.'"  stroke="'. self::COLOR_FREE.'"/>';
             echo '<text x="20" y="15">'.Yii::t('app', 'Posti liberi').'</text>';
             

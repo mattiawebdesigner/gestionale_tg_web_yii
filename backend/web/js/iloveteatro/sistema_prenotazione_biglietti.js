@@ -77,7 +77,7 @@ jQuery(".seat.nn").click((e)=>{
  * i posti numerati.
  * Esclude i posti non numerati.
  */
-jQuery(".seat:not(.seat.busy):not(.seat.nn)").click((e)=>{
+jQuery(".seat:not(.seat.busy):not(.seat.nn):not(.seat.my-busy.not-payed").click((e)=>{
     var el = jQuery(e.target);
     var nome    = el.data("nome");
     var fila    = el.data("fila");
@@ -113,13 +113,13 @@ jQuery(".seat:not(.seat.busy):not(.seat.nn)").click((e)=>{
 /**
  * visualizza le prenotazioni da rimuovere
  */
-jQuery(".not-payed").click((e)=>{
+jQuery(".my-busy.not-payed:not(.seat.reservation)").click((e)=>{
     var el = jQuery(e.target);
     var nome    = el.data("nome");
     var fila    = el.data("fila");
     var posto   = el.data("posto");
     var palco   = el.data("palco");
-    var form    = jQuery("#theatre-reservations-delete > form");
+    var form    = jQuery("#reservations-delete-form");
 
     var prenotazioni = jQuery("#theatre-reservations-delete > table");
     var id = (nome.replace(" ", "_"))+"-"+fila+"-"+posto;
@@ -128,17 +128,21 @@ jQuery(".not-payed").click((e)=>{
     }
 
     el.attr("data-id", id);
+    insert(prenotazioni, id, el, nome, fila, posto, palco, "reservations-delete-form");
     //Imposto come selezionato per la prenotazione
-    if(el.hasClass("reservation")){                    
+    /*if(el.hasClass("reservation")){
+        alert("reservations");
         remove(id, el);
-    }else{                    
+    }else{
+        alert("INSERT");
         insert(prenotazioni, id, el, nome, fila, posto, palco, "reservations-delete-form");
-    }
+    }*/
     //--------------------------------------------
-
-    var form        = jQuery("#theatre-reservations-delete > form");
+        
     var tableRow    = jQuery("#theatre-reservations-delete > table tr");
-
+    
+    
+    
     if(tableRow.length === 0){
         form.hide();
     }else{
@@ -149,10 +153,10 @@ jQuery(".not-payed").click((e)=>{
 /**
  * Pulsante di rimozione della prenotazione
  */
-jQuery("#theatre-reservations > table").on("click", ".remove-reservation", (e)=>{
+jQuery("#theatre-reservations > table, #theatre-reservations-delete > table").on("click", ".remove-reservation", (e)=>{
     var parent = jQuery(e.target).parent().parent();
     var id = parent.attr("id");
-
+    
     remove(id, jQuery("[data-id='"+id+"']"));
 });
 
