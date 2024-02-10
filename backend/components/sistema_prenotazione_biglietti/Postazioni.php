@@ -42,15 +42,16 @@ class Postazioni{
     public const CREDIT_DROPDOWN = [
         self::STATO_CREDIT          => 'Stampa',
         self::STATO_CREDIT_THEATRE  => 'Compagnia',
+        self::STATO_NOT_PAYED       => 'Cliente',
     ];
     
     /**==========================================
      * Stati pagamento
     *==========================================*/
-    private const STATO_PAYED           = 10;//Pagato
-    private const STATO_NOT_PAYED       = 0;//Non Pagato
-    private const STATO_CREDIT          = 11;//Stampa
-    private const STATO_CREDIT_THEATRE  = 12;//Compagnia teatrale
+    public const STATO_PAYED           = 10;//Pagato
+    public const STATO_NOT_PAYED       = 0;//Non Pagato
+    public const STATO_CREDIT          = 11;//Stampa
+    public const STATO_CREDIT_THEATRE  = 12;//Compagnia teatrale
     
     /**==========================================
      * Dati per il database
@@ -172,8 +173,9 @@ class Postazioni{
     * @param array $prenotazione_posti Array dei posti prenotati
     * @param array $dati Dati dell'utente che sta prenotando
     * @param int $id_spettacolo ID dello spettacolo da prenotare
+    * @param int $tipo_di_prenotazione Tipologia della prenotazione (Cliente, Stampa, Compagnia, ecc.)
     */
-    public function prenotazione($prenotazione_posti, $prenotazione_esistente, $dati, $id_spettacolo) {
+    public function prenotazione($prenotazione_posti, $prenotazione_esistente, $dati, $id_spettacolo, $tipo_di_prenotazione = self::STATO_NOT_PAYED) {
         /*$prenotazione_posti = $_POST['prenotazione'];
         $dati = $_POST['dati'];
         $id_spettacolo = $dati['spettacolo_id'];*/
@@ -190,7 +192,7 @@ class Postazioni{
                 foreach ($v_pp['fila'] as $k_fila => $v_fila){
 
                     $posto = $v_pp['posto'][$k_fila];
-                    $this->posti->$k_pp->file->$v_fila->posti->$posto->stato = 0;
+                    $this->posti->$k_pp->file->$v_fila->posti->$posto->stato = $tipo_di_prenotazione;
 
                     //dati prenotazione utente
                     $prenotazione_posti_utente[$k_pp]['file'][$v_fila]['posti'][] = $posto;
