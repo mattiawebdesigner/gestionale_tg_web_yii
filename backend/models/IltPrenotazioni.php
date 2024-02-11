@@ -37,7 +37,7 @@ class IltPrenotazioni extends \yii\db\ActiveRecord
     {
         return [
             [['spettacolo', 'nome', 'cognome', 'email', 'cellulare', 'pagato'], 'required'],
-            [['nome', 'cognome', 'email', 'cellulare', 'prenotazione'], 'string'],
+            [['nome', 'cognome', 'email', 'cellulare', 'prenotazione', 'abbonamento'], 'string'],
             [['posto'], 'integer'],
             [['data_registrazione'], 'safe']
         ];
@@ -59,6 +59,7 @@ class IltPrenotazioni extends \yii\db\ActiveRecord
             'pagato' => Yii::t('app', 'Il ticket è stato pagato?'),
             'data_registrazione' => Yii::t('app', 'Data della prenotazione'),
             'prenotazione' => Yii::t('app', 'Prenotazione'),
+            'abbonamento' => Yii::t('app', 'Abbonamento'),
         ];
     }
 }

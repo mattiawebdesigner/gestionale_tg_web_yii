@@ -16,6 +16,11 @@ $this->title = Yii::t('app', 'Ticket');
         'target' => '_blank',
     ]) ?></strong>
     
+    <p><?= Html::a('<i class="fa-solid fa-ticket-simple"></i> ' . Yii::t('app', 'Nuovo abbonamento'),
+        ['iloveteatro/subscription'],
+        ['class' => 'btn btn-info']) ?></p>
+    
+    
     <div id="album" class="programmazione-index">
         <div class="container">
             <div class="row">

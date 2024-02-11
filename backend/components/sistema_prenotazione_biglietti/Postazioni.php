@@ -35,6 +35,8 @@ class Postazioni{
     public const COLOR_CREDIT_THEATRE  = "orange";
     //Colore per le prenotazioni di uno specifico utente
     public const COLOR_MY_BOOKED = "yellow";
+    //Colore per gli abbonamenti
+    public const COLOR_SUBSCRIPTION = "#33B1F5";
     
     /**==========================================
      * Campi per dropdown menu
@@ -52,6 +54,9 @@ class Postazioni{
     public const STATO_NOT_PAYED       = 0;//Non Pagato
     public const STATO_CREDIT          = 11;//Stampa
     public const STATO_CREDIT_THEATRE  = 12;//Compagnia teatrale
+    //Stati per abbonamenti
+    public const STATO_SUBSCRIPTION_PAYED       = 13;//Abbonamento pagato
+    public const STATO_SUBSCRIPTION_NOT_PAYED   = 14;//Abbonamento non pagato
     
     /**==========================================
      * Dati per il database
@@ -171,14 +176,10 @@ class Postazioni{
     * e salva i dati dell'utente che ha prenotato
     * 
     * @param array $prenotazione_posti Array dei posti prenotati
-    * @param array $dati Dati dell'utente che sta prenotando
-    * @param int $id_spettacolo ID dello spettacolo da prenotare
+    * @param array $prenotazione_esistente Prenotazione già esistente. NULL se non ci sono prenotazioni esistenti
     * @param int $tipo_di_prenotazione Tipologia della prenotazione (Cliente, Stampa, Compagnia, ecc.)
     */
-    public function prenotazione($prenotazione_posti, $prenotazione_esistente, $dati, $id_spettacolo, $tipo_di_prenotazione = self::STATO_NOT_PAYED) {
-        /*$prenotazione_posti = $_POST['prenotazione'];
-        $dati = $_POST['dati'];
-        $id_spettacolo = $dati['spettacolo_id'];*/
+    public function prenotazione($prenotazione_posti, $prenotazione_esistente, $tipo_di_prenotazione = self::STATO_NOT_PAYED) {
         $conteggio_prenotazione_utente_non_numerato = 0;
 
         //costruisco il json per la prenotazione dell'utente
@@ -225,15 +226,64 @@ class Postazioni{
         //$prenotazione_posti_utente = json_encode($prenotazione_posti);//Verificare questo errore e sistemare di conseguenza la lettura e il resto
         $piantina_json      = json_encode($this->posti);
         
-        $tbl_teatro_spettacolo = self::DB_TABLE_SPETTACOLO;
-        $tbl_prenotazione      = self::DB_TABLE_PRENOTAZIONE;
-        
         return [
             'piantina'                  => $piantina_json,
             'prenotazione_posti_utente' => $prenotazione_posti_utente
         ];
     }
     
+    /**
+     * Prenota un abbonamento.
+     * 
+     * @param array $prenotazione_posti
+     * @param array $prenotazione_esistente Abbonamenti già presi
+     * @param int $tipo_di_prenotazione
+     * @return array
+     */
+    public function abbonamento($prenotazione_posti, $prenotazione_esistente, $tipo_di_prenotazione = self::STATO_SUBSCRIPTION_NOT_PAYED){
+        $prenotazione_posti_utente = [];
+        foreach($prenotazione_posti as $k_pp => $v_pp){
+            $prenotazione_posti_utente[$k_pp] = [];
+
+            if(isset($this->posti->$k_pp->file)){//Se ha solo file
+
+                foreach ($v_pp['fila'] as $k_fila => $v_fila){
+
+                    $posto = $v_pp['posto'][$k_fila];
+                    $this->posti->$k_pp->file->$v_fila->posti->$posto->stato = $tipo_di_prenotazione;
+
+                    //dati prenotazione utente
+                    $prenotazione_posti_utente[$k_pp]['file'][$v_fila]['posti'][] = $posto;
+                }
+            }else if(isset($this->posti->$k_pp->palco)){//se ci sono dei palchi
+                foreach ($v_pp['palco'] as $k_palco => $v_palco){
+                    $fila = $v_pp['fila'][$k_palco];
+                    if($fila == "non_numerato"){                        
+                        $this->posti->$k_pp->palco->$v_palco[0]->posti_prenotati += 1;
+                        $conteggio_prenotazione_utente_non_numerato += 1;
+                        
+                        $prenotazione_posti_utente[$k_pp]['palco'][$v_palco]['non_numerato'] = $conteggio_prenotazione_utente_non_numerato;
+                        
+                    }else{
+                        $posto = $v_pp['posto'][$k_palco];
+                        $this->posti->$k_pp->palco->$v_palco->fila->$fila->posti->$posto->stato = 0;
+
+                        //dati prenotazione utente
+                        $prenotazione_posti_utente[$k_pp]['palco'][$v_palco]['fila'][$fila]['posti'][] = $posto;
+                    }
+                }
+
+            }
+        }
+        
+        $prenotazione_posti_utente = !is_null($prenotazione_esistente)?json_encode(array_merge_recursive($prenotazione_esistente, $prenotazione_posti_utente)): json_encode($prenotazione_posti_utente);
+        $piantina_json = json_encode($this->posti);
+        
+        return [
+            'piantina'                  => $piantina_json,
+            'prenotazione_posti_utente' => $prenotazione_posti_utente
+        ];
+    }
     
     /**
      * Restituisce la piantina di un dato spettacolo
@@ -382,6 +432,10 @@ class Postazioni{
                                         $color_stroke = $color_fill = self::COLOR_CREDIT_THEATRE;
                                         $class .= " busy";
                                         break;
+                                    case self::STATO_SUBSCRIPTION_NOT_PAYED:
+                                        $color_stroke = $color_fill = self::COLOR_SUBSCRIPTION;
+                                        $class .= " busy";
+                                        break;
                                 }
                             }
                         }else if(isset($v_posizione->stato) && $this->controllaStato($v_posizione->stato)){//prenotazioni di altri utenti
@@ -394,32 +448,59 @@ class Postazioni{
                                     $color_stroke = $color_fill = self::COLOR_BOOKED;
                                     $class .= " busy";
                                     break;
-                                    case self::STATO_CREDIT:
-                                        $color_stroke = $color_fill = self::COLOR_CREDIT;
-                                        $class .= " busy";
-                                        
-                                        if($guest){
-                                            //Stati dei posti non visualizzabili all'interno
-                                            //della pagina del cliente ma solo nella
-                                            //pagina di amministrazione.
-                                            //Nella pagina del cliente vengono visualizzati
-                                            //solo come posto occupato (pagato)
-                                            $color_stroke = $color_fill = self::COLOR_PAYED;
-                                        }
-                                        break;
-                                    case self::STATO_CREDIT_THEATRE:
-                                        $color_stroke = $color_fill = self::COLOR_CREDIT_THEATRE;
-                                        $class .= " busy";
-                                        
-                                        if($guest){
-                                            //Stati dei posti non visualizzabili all'interno
-                                            //della pagina del cliente ma solo nella
-                                            //pagina di amministrazione.
-                                            //Nella pagina del cliente vengono visualizzati
-                                            //solo come posto occupato (pagato)
-                                            $color_stroke = $color_fill = self::COLOR_PAYED;
-                                        }
-                                        break;
+                                case self::STATO_CREDIT:
+                                    $color_stroke = $color_fill = self::COLOR_CREDIT;
+                                    $class .= " busy";
+
+                                    if($guest){
+                                        //Stati dei posti non visualizzabili all'interno
+                                        //della pagina del cliente ma solo nella
+                                        //pagina di amministrazione.
+                                        //Nella pagina del cliente vengono visualizzati
+                                        //solo come posto occupato (pagato)
+                                        $color_stroke = $color_fill = self::COLOR_PAYED;
+                                    }
+                                    break;
+                                case self::STATO_CREDIT_THEATRE:
+                                    $color_stroke = $color_fill = self::COLOR_CREDIT_THEATRE;
+                                    $class .= " busy";
+
+                                    if($guest){
+                                        //Stati dei posti non visualizzabili all'interno
+                                        //della pagina del cliente ma solo nella
+                                        //pagina di amministrazione.
+                                        //Nella pagina del cliente vengono visualizzati
+                                        //solo come posto occupato (pagato)
+                                        $color_stroke = $color_fill = self::COLOR_PAYED;
+                                    }
+                                    break;
+                                case self::STATO_SUBSCRIPTION_NOT_PAYED:
+                                    $color_stroke = $color_fill = self::COLOR_SUBSCRIPTION;
+                                    $class .= " busy";
+                                    
+                                    if($guest){
+                                        //Stati dei posti non visualizzabili all'interno
+                                        //della pagina del cliente ma solo nella
+                                        //pagina di amministrazione.
+                                        //Nella pagina del cliente vengono visualizzati
+                                        //solo come posto occupato (pagato)
+                                        $color_stroke = $color_fill = self::COLOR_BOOKED;
+                                    }
+                                    break;
+                                case self::STATO_SUBSCRIPTION_PAYED:
+                                    $color_fill     = self::COLOR_SUBSCRIPTION;
+                                    $color_stroke   = self::COLOR_PAYED;
+                                    $class .= " busy";
+                                    
+                                    if($guest){
+                                        //Stati dei posti non visualizzabili all'interno
+                                        //della pagina del cliente ma solo nella
+                                        //pagina di amministrazione.
+                                        //Nella pagina del cliente vengono visualizzati
+                                        //solo come posto occupato (pagato)
+                                        $color_stroke = $color_fill = self::COLOR_PAYED;
+                                    }
+                                    break;
                             }
                             
                         }
@@ -473,6 +554,8 @@ class Postazioni{
             case self::STATO_NOT_PAYED:
             case self::STATO_PAYED:
             case self::STATO_CREDIT_THEATRE:
+            case self::STATO_SUBSCRIPTION_NOT_PAYED:
+            case self::STATO_SUBSCRIPTION_PAYED:
                 return true;
         }
         
@@ -618,7 +701,7 @@ class Postazioni{
             
         };
         
-        array_filter(json_decode($prenotazione, true), $func);
+        if(!is_null(json_decode($prenotazione, true))) array_filter(json_decode($prenotazione, true), $func);
         
         return $nOfSeatBooked;
     }
