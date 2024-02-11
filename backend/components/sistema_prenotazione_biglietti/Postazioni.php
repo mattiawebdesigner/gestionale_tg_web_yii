@@ -664,9 +664,10 @@ class Postazioni{
      * Conta il numero di prenotazioni totali effettuate.
      * 
      * @param type $prenotazione Prenotazioni effettuate
+     * @param type $abbonamenti Abbonamenti prenotati
      * @return int Numero totale di prenotazioni
      */
-    public static function nOfSeatBooked($prenotazione){
+    public static function nOfSeatBooked($prenotazione, $abbonamenti){
         $searchKey = 'file';
         $searchKey2 = "posti";
         $nOfSeatBooked = 0;
@@ -702,6 +703,7 @@ class Postazioni{
         };
         
         if(!is_null(json_decode($prenotazione, true))) array_filter(json_decode($prenotazione, true), $func);
+        if(!is_null(json_decode($abbonamenti, true))) array_filter(json_decode($abbonamenti, true), $func);
         
         return $nOfSeatBooked;
     }
@@ -733,26 +735,13 @@ class Postazioni{
         }
         //-----------------------------------------------------------------
         
-        echo "<pre>";
-        //print_r($posti);
-        //print_r(json_decode($prenotazione));
-        echo "</pre>";
         
         foreach ($posti as $k_p => $p_v){
             if(isset($prenotazione[$k_p])){
                 //Ciclo le file
                 foreach ($posti[$k_p]['file'] as $k_fila => $posti){
                     if(isset($prenotazione[$k_p][$searchKey][$k_fila])){
-                        foreach ($posti[$searchKey2] as $posto => $info){
-                            /*echo "<pre>";
-                            print_r('$prenotazione['.$k_p.']['.$searchKey.']['.$k_fila.']['.$searchKey2.']['.$posto.']');
-                            print_r($prenotazione[$k_p]['file'][$k_fila]['posti']);
-                            echo "<br />";
-                            print_r(array_search($posto, $prenotazione[$k_p]['file'][$k_fila]['posti']));
-                            //print_r($prenotazione[$k_p]['file'][$k_fila]['posti']);
-                            print_r($info);
-                            echo "</pre>";*/
-                            
+                        foreach ($posti[$searchKey2] as $posto => $info){                            
                             if(array_search($posto, $prenotazione[$k_p]['file'][$k_fila]['posti']) !== false){
                                 if(isset($info[$searchKey3])){
                                     switch ($info[$searchKey3]){
@@ -766,12 +755,6 @@ class Postazioni{
                                             $nOfSeatPress ++;
                                             break;
                                     }
-                                    /*echo "<pre>";
-                                    //print_r($info[$searchKey3]);
-                                    //print_r(array_search($posto, $prenotazione[$k_p]['file'][$k_fila]['posti']));
-                                    print_r($info);
-                                    //print_r($prenotazione[$k_p]['file'][$k_fila]['posti']);
-                                    echo "</pre>";*/
                                 }
                                 
                                 $tot ++;
