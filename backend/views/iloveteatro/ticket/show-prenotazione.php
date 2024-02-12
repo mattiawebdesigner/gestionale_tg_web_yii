@@ -24,9 +24,9 @@ $this->title = Yii::t('app', 'Gestisci prenotazione: {spettacolo}', [
     </div>
     
     <div class="informazione-posti">
-        <div><?= Yii::t('app', 'Posti Totali: {tot}', ['tot' => "<strong>".$nOfSeatState[$prenotazioni->email]['tot']."</strong>"]) ?></div>
-        <div><?= Yii::t('app', 'Posti pagati: {tot}', ['tot' => "<strong>".$nOfSeatState[$prenotazioni->email]['nOfSeatPaid']."</strong>"]) ?></div>
-        <div><?= Yii::t('app', 'Posti da pagare: {tot}', ['tot' => "<strong>".$nOfSeatState[$prenotazioni->email]['nOfSeatNotPaid']."</strong>"]) ?></div>
+        <div><?= Yii::t('app', 'Posti Totali: {tot}', ['tot' => "<strong>".($nOfSeatState[$prenotazioni->email]['tot']+$nOfSeatState[$prenotazioni->email]['subcribers']['tot'])."</strong>"]) ?></div>
+        <div><?= Yii::t('app', 'Posti pagati: {tot}', ['tot' => "<strong>".($nOfSeatState[$prenotazioni->email]['nOfSeatPaid']+$nOfSeatState[$prenotazioni->email]['subcribers']['nOfSeatPaid'])."</strong>"]) ?></div>
+        <div><?= Yii::t('app', 'Posti da pagare: {tot}', ['tot' => "<strong>".($nOfSeatState[$prenotazioni->email]['nOfSeatNotPaid']+$nOfSeatState[$prenotazioni->email]['subcribers']['nOfSeatNotPaid'])."</strong>"]) ?></div>
         <p></p>
         <div><?= Yii::t('app', 'Riservati per la stampa: {tot}', ['tot' => "<strong>".$nOfSeatState[$prenotazioni->email]['nOfSeatPress']."</strong>"]) ?></div>
     </div>
