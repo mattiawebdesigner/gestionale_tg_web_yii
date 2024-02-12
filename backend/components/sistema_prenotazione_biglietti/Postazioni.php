@@ -428,7 +428,7 @@ class Postazioni{
                                         $class .= " busy";
                                        break;
                                     case self::STATO_CREDIT:
-                                        $color_stroke = self::COLOR_CREDIT;
+                                        $color_stroke = $color_fill = self::COLOR_CREDIT;
                                         $class .= " busy";
                                         break;
                                     case self::STATO_CREDIT_THEATRE:
@@ -456,7 +456,7 @@ class Postazioni{
                                     $class .= " busy";
                                     break;
                                 case self::STATO_CREDIT:
-                                    $color_stroke = $color_fill = self::COLOR_CREDIT;
+                                    $color_stroke = $color_fill = self::COLOR_BOOKED;
                                     $class .= " busy";
 
                                     if($guest){
@@ -469,7 +469,7 @@ class Postazioni{
                                     }
                                     break;
                                 case self::STATO_CREDIT_THEATRE:
-                                    $color_stroke = $color_fill = self::COLOR_CREDIT_THEATRE;
+                                    $color_stroke = $color_fill = self::COLOR_BOOKED;
                                     $class .= " busy";
 
                                     if($guest){
