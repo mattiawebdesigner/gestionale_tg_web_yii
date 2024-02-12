@@ -784,7 +784,7 @@ class Postazioni{
      *                       Se <b>false</b> visualizza la legenda limitata.
      */
     public static function legend(bool $guest = false, bool $complete = false){
-        echo '<svg width="100%" height="20%" xmlns="http://www.w3.org/2000/svg">';
+        echo '<svg width="100%" height="200" xmlns="http://www.w3.org/2000/svg">';
             echo '<circle class="" r="5" stroke-width="4" cx="10" cy="10" fill="'. self::COLOR_FREE.'"  stroke="'. self::COLOR_FREE.'"/>';
             echo '<text x="20" y="15">'.Yii::t('app', 'Posti liberi').'</text>';
             
@@ -811,6 +811,12 @@ class Postazioni{
 
                 echo '<circle class="" r="5" stroke-width="4" cx="10" cy="130" fill="'. self::COLOR_MY_BOOKED.'"  stroke="'. self::COLOR_PAYED.'"/>';
                 echo '<text x="20" y="135">'.Yii::t('app', 'Prenotazioni del cliente pagate').'</text>';
+
+                echo '<circle class="" r="5" stroke-width="4" cx="10" cy="150" fill="'. self::COLOR_SUBSCRIPTION.'"  stroke="'. self::COLOR_SUBSCRIPTION.'"/>';
+                echo '<text x="20" y="155">'.Yii::t('app', 'Abbonamento non pagato').'</text>';
+
+                echo '<circle class="" r="5" stroke-width="4" cx="10" cy="170" fill="'. self::COLOR_SUBSCRIPTION.'"  stroke="'. self::COLOR_PAYED.'"/>';
+                echo '<text x="20" y="175">'.Yii::t('app', 'Abbonamento pagato').'</text>';
             }
         echo '</svg>';
     }
