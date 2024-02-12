@@ -2,11 +2,11 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
-$totNOfSeat         = $nOfSeatState[$prenotazioni->email]['tot'];
-$totNOfSeatPaid     = $nOfSeatState[$prenotazioni->email]['nOfSeatPaid'];
-$totNOfSeatNotPaid  = $nOfSeatState[$prenotazioni->email]['nOfSeatNotPaid'];
+$totNOfSeat         = $nOfSeatState[$prenotazioni->email]['tot']??0;
+$totNOfSeatPaid     = $nOfSeatState[$prenotazioni->email]['nOfSeatPaid']??0;
+$totNOfSeatNotPaid  = $nOfSeatState[$prenotazioni->email]['nOfSeatNotPaid']??0;
 if(isset($nOfSeatState[$prenotazioni->email]['subcribers'])){
-    $totNOfSeatState    += $nOfSeatState[$prenotazioni->email]['subcribers']['tot'];
+    $totNOfSeat         += $nOfSeatState[$prenotazioni->email]['subcribers']['tot'];
     $totNOfSeatPaid     += $nOfSeatState[$prenotazioni->email]['subcribers']['nOfSeatPaid'];
     $totNOfSeatNotPaid  += $nOfSeatState[$prenotazioni->email]['subcribers']['nOfSeatNotPaid'];
 }
@@ -37,7 +37,7 @@ $this->title = Yii::t('app', 'Gestisci prenotazione: {spettacolo}', [
         <div><?= Yii::t('app', 'Posti pagati: {tot}', ['tot' => "<strong>".$totNOfSeatPaid."</strong>"]) ?></div>
         <div><?= Yii::t('app', 'Posti da pagare: {tot}', ['tot' => "<strong>".$totNOfSeatNotPaid."</strong>"]) ?></div>
         <p></p>
-        <div><?= Yii::t('app', 'Riservati per la stampa: {tot}', ['tot' => "<strong>".$nOfSeatState[$prenotazioni->email]['nOfSeatPress']."</strong>"]) ?></div>
+        <div><?= Yii::t('app', 'Riservati per la stampa: {tot}', ['tot' => "<strong>".($nOfSeatState[$prenotazioni->email]['nOfSeatPress']??0)."</strong>"]) ?></div>
     </div>
     
     <div id="theatre-place">

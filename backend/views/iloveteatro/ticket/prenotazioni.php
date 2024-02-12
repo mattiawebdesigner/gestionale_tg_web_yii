@@ -84,6 +84,8 @@ $this->title = Yii::t('app', 'Prenotazioni: {spettacolo}', [
                 <div><?= Yii::t('app', 'Cognome e Nome') ?>: <strong><?= $prenotazione->cognome ?> <?= $prenotazione->nome ?></strong></div>
                 <div><?= Yii::t('app', 'Email') ?>: <strong><?= $prenotazione->email ?></strong></div>
                 <div><?= Yii::t('app', 'Telefono') ?>: <strong><?= $prenotazione->cellulare ?></strong></div>
+                
+                <?php if(isset($nOfSeatState[$prenotazione->email]['nOfSeatPaid'])): ?>
                 <hr />
                 <div>
                     <?= Yii::t('app', 'Biglietti pagati') ?>: <strong class="c-darkgreen">
@@ -100,6 +102,8 @@ $this->title = Yii::t('app', 'Prenotazioni: {spettacolo}', [
                     <?= $nOfSeatState[$prenotazione->email]['tot'] ?>
                     </strong>
                 </div>
+                <?php endif; ?>
+                
                 <?php if(isset($nOfSeatState[$prenotazione->email]['subcribers'])): ?>
                 <hr />
                 <div>

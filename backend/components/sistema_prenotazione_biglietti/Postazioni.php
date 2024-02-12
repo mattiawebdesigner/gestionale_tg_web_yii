@@ -399,6 +399,8 @@ class Postazioni{
      *                      di amministrazione (true) o in quella del cliente (false).
      */
     private function getPlatea($p, $nome, $guest){
+        $this->my_booked = json_decode($this->my_booked, true);
+        
         //Ciclo sulle file
         foreach($p as $k_fila2 => $v_fila2) : 
             //Ciclo posti 
@@ -414,6 +416,7 @@ class Postazioni{
                         
                         //Colori per i posti prenotati da un utente
                         if(isset($this->my_booked[$nome]['file'][$k_fila2]['posti']) && $this->verificaPostoPrenotato($this->my_booked[$nome]['file'][$k_fila2]['posti'], $k_posizione)){
+                            
                             $color_stroke = "black";
                             $color_fill   = self::COLOR_MY_BOOKED;
                             $class       .= " my-busy not-payed";
@@ -434,8 +437,12 @@ class Postazioni{
                                         break;
                                     case self::STATO_SUBSCRIPTION_NOT_PAYED:
                                         $color_stroke = $color_fill = self::COLOR_SUBSCRIPTION;
+                                        //$color_stroke = $color_fill = "orange";
                                         $class .= " busy";
                                         break;
+                                    case self::STATO_SUBSCRIPTION_PAYED:
+                                        break;
+                                        
                                 }
                             }
                         }else if(isset($v_posizione->stato) && $this->controllaStato($v_posizione->stato)){//prenotazioni di altri utenti
@@ -475,21 +482,11 @@ class Postazioni{
                                     }
                                     break;
                                 case self::STATO_SUBSCRIPTION_NOT_PAYED:
-                                    $color_stroke = $color_fill = self::COLOR_SUBSCRIPTION;
+                                    $color_stroke = $color_fill = self::COLOR_BOOKED;
                                     $class .= " busy";
-                                    
-                                    if($guest){
-                                        //Stati dei posti non visualizzabili all'interno
-                                        //della pagina del cliente ma solo nella
-                                        //pagina di amministrazione.
-                                        //Nella pagina del cliente vengono visualizzati
-                                        //solo come posto occupato (pagato)
-                                        $color_stroke = $color_fill = self::COLOR_BOOKED;
-                                    }
                                     break;
                                 case self::STATO_SUBSCRIPTION_PAYED:
-                                    $color_fill     = self::COLOR_SUBSCRIPTION;
-                                    $color_stroke   = self::COLOR_PAYED;
+                                    $color_stroke = $color_fill = self::COLOR_BOOKED;
                                     $class .= " busy";
                                     
                                     if($guest){
@@ -524,6 +521,8 @@ class Postazioni{
             //Fine ciclo posti 
         endforeach;
         //Fine ciclo delle file
+        
+        $this->my_booked = json_encode($this->my_booked);
     }
     
     /**

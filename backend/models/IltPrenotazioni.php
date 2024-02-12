@@ -71,12 +71,14 @@ class IltPrenotazioni extends \yii\db\ActiveRecord
         }
         //------------------------------
         $nOfSeatState   = [];
-        foreach ($prenotazioni as $prenotazione){            
-            $res = Postazioni::nOfSeatState($piantina, $prenotazione->prenotazione);
-            $nOfSeatState[$prenotazione->email]['nOfSeatPaid'] = $res['nOfSeatPaid'];
-            $nOfSeatState[$prenotazione->email]['nOfSeatNotPaid'] = $res['nOfSeatNotPaid'];
-            $nOfSeatState[$prenotazione->email]['nOfSeatPress'] = $res['nOfSeatPress'];
-            $nOfSeatState[$prenotazione->email]['tot'] = $res['tot'];
+        foreach ($prenotazioni as $prenotazione){         
+            if(!is_null($prenotazione->prenotazione)){   
+                $res = Postazioni::nOfSeatState($piantina, $prenotazione->prenotazione);
+                $nOfSeatState[$prenotazione->email]['nOfSeatPaid'] = $res['nOfSeatPaid'];
+                $nOfSeatState[$prenotazione->email]['nOfSeatNotPaid'] = $res['nOfSeatNotPaid'];
+                $nOfSeatState[$prenotazione->email]['nOfSeatPress'] = $res['nOfSeatPress'];
+                $nOfSeatState[$prenotazione->email]['tot'] = $res['tot'];
+            }
             
             if(!is_null($prenotazione->abbonamento)){
                 $subscriber = Postazioni::nOfSeatState($piantina, $prenotazione->abbonamento);
