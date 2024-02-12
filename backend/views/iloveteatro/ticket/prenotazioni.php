@@ -68,7 +68,7 @@ $this->title = Yii::t('app', 'Prenotazioni: {spettacolo}', [
     
     
     <div class="prenotazioni flex">
-        <?php foreach($prenotazioni as $prenotazione): ?>            
+        <?php foreach($prenotazioni as $prenotazione): ?>
             <div class="item">
                 
                 <div class="eye">
@@ -86,25 +86,44 @@ $this->title = Yii::t('app', 'Prenotazioni: {spettacolo}', [
                 <div><?= Yii::t('app', 'Telefono') ?>: <strong><?= $prenotazione->cellulare ?></strong></div>
                 <hr />
                 <div>
-                    <?= Yii::t('app', 'Prenotazioni pagate') ?>: <strong class="c-darkgreen">
+                    <?= Yii::t('app', 'Biglietti pagati') ?>: <strong class="c-darkgreen">
                     <?= $nOfSeatState[$prenotazione->email]['nOfSeatPaid'] ?>
                     </strong>
                 </div>
                 <div>
-                    <?= Yii::t('app', 'Prenotazioni da pagare') ?>: <strong class="c-iloveteatro">
+                    <?= Yii::t('app', 'Biglietti da pagare') ?>: <strong class="c-iloveteatro">
                     <?= $nOfSeatState[$prenotazione->email]['nOfSeatNotPaid'] ?>
                     </strong>
                 </div>
                 <div>
-                    <?= Yii::t('app', 'Totali prenotazioni') ?>: <strong>
+                    <?= Yii::t('app', 'Totali biglietti') ?>: <strong>
                     <?= $nOfSeatState[$prenotazione->email]['tot'] ?>
                     </strong>
                 </div>
+                <?php if(isset($nOfSeatState[$prenotazione->email]['subcribers'])): ?>
+                <hr />
+                <div>
+                    <?= Yii::t('app', 'Abbonamenti pagati') ?>: <strong class="c-darkgreen">
+                    <?= $nOfSeatState[$prenotazione->email]['subcribers']['nOfSeatPaid'] ?>
+                    </strong>
+                </div>
+                <div>
+                    <?= Yii::t('app', 'Abbonamenti da pagare') ?>: <strong class="c-iloveteatro">
+                    <?= $nOfSeatState[$prenotazione->email]['subcribers']['nOfSeatNotPaid'] ?>
+                    </strong>
+                </div>
+                <div>
+                    <?= Yii::t('app', 'Abbonamenti totali') ?>: <strong>
+                    <?= $nOfSeatState[$prenotazione->email]['subcribers']['tot'] ?>
+                    </strong>
+                </div>
+                <?php endif; ?>
+                
                 <?php if(!is_null($prenotazione->data_registrazione)) : ?>
                 <div><?= Yii::t('app', 'Data della prenotazione') ?>: <strong><?= date('d-m-Y', strtotime($prenotazione->data_registrazione)) ?></strong></div>
                 <?php endif; ?>
             </div>
-        
+            
         <?php endforeach; ?>
     </div>
     

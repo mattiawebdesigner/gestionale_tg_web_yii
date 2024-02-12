@@ -746,9 +746,11 @@ class Postazioni{
                                 if(isset($info[$searchKey3])){
                                     switch ($info[$searchKey3]){
                                         case self::STATO_PAYED:
+                                        case self::STATO_SUBSCRIPTION_PAYED:
                                             $nOfSeatPaid ++;
                                             break;
                                         case self::STATO_NOT_PAYED:
+                                        case self::STATO_SUBSCRIPTION_NOT_PAYED:
                                             $nOfSeatNotPaid ++;
                                             break;
                                         case self::STATO_CREDIT:
