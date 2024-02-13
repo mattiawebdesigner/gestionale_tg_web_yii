@@ -419,25 +419,27 @@ class Postazioni{
                             
                             $color_stroke = "black";
                             $color_fill   = self::COLOR_MY_BOOKED;
-                            $class       .= " my-busy not-payed";
+                            $class       .= " my-busy ";
                             
                             if(isset($v_posizione->stato) && $this->controllaStato($v_posizione->stato)){
                                 switch ($v_posizione->stato){
+                                    case self::STATO_NOT_PAYED:
+                                        $class .= " busy not-payed";
+                                        break;
                                     case self::STATO_PAYED:
                                         $color_stroke   = self::COLOR_PAYED;
                                         $class .= " busy";
                                        break;
                                     case self::STATO_CREDIT:
                                         $color_stroke = $color_fill = self::COLOR_CREDIT;
-                                        $class .= " busy";
+                                        $class .= " busy not-payed";
                                         break;
                                     case self::STATO_CREDIT_THEATRE:
                                         $color_stroke = $color_fill = self::COLOR_CREDIT_THEATRE;
-                                        $class .= " busy";
+                                        $class .= " busy not-payed";
                                         break;
                                     case self::STATO_SUBSCRIPTION_NOT_PAYED:
                                         $color_stroke = $color_fill = self::COLOR_SUBSCRIPTION;
-                                        //$color_stroke = $color_fill = "orange";
                                         $class .= " busy";
                                         break;
                                     case self::STATO_SUBSCRIPTION_PAYED:
