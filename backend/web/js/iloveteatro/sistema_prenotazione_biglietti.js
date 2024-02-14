@@ -1,4 +1,13 @@
-/* 
+/*********************
+ * COSTANTI
+*********************/
+    //Posti liberi
+    const COLOR_FREE    = "darkgreen";
+    //Posto prenotato
+    const COLOR_BOOKED  = "grey";
+
+
+/*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Other/javascript.js to edit this template
  */
@@ -113,7 +122,7 @@ jQuery(".seat:not(.seat.busy):not(.seat.nn):not(.seat.my-busy.not-payed").click(
 /**
  * visualizza le prenotazioni da rimuovere
  */
-jQuery(".my-busy.not-payed:not(.seat.reservation)").click((e)=>{
+jQuery(".my-busy.not-payed:not(.seat.reservation), .my-busy.credit:not(.seat.reservation)").click((e)=>{
     var el = jQuery(e.target);
     var nome    = el.data("nome");
     var fila    = el.data("fila");
@@ -128,20 +137,24 @@ jQuery(".my-busy.not-payed:not(.seat.reservation)").click((e)=>{
     }
 
     el.attr("data-id", id);
-    insert(prenotazioni, id, el, nome, fila, posto, palco, "reservations-delete-form");
-    //Imposto come selezionato per la prenotazione
-    /*if(el.hasClass("reservation")){
-        alert("reservations");
-        remove(id, el);
-    }else{
-        alert("INSERT");
-        insert(prenotazioni, id, el, nome, fila, posto, palco, "reservations-delete-form");
-    }*/
-    //--------------------------------------------
+    if(el.hasClass("reservation")){
+        let stroke  = el.attr("old-stroke");
+        let fill    = el.attr("old-fill");
+    
+        console.log(stroke);
+        console.log(fill);
         
-    var tableRow    = jQuery("#theatre-reservations-delete > table tr");
-    
-    
+        remove(id, el, fill, stroke);
+    }else{
+        let stroke  = el.attr("stroke");
+        let fill    = el.attr("fill");
+        
+        el.attr("old-stroke", stroke);
+        el.attr("old-fill", fill);
+        insert(prenotazioni, id, el, nome, fila, posto, palco, "reservations-delete-form", COLOR_FREE, COLOR_FREE);
+    }
+        
+    var tableRow    = jQuery("#theatre-reservations-delete > table tr");    
     
     if(tableRow.length === 0){
         form.hide();
@@ -165,9 +178,9 @@ jQuery("#theatre-reservations > table, #theatre-reservations-delete > table").on
  * @param {int} id
  * @param {[Object object]} el
  */
-function remove(id, el){
-    el.attr("fill", "darkgreen");
-    el.attr("stroke", "darkgreen");
+function remove(id, el, fill = COLOR_FREE, stroke = COLOR_FREE){
+    el.attr("fill", fill);
+    el.attr("stroke", stroke);
     el.removeClass("reservation busy");
 
     var form        = jQuery("#theatre-reservations > form");
@@ -192,9 +205,9 @@ function remove(id, el){
  * @param {palco} string 
  * 
  */
-function insert(prenotazioni, id, el, nome, fila, posto, palco = undefined, formClass = "reservations-form"){
-    el.attr("fill", "grey");
-    el.attr("stroke", "grey");
+function insert(prenotazioni, id, el, nome, fila, posto, palco = undefined, formClass = "reservations-form", fill = COLOR_BOOKED, stroke = COLOR_BOOKED){
+    el.attr("fill", fill);
+    el.attr("stroke", stroke);
     el.addClass("reservation busy");
 
     let insert = "<tr id='"+id+"'>" + 

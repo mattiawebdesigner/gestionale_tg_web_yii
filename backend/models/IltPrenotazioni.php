@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use backend\components\sistema_prenotazione_biglietti\Postazioni;
 
 /**
  * This is the model class for table "ilt_foto".
@@ -37,7 +38,7 @@ class IltPrenotazioni extends \yii\db\ActiveRecord
     {
         return [
             [['spettacolo', 'nome', 'cognome', 'email', 'cellulare', 'pagato'], 'required'],
-            [['nome', 'cognome', 'email', 'cellulare', 'prenotazione'], 'string'],
+            [['nome', 'cognome', 'email', 'cellulare', 'prenotazione', 'abbonamento'], 'string'],
             [['posto'], 'integer'],
             [['data_registrazione'], 'safe']
         ];
@@ -59,6 +60,38 @@ class IltPrenotazioni extends \yii\db\ActiveRecord
             'pagato' => Yii::t('app', 'Il ticket è stato pagato?'),
             'data_registrazione' => Yii::t('app', 'Data della prenotazione'),
             'prenotazione' => Yii::t('app', 'Prenotazione'),
+            'abbonamento' => Yii::t('app', 'Abbonamento'),
         ];
     }
+    
+    public static function totali($prenotazioni, $piantina){
+        $nOfSeatBooked = 0;
+        foreach ($prenotazioni as $prenotazione){            
+            $nOfSeatBooked += Postazioni::nOfSeatBooked($prenotazione->prenotazione, $prenotazione->abbonamento);
+        }
+        //------------------------------
+        $nOfSeatState   = [];
+        foreach ($prenotazioni as $prenotazione){         
+            if(!is_null($prenotazione->prenotazione)){   
+                $res = Postazioni::nOfSeatState($piantina, $prenotazione->prenotazione);
+                $nOfSeatState[$prenotazione->email]['nOfSeatPaid'] = $res['nOfSeatPaid'];
+                $nOfSeatState[$prenotazione->email]['nOfSeatNotPaid'] = $res['nOfSeatNotPaid'];
+                $nOfSeatState[$prenotazione->email]['nOfSeatPress'] = $res['nOfSeatPress'];
+                $nOfSeatState[$prenotazione->email]['tot'] = $res['tot'];
+            }
+            
+            if(!is_null($prenotazione->abbonamento)){
+                $subscriber = Postazioni::nOfSeatState($piantina, $prenotazione->abbonamento);
+                $nOfSeatState[$prenotazione->email]['subcribers']['nOfSeatPaid'] = $subscriber['nOfSeatPaid'];
+                $nOfSeatState[$prenotazione->email]['subcribers']['nOfSeatNotPaid'] = $subscriber['nOfSeatNotPaid'];
+                $nOfSeatState[$prenotazione->email]['subcribers']['tot'] = $subscriber['tot'];
+            }
+        }
+        
+        return [
+            'nOfSeatBooked'     => $nOfSeatBooked,
+            'nOfSeatState'      => $nOfSeatState,
+        ];
+    }
+    
 }
