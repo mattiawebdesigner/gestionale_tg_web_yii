@@ -432,11 +432,11 @@ class Postazioni{
                                        break;
                                     case self::STATO_CREDIT:
                                         $color_stroke = $color_fill = self::COLOR_CREDIT;
-                                        $class .= " busy not-payed";
+                                        $class .= " busy credit";
                                         break;
                                     case self::STATO_CREDIT_THEATRE:
                                         $color_stroke = $color_fill = self::COLOR_CREDIT_THEATRE;
-                                        $class .= " busy not-payed";
+                                        $class .= " busy credit";
                                         break;
                                     case self::STATO_SUBSCRIPTION_NOT_PAYED:
                                         $color_stroke = $color_fill = self::COLOR_SUBSCRIPTION;

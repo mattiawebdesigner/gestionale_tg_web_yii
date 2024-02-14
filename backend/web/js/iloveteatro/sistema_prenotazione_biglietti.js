@@ -122,7 +122,7 @@ jQuery(".seat:not(.seat.busy):not(.seat.nn):not(.seat.my-busy.not-payed").click(
 /**
  * visualizza le prenotazioni da rimuovere
  */
-jQuery(".my-busy.not-payed:not(.seat.reservation)").click((e)=>{
+jQuery(".my-busy.not-payed:not(.seat.reservation), .my-busy.credit:not(.seat.reservation)").click((e)=>{
     var el = jQuery(e.target);
     var nome    = el.data("nome");
     var fila    = el.data("fila");
