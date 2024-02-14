@@ -40,10 +40,17 @@ $this->title = Yii::t('app', 'Gestisci prenotazione: {spettacolo}', [
         <div><?= Yii::t('app', 'Riservati per la stampa: {tot}', ['tot' => "<strong>".($nOfSeatState[$prenotazioni->email]['nOfSeatPress']??0)."</strong>"]) ?></div>
     </div>
     
-    <div id="theatre-place">
-        <?php
-        $postazioni->get(false);
-        ?>
+    
+    <div id="">
+        <div  class="btn btn-warning">
+            <i class="fa-solid fa-dollar-sign"></i> <?= Yii::t('app', 'Segna le prenotazioni come pagate') ?>
+        </div>
+        
+        <div id="theatre-place">
+            <?php
+            $postazioni->get(false);
+            ?>
+        </div>
     </div>
     
     <div class="legend">
