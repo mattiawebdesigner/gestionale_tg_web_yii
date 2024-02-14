@@ -5,7 +5,19 @@
             /*
              * Criterio di selezione del contenitore per la piantina
              */
-            piantina_contenitore: "theatre-place"
+            piantina_contenitore: "#theatre-place",
+            
+            form : {
+                /*
+                 * Form per la cancellazione di una prenotazione
+                 */
+                'cancellazione_contenitore' : "#theatre-reservations-delete",
+                /*
+                 * 
+                 * @type $|_$
+                 */
+                'buy_contenitore' : "#theatre-reservations-buy"
+            }
         }, options );
         
         //***************************
@@ -13,10 +25,48 @@
         //***************************
         //Elemento a cui è applicato il plugin
         const _THIS = $(this);
+        const _PIANTINACONTENITORE              = jQuery(settings.piantina_contenitore, _THIS);
+        const _FORM_CANCELLAZIONE_CONTENITORE   = jQuery(settings.form.cancellazione_contenitore, _THIS);
+        const _FORM_BUY_CONTENITORE             = jQuery(settings.form.buy_contenitore, _THIS);
+        
         //Posti liberi
         const COLOR_FREE    = "darkgreen";
         //Posto prenotato
         const COLOR_BOOKED  = "grey";
+        
+        /**
+         * Gestione dei posti da confermare
+         * come pagati
+         */
+        jQuery(".buy-place", _THIS).on("click", function(e){
+            let _seat = jQuery(".seat.my-busy.not-payed", _PIANTINACONTENITORE);
+            _seat.toggleClass("check");
+            
+            jQuery(".mode-in", this).toggle();
+            jQuery(".mode-out", this).toggle();
+            
+            jQuery(".seat:not(.seat.my-busy.not-payed)", _PIANTINACONTENITORE).toggle();
+            //_seat.removeClass("my-busy").removeClass("not-payed");
+            
+            var radius = jQuery(".seat.my-busy.not-payed", _PIANTINACONTENITORE).attr("r");
+            jQuery(".seat.check").click(function(e){
+                _FORM_CANCELLAZIONE_CONTENITORE.hide();
+                jQuery(this).attr("r", radius/2);
+                
+                console.log(_FORM_BUY_CONTENITORE);
+                jQuery("form", _FORM_BUY_CONTENITORE).show();
+                
+                var el = jQuery(e.target);
+                var nome    = el.data("nome");
+                var fila    = el.data("fila");
+                var posto   = el.data("posto");
+                var palco   = el.data("palco");
+                var id      = (nome.replace(" ", "_"))+"-"+fila+"-"+posto;
+
+                var prenotazioni = jQuery("#theatre-reservations-buy > table", _THIS);
+                insert(prenotazioni, id, el, nome, fila, posto, palco, "reservations-delete-form");
+            });
+        });
         
         /**
         * Attivo l'evento di selezione del posto, valido SOLO per 
@@ -85,7 +135,7 @@
 
                 el.attr("old-stroke", stroke);
                 el.attr("old-fill", fill);
-                insert(prenotazioni, id, el, nome, fila, posto, palco, "reservations-delete-form", COLOR_FREE, COLOR_FREE);
+                insert(prenotazioni, id, el, nome, fila, posto, palco, "reservations-buy-form", COLOR_FREE, COLOR_FREE);
             }
 
             var tableRow    = jQuery("#theatre-reservations-delete > table tr", _THIS);    
@@ -172,9 +222,9 @@
 }( jQuery ));
 
 jQuery(".seat").tooltip({
-                content : function (){//Renderizza anche in HTML
-                    var item = jQuery(this);
-                    var data = item.data("tooltip");
-                    return data;
-                }
-            });
+    content : function (){//Renderizza anche in HTML
+        var item = jQuery(this);
+        var data = item.data("tooltip");
+        return data;
+    }
+});

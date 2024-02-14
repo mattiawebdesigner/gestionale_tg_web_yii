@@ -44,6 +44,8 @@
     } 
 }
 
+.d-none-n-i{display: none;}
+
 .c-red{color: red;}
 .c-iloveteatro, .help-block{color: var(--color-iloveteatro);}
 .c-darkgreen{color: darkgreen;}

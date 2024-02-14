@@ -42,8 +42,9 @@ $this->title = Yii::t('app', 'Gestisci prenotazione: {spettacolo}', [
     
     
     <div id="sistema_prenotazione_biglietti">
-        <div  class="btn btn-warning">
-            <i class="fa-solid fa-dollar-sign"></i> <?= Yii::t('app', 'Segna le prenotazioni come pagate') ?>
+        <div  class="btn btn-warning buy-place">
+            <span class="mode-in"><i class="fa-solid fa-dollar-sign"></i> <?= Yii::t('app', 'Segna le prenotazioni come pagate') ?></span>
+            <span class="mode-out d-none-n-i"><i class="fa-solid fa-dollar-sign"></i> <?= Yii::t('app', 'Esci dalla modalità prenotazioni come pagate') ?></span>
         </div>
         
         <div id="theatre-place">
@@ -83,6 +84,19 @@ $this->title = Yii::t('app', 'Gestisci prenotazione: {spettacolo}', [
                 <input type="submit" value="<?= Yii::t('app', 'Cancella prenotazioni'); ?>" class="btn btn-iloveteatro" />
 
                 <input type="hidden" name="reservations-delete" value="true" />
+            <?php ActiveForm::end(); ?>
+
+            <table class="table table-striped"></table> 
+        </div>
+        
+        <?php // Sezione per confermare la cancellazione di una prenotazione ?>
+        <div id="theatre-reservations-buy">
+            <?php $form = ActiveForm::begin(['options' => ['id' => 'reservations-buy-form']]); ?>
+                <input type="hidden" name="dati[spettacolo_id]" value="<?= $spettacolo->id ?>" />
+                <input type="hidden" name="dati[email]" value="<?= $prenotazioni->email ?>" />
+                <input type="submit" value="<?= Yii::t('app', 'Segna come pagate'); ?>" class="btn btn-iloveteatro" />
+
+                <input type="hidden" name="reservations-buy" value="true" />
             <?php ActiveForm::end(); ?>
 
             <table class="table table-striped"></table> 

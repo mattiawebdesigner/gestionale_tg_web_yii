@@ -130,33 +130,6 @@ $this->title = Yii::t('app', 'Prenotazioni: {spettacolo}', [
             
         <?php endforeach; ?>
     </div>
-    
-    <!--<div class="prenotazioni flex flex-wrap-wrap gap-1">
-        <?php foreach($prenotazioni as $prenotazione): ?>
-        
-            <?php
-            $posto = IltPosto::find()->where(['id' => $prenotazione->posto])->one();
-            ?>
-
-            <div class="name">
-                <div class="trash">
-                    <?= Html::a('<i class="fa-solid fa-eye"></i> ', ['show-ticket', 
-                                                                    'spettacolo_id' => $spettacolo->id,
-                                                                    'email' => $prenotazione->email,
-                                                                ], [
-                        'class' => 'btn btn-info',
-                        'title' => Yii::t('app', 'Segna la prenotazione come pagata'),
-                    ]) ?>
-                </div>
-                
-                <p>&nbsp;</p>
-                <p>Nome e Cognome: <strong><?= $prenotazione->cognome ?> <?= $prenotazione->nome ?></strong></p>
-                <p>Email: <strong><?= $prenotazione->email ?></strong></p>
-                <p>Telefono: <strong><?= $prenotazione->cellulare ?></strong></p>
-            </div>
-        
-        <?php endforeach; ?>
-   </div> -->
 </div>
 
 <?php
