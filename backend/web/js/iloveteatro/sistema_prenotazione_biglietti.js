@@ -157,7 +157,7 @@
         /**
         * Pulsante di rimozione della prenotazione
         */
-        jQuery("#theatre-reservations > table, #theatre-reservations-delete > table").on("click", ".remove-reservation", (e)=>{
+        jQuery("#theatre-reservations > table, #theatre-reservations-delete > table", _THIS).on("click", ".remove-reservation", (e)=>{
             var parent = jQuery(e.target).parent().parent();
             var id = parent.attr("id");
 
