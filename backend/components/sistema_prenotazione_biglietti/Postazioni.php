@@ -590,7 +590,7 @@ class Postazioni{
     }
     
     /**
-     * Verifica se un posto Ã¨ presente tra quelli prenotati.
+     * Verifica se un posto è presente tra quelli prenotati.
      * 
      * @param type $posti
      * @param type $posto
