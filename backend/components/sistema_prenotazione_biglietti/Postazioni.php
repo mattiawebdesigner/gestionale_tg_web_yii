@@ -176,7 +176,7 @@ class Postazioni{
     * e salva i dati dell'utente che ha prenotato
     * 
     * @param array $prenotazione_posti Array dei posti prenotati
-    * @param array $prenotazione_esistente Prenotazione già esistente. NULL se non ci sono prenotazioni esistenti
+    * @param array $prenotazione_esistente Prenotazione giÃ  esistente. NULL se non ci sono prenotazioni esistenti
     * @param int $tipo_di_prenotazione Tipologia della prenotazione (Cliente, Stampa, Compagnia, ecc.)
     */
     public function prenotazione($prenotazione_posti, $prenotazione_esistente, $tipo_di_prenotazione = self::STATO_NOT_PAYED) {
@@ -254,6 +254,9 @@ class Postazioni{
                         case self::STATO_NOT_PAYED:
                             $this->posti->$k_pp->file->$v_fila->posti->$posto->stato = self::STATO_PAYED;
                             break;
+                        case self::STATO_SUBSCRIPTION_NOT_PAYED:
+                            $this->posti->$k_pp->file->$v_fila->posti->$posto->stato = self::STATO_SUBSCRIPTION_PAYED;
+                            break;
                     }
 
                     //dati prenotazione utente
@@ -292,7 +295,7 @@ class Postazioni{
      * Prenota un abbonamento.
      * 
      * @param array $prenotazione_posti
-     * @param array $prenotazione_esistente Abbonamenti già presi
+     * @param array $prenotazione_esistente Abbonamenti giÃ  presi
      * @param int $tipo_di_prenotazione
      * @return array
      */
@@ -388,7 +391,7 @@ class Postazioni{
                                     }
                                     //echo str_replace("_", " ", $o);
                                     echo '<circle class="'.$class.'" '
-                                            . 'data-tooltip="Fila <strong>'.$k3.'</strong><br />Posto: <strong>'.$k5.'</strong><br />Tipo seduta: <strong>'.$tipo_seduta.'</strong><br />Visibilità ridotta: <strong>'.$visibilita.'</strong>" '
+                                            . 'data-tooltip="Fila <strong>'.$k3.'</strong><br />Posto: <strong>'.$k5.'</strong><br />Tipo seduta: <strong>'.$tipo_seduta.'</strong><br />VisibilitÃ  ridotta: <strong>'.$visibilita.'</strong>" '
                                             . 'title="" '
                                             . 'data-nome="'. (str_replace("_", " ", $o)).'" '
                                             . 'data-palco='.$k.' '
@@ -496,7 +499,7 @@ class Postazioni{
                                         break;
                                     case self::STATO_SUBSCRIPTION_NOT_PAYED:
                                         $color_stroke = $color_fill = self::COLOR_SUBSCRIPTION;
-                                        $class .= " busy";
+                                        $class .= " busy subscription-not-payed";
                                         break;
                                     case self::STATO_SUBSCRIPTION_PAYED:
                                         break;
@@ -584,7 +587,7 @@ class Postazioni{
     }
     
     /**
-     * Verifica se un posto è presente tra quelli prenotati.
+     * Verifica se un posto Ã¨ presente tra quelli prenotati.
      * 
      * @param type $posti
      * @param type $posto
@@ -600,7 +603,7 @@ class Postazioni{
     }
     
     /**
-     * Verifica se lo stato è valido
+     * Verifica se lo stato Ã¨ valido
      * 
      * @param string|int $stato
      * @return boolean
@@ -692,14 +695,14 @@ class Postazioni{
      * 
      * @param array $prenotazione
      * @param array $piantina
-     * @param boolean $nuova_prenotazione Indica se è una nuova prenotazione (true) o no (false)
+     * @param boolean $nuova_prenotazione Indica se Ã¨ una nuova prenotazione (true) o no (false)
      * @param mixed $conn
-     * @return boolean|array Restituisce false se la prenotazione non è corretta.
+     * @return boolean|array Restituisce false se la prenotazione non Ã¨ corretta.
      *                       Restituisce l'array della piantina modificata,
      *                          se i dati della prenotazione passati sono corretti.
      */
     public static function updatePiantina(array $prenotazione, $piantina, $nuova_prenotazione = true){
-        //non è una prenotazione valida
+        //non Ã¨ una prenotazione valida
         if(!is_array($prenotazione)){return false;}
         
         /*echo "<pre>";
@@ -732,14 +735,14 @@ class Postazioni{
         $func = function ($subarray) use ($searchKey, &$func, $searchKey2, &$nOfSeatBooked) {
             $cont = 0;
             
-            //Controllo se il valore di $subarray è un array
+            //Controllo se il valore di $subarray Ã¨ un array
             //e non contiene la chiave cercata.
             //In questo caso si ripassa ala funzione stessa il valore
             //del nuovo sotto array
             if(!isset($subarray[$searchKey]) && is_array($subarray)){
                 $func($subarray[key($subarray)]);
             
-            //Se invece la chiave è trovata calcolo
+            //Se invece la chiave Ã¨ trovata calcolo
             //restituisco i valori (solitamente un array)
             }else{
                 if(isset($subarray[$searchKey])){

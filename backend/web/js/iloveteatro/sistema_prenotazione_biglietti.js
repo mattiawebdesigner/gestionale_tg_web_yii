@@ -33,23 +33,32 @@
         const COLOR_FREE    = "darkgreen";
         //Posto prenotato
         const COLOR_BOOKED  = "grey";
+        //Tipologia: Ticket
+        const TYPE_TICKET = "prenotazione";
+        //Tipologia: Abbonamento
+        const TYPE_SUBSCRIPTIONS = "subscriptions";
         
         /**
          * Gestione dei posti da confermare
          * come pagati
          */
         jQuery(".buy-place", _THIS).on("click", function(e){
-            let _seat = jQuery(".seat.my-busy.not-payed", _PIANTINACONTENITORE);
+            let _seat               = jQuery(".seat.my-busy.not-payed", _PIANTINACONTENITORE);
+            let _seat_subscription  = jQuery(".seat.my-busy.subscription-not-payed", _PIANTINACONTENITORE);
             _seat.toggleClass("check");
+            _seat_subscription.toggleClass("check");
             
             jQuery(".mode-in", this).toggle();
             jQuery(".mode-out", this).toggle();
             
-            jQuery(".seat:not(.seat.my-busy.not-payed)", _PIANTINACONTENITORE).toggle();
-            //_seat.removeClass("my-busy").removeClass("not-payed");
+            jQuery(".seat:not(.seat.my-busy.not-payed):not(.seat.my-busy.subscription-not-payed)", _PIANTINACONTENITORE).toggle();
             
             var radius = jQuery(".seat.my-busy.not-payed", _PIANTINACONTENITORE).attr("r");
-            jQuery(".seat.check").click(function(e){
+            
+            /**
+             * Gestione dei ticket da segnare come pagati
+             */
+            jQuery(".seat.not-payed.check").click(function(e){
                 _FORM_CANCELLAZIONE_CONTENITORE.hide();
                 jQuery(this).attr("r", radius/2);
                 
@@ -62,9 +71,30 @@
                 var posto   = el.data("posto");
                 var palco   = el.data("palco");
                 var id      = (nome.replace(" ", "_"))+"-"+fila+"-"+posto;
-
+                
                 var prenotazioni = jQuery("#theatre-reservations-buy > table", _THIS);
-                insert(prenotazioni, id, el, nome, fila, posto, palco, "reservations-delete-form");
+                insert(prenotazioni, id, el, nome, fila, posto, palco, "reservations-buy-form");
+            });
+            
+            /**
+             * Gestione degli abbonamenti da segnare come pagati
+             */
+            jQuery(".seat.subscription-not-payed.check").click(function(e){
+                _FORM_CANCELLAZIONE_CONTENITORE.hide();
+                jQuery(this).attr("r", radius/2);
+                
+                console.log(_FORM_BUY_CONTENITORE);
+                jQuery("form", _FORM_BUY_CONTENITORE).show();
+                
+                var el = jQuery(e.target);
+                var nome    = el.data("nome");
+                var fila    = el.data("fila");
+                var posto   = el.data("posto");
+                var palco   = el.data("palco");
+                var id      = (nome.replace(" ", "_"))+"-"+fila+"-"+posto;
+                
+                var prenotazioni = jQuery("#theatre-reservations-buy > table", _THIS);
+                insert(prenotazioni, id, el, nome, fila, posto, palco, "reservations-buy-form", COLOR_BOOKED, COLOR_BOOKED, TYPE_SUBSCRIPTIONS);
             });
         });
         
@@ -160,23 +190,24 @@
         * @param {string} formClass
         * @param {string} fill
         * @param {string} stroke
-        * 
+        * @param {string} type Tipo di inserimento (Abbonamento o Ticket)
         */
-        function insert(prenotazioni, id, el, nome, fila, posto, palco = undefined, formClass = "reservations-form", fill = COLOR_BOOKED, stroke = COLOR_BOOKED){
+        function insert(prenotazioni, id, el, nome, fila, posto, palco = undefined, formClass = "reservations-form", fill = COLOR_BOOKED, stroke = COLOR_BOOKED, type = TYPE_TICKET){
             el.attr("fill", fill);
             el.attr("stroke", stroke);
             el.addClass("reservation busy");
 
             let insert = "<tr id='"+id+"'>" + 
-                            "<th>" + nome + " <input type='hidden' name='prenotazione["+nome+"][nome][]' form='"+formClass+"' value='"+nome+"' /></th>";
+                            "<th>" + nome + " <input type='hidden' name='"+type+"["+nome+"][nome][]' form='"+formClass+"' value='"+nome+"' /></th>";
             if(palco !== undefined){
-                insert += "<td>Palco: <strong>"+palco+"</strong> <input type='hidden' name='prenotazione["+nome+"][palco][]' form='"+formClass+"' value='"+palco+"' /></td>";
+                insert += "<td>Palco: <strong>"+palco+"</strong> <input type='hidden' name='"+type+"["+nome+"][palco][]' form='"+formClass+"' value='"+palco+"' /></td>";
             }else{
                 insert += "<td></td>";
             }
 
-            insert += "<td>Fila: <strong>" + fila + "</strong> <input type='hidden' name='prenotazione["+nome+"][fila][]' form='"+formClass+"' value='"+fila+"' /></td> " +
-                            "<td>Posto: <strong>" + posto + "</strong> <input type='hidden' name='prenotazione["+nome+"][posto][]' form='"+formClass+"' value='"+posto+"' /></td>" +
+            insert += "<td>Fila: <strong>" + fila + "</strong>  " + 
+                            "<input type='hidden' name='"+type+"["+nome+"][fila][]' form='"+formClass+"' value='"+fila+"' /></td>" + 
+                            "<td>Posto: <strong>" + posto + "</strong> <input type='hidden' name='"+type+"["+nome+"][posto][]' form='"+formClass+"' value='"+posto+"' /></td>" +
                             "<td><span class='remove-reservation fa fa-trash-alt'></span></td>" +
                         "</tr>";
             prenotazioni.append(insert);
