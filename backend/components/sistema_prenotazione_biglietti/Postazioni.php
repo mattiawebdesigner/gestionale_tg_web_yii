@@ -502,6 +502,9 @@ class Postazioni{
                                         $class .= " busy subscription-not-payed";
                                         break;
                                     case self::STATO_SUBSCRIPTION_PAYED:
+                                        $color_stroke   = self::COLOR_PAYED;
+                                        $color_fill     = self::COLOR_SUBSCRIPTION;
+                                        $class .= " busy subscription-not-payed";
                                         break;
                                         
                                 }
