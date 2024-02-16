@@ -139,7 +139,7 @@
         /**
         * visualizza le prenotazioni da rimuovere
         */
-        jQuery(".my-busy.not-payed:not(.seat.reservation), .my-busy.credit:not(.seat.reservation)", _THIS).click((e)=>{
+        jQuery(".my-busy.not-payed:not(.seat.reservation), .my-busy.credit:not(.seat.reservation), .my-busy.credit:not(.seat.reservation)", _THIS).click((e)=>{
             var el = jQuery(e.target);
             var nome    = el.data("nome");
             var fila    = el.data("fila");
@@ -165,7 +165,48 @@
 
                 el.attr("old-stroke", stroke);
                 el.attr("old-fill", fill);
-                insert(prenotazioni, id, el, nome, fila, posto, palco, "reservations-buy-form", COLOR_FREE, COLOR_FREE);
+                insert(prenotazioni, id, el, nome, fila, posto, palco, "reservations-delete-form", COLOR_FREE, COLOR_FREE);
+            }
+
+            var tableRow    = jQuery("#theatre-reservations-delete > table tr", _THIS);    
+
+            if(tableRow.length === 0){
+                form.hide();
+            }else{
+                form.show();
+            }
+        });
+        
+        /**
+        * visualizza gli abbonamenti da rimuovere
+        */
+        jQuery(".my-busy.subscription-not-payed:not(.seat.reservation), .my-busy.credit:not(.seat.reservation)", _THIS).click((e)=>{
+            var el = jQuery(e.target);
+            var nome    = el.data("nome");
+            var fila    = el.data("fila");
+            var posto   = el.data("posto");
+            var palco   = el.data("palco");
+            var form    = jQuery("#reservations-delete-form", _THIS);
+
+            var prenotazioni = jQuery("#theatre-reservations-delete > table", _THIS);
+            var id = (nome.replace(" ", "_"))+"-"+fila+"-"+posto;
+            if(palco !== undefined){
+                id += "-"+palco;
+            }
+
+            el.attr("data-id", id);
+            if(el.hasClass("reservation")){
+                let stroke  = el.attr("old-stroke");
+                let fill    = el.attr("old-fill");
+                
+                remove(id, el, fill, stroke);
+            }else{
+                let stroke  = el.attr("stroke");
+                let fill    = el.attr("fill");
+
+                el.attr("old-stroke", stroke);
+                el.attr("old-fill", fill);
+                insert(prenotazioni, id, el, nome, fila, posto, palco, "reservations-delete-form", COLOR_FREE, COLOR_FREE, TYPE_SUBSCRIPTIONS);
             }
 
             var tableRow    = jQuery("#theatre-reservations-delete > table tr", _THIS);    
