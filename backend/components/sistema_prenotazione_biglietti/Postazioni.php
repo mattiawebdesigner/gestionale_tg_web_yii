@@ -144,8 +144,10 @@ class Postazioni{
                     foreach ($v_posti as $posti){
                         foreach ($posti as $posto){
                             //trovo la chiave del posto da rimuovere dalla prenotazione
-                            $key_to_remove = array_search($posto, $prenotazioni[$k_p]['file'][$fila]['posti']);
-                            unset($prenotazioni[$k_p]['file'][$fila]['posti'][$key_to_remove]);
+                            try{
+                                $key_to_remove = array_search($posto, $prenotazioni[$k_p]['file'][$fila]['posti']);
+                                unset($prenotazioni[$k_p]['file'][$fila]['posti'][$key_to_remove]);
+                            }catch(\Exception $ex){}
                             
                             if(empty($prenotazioni[$k_p]['file'][$fila]['posti'])){
                                 unset($prenotazioni[$k_p]['file'][$fila]);
