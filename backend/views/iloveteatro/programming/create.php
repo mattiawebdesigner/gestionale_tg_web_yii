@@ -50,6 +50,12 @@ $this->title = Yii::t('app', 'Nuovo spettacolo');
                 ]) ?>
     </div>
     
+    <div class="flex gap-1">
+        <?= $form->field($model, 'piantina')->dropDownList(
+            \yii\helpers\ArrayHelper::map($piantine, 'id', 'teatro')
+        ) ?>
+    </div>
+    
     
     <?php ActiveForm::end(); ?>
 </div>
