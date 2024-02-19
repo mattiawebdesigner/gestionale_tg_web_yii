@@ -29,10 +29,10 @@ $this->title = Yii::t('app', 'Ticket');
                 <?php foreach($spettacoli as $a): ?>
                     <div class="col col-sm-3 preview" style="background-image: url('<?= $a->locandina ?>');">
                             <div class="n-ticket p-absolute">
-                            <?= Yii::t('app', 'Posti occupati: ') ?> <strong><?= (IltPrenotazioni::find()->where(['spettacolo' => $a->id])->count()) ?></strong>
+                            <?= Yii::t('app', 'Posti occupati: ') ?> <strong><?= $s_tot[$a->id]['tot'] ?></strong>
                         </div>
                         <div class="n-ticket-paid p-absolute">
-                            <?= Yii::t('app', 'Posti pagati: ') ?> <strong><?= (IltPrenotazioni::find()->where(['spettacolo' => $a->id])->andWhere(['pagato' => IltPrenotazioni::PAGATO])->count()) ?></strong>
+                            <?= Yii::t('app', 'Posti pagati: ') ?> <strong><?= $s_tot[$a->id]['buy'] ?></strong>
                         </div>
                     <?= Html::a(<<<A
                             <div class="title">$a->spettacolo</div>
