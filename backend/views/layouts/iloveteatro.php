@@ -96,6 +96,8 @@ AppAsset::register($this);
                 ['label' => '<i class="far fa-eye"></i> '.Yii::t('app', 'Iscritti'), 'url' => ['/iloveteatro/iscritti']],   
             ]
         ];
+        $menuItems[] = ['label' => '<i class="fas fa-euro"></i> <span>'.Yii::t('app', 'Sponsor').'</span>', 'url' => ['iloveteatro/sponsor']];
+        $menuItems[] = ['label' => '<i class="fas fa-users"></i> <span>'.Yii::t('app', 'Partner').'</span>', 'url' => ['iloveteatro/partner']];
         $menuItems[] = ['label' => '<i class="fas fa-images"></i> <span>'.Yii::t('app', 'Media').'</span>', 'url' => ['iloveteatro/media']];
         $menuItems[] = ['label' => '<i class="fas fa-comments"></i> <span>'.Yii::t('app', 'Commenti').'</span>', 'url' => ['iloveteatro/commenti']];
         $menuItems[] = ['label' => '<i class="fas fa-cog"></i> <span>'.Yii::t('app', 'Impostazioni').'</span>', 'url' => ['iloveteatro/settings']];

@@ -41,6 +41,12 @@ $this->title = Yii::t('app', 'Gestionale {festival}', [
         </div>
         
         <div class="section">
+            <h4><i class="fas fa-euro"></i> <?= Yii::t('app', 'Sponsor') ?></h4>
+            <p><?= Yii::t('app', 'Gestisci gli sponsor') ?></p>
+            <?= Html::a(Yii::t('app', 'Vai'), ['sponsor']) ?>
+        </div>
+        
+        <div class="section">
             <h4><i class="fas fa-comments"></i> <?= Yii::t('app', 'I commenti') ?></h4>
             <p><?= Yii::t('app', 'Gestisci i commenti') ?></p>
             <?= Html::a(Yii::t('app', 'Vai'), ['commenti']) ?>
