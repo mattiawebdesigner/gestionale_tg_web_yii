@@ -16,12 +16,10 @@ $this->title = Yii::t('app', 'Gestione sponsor');
         <?= Yii::t('app', 'Nessuno sponsor inserito') ?>
     </div>
     <?php else: ?>
+    <h4><?= Yii::t('app', 'Elenco degli sponsor nel sistema') ?></h4>
     <div class="flex gap-2">
-        
         <?php foreach($sponsor as $sp): ?>
-        <div class="sponsor" style="background-image: url(<?= $sp->immagine ?>)">
-            
-        </div>
+        <div class="sponsor" style="background-image: url(<?= $sp->immagine ?>)"></div>
         <?php endforeach; ?>
     </div>
     <?php endif; ?>
