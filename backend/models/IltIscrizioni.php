@@ -30,6 +30,9 @@ class IltIscrizioni extends \yii\db\ActiveRecord
      * Reject
      */
     const DELETED        = 9;
+    /**
+     * Accepted
+     */
     const SUBSCRIBED     = 10;
     
     /**
@@ -49,7 +52,8 @@ class IltIscrizioni extends \yii\db\ActiveRecord
             [['compagnia', 'nome_referente', 'cognome_referente', 'codice_fiscale_referente', 'festival'], 'required'],
             [['festival', 'attivo'], 'integer'],
             [['compagnia'], 'string', 'max' => 150],
-            [['codice_fiscale_compagnia', 'partita_iva'], 'string', 'max' => 11],
+            [['codice_fiscale_compagnia'], 'string', 'max' => 16],
+            [['partita_iva'], 'string', 'max' => 11],
             [['nome_referente', 'cognome_referente'], 'string', 'max' => 50],
             [['codice_fiscale_referente'], 'string', 'max' => 16],
             [['festival'], 'exist', 'skipOnError' => true, 'targetClass' => IltFestival::className(), 'targetAttribute' => ['festival' => 'id']],
