@@ -344,3 +344,11 @@ footer.footer{
         width: 100%;
     }
 }
+
+.sponsor, .partner{
+    width: 250px;
+    height: 150px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
