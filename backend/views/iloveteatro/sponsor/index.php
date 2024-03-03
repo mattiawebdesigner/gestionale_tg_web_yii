@@ -2,7 +2,7 @@
 /**
  * visualizza l'elenco completo degli sponsor presenti nel sistema
  * 
- * @name $model Modello contenente tutti gli sponsor
+ * @name $sponsor Modello contenente tutti gli sponsor
  */
 use yii\helpers\Html;
 
