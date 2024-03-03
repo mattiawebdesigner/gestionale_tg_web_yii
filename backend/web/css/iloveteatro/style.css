@@ -345,7 +345,7 @@ footer.footer{
     }
 }
 
-.sponsor{
+.sponsor, .partner{
     width: 250px;
     height: 150px;
     background-size: contain;
