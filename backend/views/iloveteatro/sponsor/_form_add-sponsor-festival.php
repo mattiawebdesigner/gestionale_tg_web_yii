@@ -13,7 +13,7 @@ use yii\helpers\ArrayHelper;
     
     <div>
         <?= $form->field($model, 'sponsor')->dropDownList(ArrayHelper::map(app\models\IltSponsor::find()->asArray()->all(), 'id', 'sponsor')) ?>
-        <?= $form->field($model, 'festival')->hiddenInput(['value' => $festival->festival])->label(false) ?>
+        <?= $form->field($model, 'festival')->hiddenInput(['value' => $festival->id])->label(false) ?>
    </div>
     <?php ActiveForm::end(); ?>
 </div>

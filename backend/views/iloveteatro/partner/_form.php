@@ -19,7 +19,7 @@ use yii\helpers\Html;
         <?= $form->field($model, 'logo')->fileInput() ?>
         
         <?= $form->field($model, 'tipologia_di_partner')->hiddenInput(['value' => backend\models\IltPartner::PARTNER])->label(false) ?>
-        <?= $form->field($model, 'festival')->hiddenInput(['value' => $festival->festival])->label(false) ?>
+        <?= $form->field($model, 'festival')->hiddenInput(['value' => $festival->id])->label(false) ?>
    </div>
     <?php ActiveForm::end(); ?>
 </div>
