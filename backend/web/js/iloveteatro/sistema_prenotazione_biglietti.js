@@ -62,7 +62,6 @@
                 _FORM_CANCELLAZIONE_CONTENITORE.hide();
                 jQuery(this).attr("r", radius/2);
                 
-                console.log(_FORM_BUY_CONTENITORE);
                 jQuery("form", _FORM_BUY_CONTENITORE).show();
                 
                 var el = jQuery(e.target);
