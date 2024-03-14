@@ -33,6 +33,7 @@ $this->title = Yii::t('app', 'Nuova prenotazione: {spettacolo}', [
                         <option value="<?= Postazioni::STATO_CREDIT ?>"><?= Yii::t('app', Postazioni::CREDIT_DROPDOWN[Postazioni::STATO_CREDIT]) ?></option>
                         <option value="<?= Postazioni::STATO_CREDIT_THEATRE ?>"><?= Yii::t('app', Postazioni::CREDIT_DROPDOWN[Postazioni::STATO_CREDIT_THEATRE]) ?></option>
                         <option value="<?= Postazioni::STATO_NOT_PAYED ?>" selected="selected"><?= Yii::t('app', Postazioni::CREDIT_DROPDOWN[Postazioni::STATO_NOT_PAYED]) ?></option>
+                        <option value="<?= Postazioni::STATO_CREDIT_JURYMAN ?>" selected="selected"><?= Yii::t('app', Postazioni::CREDIT_DROPDOWN[Postazioni::STATO_CREDIT_JURYMAN]) ?></option>
                     </select>
                 </p>
                 <input type="hidden" name="dati[spettacolo_id]" value="<?= $model->id ?>" />

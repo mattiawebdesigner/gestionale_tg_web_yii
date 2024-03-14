@@ -19,12 +19,12 @@ $this->title = Yii::t('app', 'Nuovo abbonamento');
         <div id="theatre-reservations">
             <?php $form = ActiveForm::begin(['options' => ['id' => 'reservations-form']]); ?>
                 <p>
-                    <input type="text" name="dati[nome]" placeholder="Nome" />
-                    <input type="text" name="dati[cognome]" placeholder="Cogome" />
+                    <input type="text" name="dati[nome]" placeholder="Nome" required="required" />
+                    <input type="text" name="dati[cognome]" placeholder="Cogome" required="required" />
                 </p>
                 <p>
-                    <input type="email" name="dati[email]" placeholder="Email" />
-                    <input type="text" name="dati[cellulare]" placeholder="Cellulare" />
+                    <input type="email" name="dati[email]" placeholder="Email" required="required" />
+                    <input type="text" name="dati[cellulare]" placeholder="Cellulare" required="required" />
                 </p>
                 <p>
                     <label for="tipo-prenotazione"><?= Yii::t('app', 'Tipologia di posto') ?></label>
@@ -32,6 +32,7 @@ $this->title = Yii::t('app', 'Nuovo abbonamento');
                         <option value="<?= Postazioni::STATO_CREDIT ?>"><?= Yii::t('app', Postazioni::CREDIT_DROPDOWN[Postazioni::STATO_CREDIT]) ?></option>
                         <option value="<?= Postazioni::STATO_CREDIT_THEATRE ?>"><?= Yii::t('app', Postazioni::CREDIT_DROPDOWN[Postazioni::STATO_CREDIT_THEATRE]) ?></option>
                         <option value="<?= Postazioni::STATO_NOT_PAYED ?>" selected="selected"><?= Yii::t('app', Postazioni::CREDIT_DROPDOWN[Postazioni::STATO_NOT_PAYED]) ?></option>
+                        <option value="<?= Postazioni::STATO_CREDIT_JURYMAN ?>" selected="selected"><?= Yii::t('app', Postazioni::CREDIT_DROPDOWN[Postazioni::STATO_CREDIT_JURYMAN]) ?></option>
                     </select>
                 </p>
                 <input type="submit" value="Prenota" class="btn btn-iloveteatro" />
