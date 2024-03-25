@@ -79,7 +79,7 @@ $this->title = $title." | I Love Teatro";
             
             <div class="image">
                 <?php if($model->immagine_in_evidenza <> "" ) : ?>
-                <div class="image" style="background-image: url(../web/iloveteatro/media_uploads/<?= $model->immagine_in_evidenza ?>);"></div>
+                <div class="image" style="background-image: url(<?= (str_contains($model->immagine_in_evidenza, "https://"))? $model->immagine_in_evidenza : "../web/iloveteatro/media_uploads/".$model->immagine_in_evidenza ?>);"></div>
                 <?php endif; ?>
                 
                 <?= $form->field($uploadForm, 'mediaFile')->fileInput(['required' => false])->label(Yii::t('app', 'Immagine in evidenza')) ?>
