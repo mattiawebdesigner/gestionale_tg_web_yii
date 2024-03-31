@@ -53,14 +53,15 @@ class Postazioni{
     /**==========================================
      * Stati pagamento
     *==========================================*/
+    //Stati per abbonamenti
+    public const STATO_SUBSCRIPTION_NOT_PAYED   = 14;//Abbonamento non pagato
+    public const STATO_SUBSCRIPTION_PAYED       = 15;//Abbonamento pagato
+    
     public const STATO_PAYED           = 10;//Pagato
     public const STATO_NOT_PAYED       = 0;//Non Pagato
     public const STATO_CREDIT          = 11;//Stampa
     public const STATO_CREDIT_THEATRE  = 12;//Compagnia teatrale
     public const STATO_CREDIT_JURYMAN  = 13;//Giurato del festival
-    //Stati per abbonamenti
-    public const STATO_SUBSCRIPTION_PAYED       = 13;//Abbonamento pagato
-    public const STATO_SUBSCRIPTION_NOT_PAYED   = 14;//Abbonamento non pagato
     
     /**==========================================
      * Dati per il database
@@ -484,7 +485,7 @@ class Postazioni{
                             
                             $color_stroke = "black";
                             $color_fill   = self::COLOR_MY_BOOKED;
-                            $class       .= " my-busy ";
+                            $class       .= " my-busy ".$v_posizione->stato;
                             
                             if(isset($v_posizione->stato) && $this->controllaStato($v_posizione->stato)){
                                 switch ($v_posizione->stato){
@@ -505,7 +506,7 @@ class Postazioni{
                                         break;
                                     case self::STATO_CREDIT_JURYMAN:
                                         $color_stroke = $color_fill = self::COLOR_CREDIT_JURYMAN;
-                                        $class .= " busy credit";
+                                        $class .= " busy credit SI";
                                         break;
                                     case self::STATO_SUBSCRIPTION_NOT_PAYED:
                                         $color_stroke = $color_fill = self::COLOR_SUBSCRIPTION;
@@ -627,6 +628,7 @@ class Postazioni{
             case self::STATO_NOT_PAYED:
             case self::STATO_PAYED:
             case self::STATO_CREDIT_THEATRE:
+            case self::STATO_CREDIT_JURYMAN:
             case self::STATO_SUBSCRIPTION_NOT_PAYED:
             case self::STATO_SUBSCRIPTION_PAYED:
                 return true;
