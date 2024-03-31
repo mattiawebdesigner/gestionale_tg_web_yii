@@ -57,8 +57,11 @@ class Postazioni{
     public const STATO_SUBSCRIPTION_NOT_PAYED   = 14;//Abbonamento non pagato
     public const STATO_SUBSCRIPTION_PAYED       = 15;//Abbonamento pagato
     
+    //Stati ticket clienti
     public const STATO_PAYED           = 10;//Pagato
     public const STATO_NOT_PAYED       = 0;//Non Pagato
+    
+    //Stati CREDIT
     public const STATO_CREDIT          = 11;//Stampa
     public const STATO_CREDIT_THEATRE  = 12;//Compagnia teatrale
     public const STATO_CREDIT_JURYMAN  = 13;//Giurato del festival
