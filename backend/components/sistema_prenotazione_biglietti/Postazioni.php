@@ -566,6 +566,19 @@ class Postazioni{
                                         $color_stroke = $color_fill = self::COLOR_PAYED;
                                     }
                                     break;
+                                case self::STATO_CREDIT_JURYMAN:
+                                    $color_stroke = $color_fill = self::COLOR_CREDIT_JURYMAN;
+                                    $class .= " busy";
+
+                                    if($guest){
+                                        //Stati dei posti non visualizzabili all'interno
+                                        //della pagina del cliente ma solo nella
+                                        //pagina di amministrazione.
+                                        //Nella pagina del cliente vengono visualizzati
+                                        //solo come posto occupato (pagato)
+                                        $color_stroke = $color_fill = self::COLOR_PAYED;
+                                    }
+                                    break;
                                 case self::STATO_SUBSCRIPTION_NOT_PAYED:
                                     $color_stroke = $color_fill = self::COLOR_BOOKED;
                                     $class .= " busy";
