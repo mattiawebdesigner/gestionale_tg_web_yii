@@ -30,10 +30,9 @@ $this->title = Yii::t('app', 'Nuova prenotazione: {spettacolo}', [
                 <p>
                     <label for="tipo-prenotazione"><?= Yii::t('app', 'Tipologia di posto') ?></label>
                     <select name="tipo-prenotazione">
-                        <option value="<?= Postazioni::STATO_CREDIT ?>"><?= Yii::t('app', Postazioni::CREDIT_DROPDOWN[Postazioni::STATO_CREDIT]) ?></option>
-                        <option value="<?= Postazioni::STATO_CREDIT_THEATRE ?>"><?= Yii::t('app', Postazioni::CREDIT_DROPDOWN[Postazioni::STATO_CREDIT_THEATRE]) ?></option>
-                        <option value="<?= Postazioni::STATO_NOT_PAYED ?>" selected="selected"><?= Yii::t('app', Postazioni::CREDIT_DROPDOWN[Postazioni::STATO_NOT_PAYED]) ?></option>
-                        <option value="<?= Postazioni::STATO_CREDIT_JURYMAN ?>" selected="selected"><?= Yii::t('app', Postazioni::CREDIT_DROPDOWN[Postazioni::STATO_CREDIT_JURYMAN]) ?></option>
+                        <?php foreach(Postazioni::CREDIT_DROPDOWN as $k => $v): ?>
+                        <option value="<?= $k ?>" <?= Postazioni::STATO_NOT_PAYED ? 'selected="selected"' : ''  ?>><?= Yii::t('app', $v) ?></option>
+                        <?php endforeach; ?>
                     </select>
                 </p>
                 <input type="hidden" name="dati[spettacolo_id]" value="<?= $model->id ?>" />

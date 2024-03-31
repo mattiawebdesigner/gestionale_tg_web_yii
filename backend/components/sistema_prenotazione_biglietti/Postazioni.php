@@ -35,6 +35,8 @@ class Postazioni{
     public const COLOR_CREDIT_THEATRE  = "orange";
     //Colore per gli accrediti della giuria
     public const COLOR_CREDIT_JURYMAN = "#F70CE0";
+    //colore per i posti riservati agli sponsor
+    public const COLOR_CREDIT_SPONSOR = "#D9AA59";
     //Colore per le prenotazioni di uno specifico utente
     public const COLOR_MY_BOOKED = "yellow";
     //Colore per gli abbonamenti
@@ -44,10 +46,11 @@ class Postazioni{
      * Campi per dropdown menu
     ==========================================*/
     public const CREDIT_DROPDOWN = [
+        self::STATO_NOT_PAYED       => 'Cliente',
         self::STATO_CREDIT          => 'Stampa',
         self::STATO_CREDIT_THEATRE  => 'Compagnia',
         self::STATO_CREDIT_JURYMAN  => 'Giurato',
-        self::STATO_NOT_PAYED       => 'Cliente',
+        self::STATO_CREDIT_SPONSOR  => 'Sponsor',
     ];
     
     /**==========================================
@@ -65,6 +68,7 @@ class Postazioni{
     public const STATO_CREDIT          = 11;//Stampa
     public const STATO_CREDIT_THEATRE  = 12;//Compagnia teatrale
     public const STATO_CREDIT_JURYMAN  = 13;//Giurato del festival
+    public const STATO_CREDIT_SPONSOR  = 16;//sponsor del festival
     
     /**==========================================
      * Dati per il database
@@ -488,7 +492,7 @@ class Postazioni{
                             
                             $color_stroke = "black";
                             $color_fill   = self::COLOR_MY_BOOKED;
-                            $class       .= " my-busy ".$v_posizione->stato;
+                            $class       .= " my-busy ";
                             
                             if(isset($v_posizione->stato) && $this->controllaStato($v_posizione->stato)){
                                 switch ($v_posizione->stato){
@@ -519,6 +523,9 @@ class Postazioni{
                                         $color_stroke   = self::COLOR_PAYED;
                                         $color_fill     = self::COLOR_SUBSCRIPTION;
                                         $class .= " busy subscription-payed";
+                                        break;
+                                    case self::STATO_CREDIT_SPONSOR:
+                                        $color_stroke = $color_fill = self::COLOR_CREDIT_SPONSOR;
                                         break;
                                         
                                 }
@@ -565,6 +572,19 @@ class Postazioni{
                                     break;
                                 case self::STATO_SUBSCRIPTION_PAYED:
                                     $color_stroke = $color_fill = self::COLOR_BOOKED;
+                                    $class .= " busy";
+                                    
+                                    if($guest){
+                                        //Stati dei posti non visualizzabili all'interno
+                                        //della pagina del cliente ma solo nella
+                                        //pagina di amministrazione.
+                                        //Nella pagina del cliente vengono visualizzati
+                                        //solo come posto occupato (pagato)
+                                        $color_stroke = $color_fill = self::COLOR_PAYED;
+                                    }
+                                    break;
+                                case self::STATO_CREDIT_SPONSOR:
+                                    $color_stroke = $color_fill = self::COLOR_CREDIT_SPONSOR;
                                     $class .= " busy";
                                     
                                     if($guest){
@@ -632,6 +652,7 @@ class Postazioni{
             case self::STATO_PAYED:
             case self::STATO_CREDIT_THEATRE:
             case self::STATO_CREDIT_JURYMAN:
+            case self::STATO_CREDIT_SPONSOR:
             case self::STATO_SUBSCRIPTION_NOT_PAYED:
             case self::STATO_SUBSCRIPTION_PAYED:
                 return true;
@@ -888,18 +909,21 @@ class Postazioni{
 
                 echo '<circle class="" r="5" stroke-width="4" cx="10" cy="110" fill="'. self::COLOR_CREDIT_JURYMAN.'"  stroke="'. self::COLOR_CREDIT_JURYMAN.'"/>';
                 echo '<text x="20" y="115">'.Yii::t('app', 'Posto riservato per la giuria').'</text>';
+
+                echo '<circle class="" r="5" stroke-width="4" cx="10" cy="130" fill="'. self::COLOR_CREDIT_SPONSOR.'"  stroke="'. self::COLOR_CREDIT_SPONSOR.'"/>';
+                echo '<text x="20" y="135">'.Yii::t('app', 'Posto riservato per gli sponsor').'</text>';
                 
-                echo '<circle class="" r="5" stroke-width="4" cx="10" cy="130" fill="'. self::COLOR_MY_BOOKED.'"  stroke="black"/>';
-                echo '<text x="20" y="135">'.Yii::t('app', 'Prenotazioni del cliente').'</text>';
+                echo '<circle class="" r="5" stroke-width="4" cx="10" cy="150" fill="'. self::COLOR_MY_BOOKED.'"  stroke="black"/>';
+                echo '<text x="20" y="155">'.Yii::t('app', 'Prenotazioni del cliente').'</text>';
 
-                echo '<circle class="" r="5" stroke-width="4" cx="10" cy="150" fill="'. self::COLOR_MY_BOOKED.'"  stroke="'. self::COLOR_PAYED.'"/>';
-                echo '<text x="20" y="155">'.Yii::t('app', 'Prenotazioni del cliente pagate').'</text>';
+                echo '<circle class="" r="5" stroke-width="4" cx="10" cy="170" fill="'. self::COLOR_MY_BOOKED.'"  stroke="'. self::COLOR_PAYED.'"/>';
+                echo '<text x="20" y="175">'.Yii::t('app', 'Prenotazioni del cliente pagate').'</text>';
 
-                echo '<circle class="" r="5" stroke-width="4" cx="10" cy="170" fill="'. self::COLOR_SUBSCRIPTION.'"  stroke="'. self::COLOR_SUBSCRIPTION.'"/>';
-                echo '<text x="20" y="175">'.Yii::t('app', 'Abbonamento non pagato').'</text>';
+                echo '<circle class="" r="5" stroke-width="4" cx="10" cy="190" fill="'. self::COLOR_SUBSCRIPTION.'"  stroke="'. self::COLOR_SUBSCRIPTION.'"/>';
+                echo '<text x="20" y="195">'.Yii::t('app', 'Abbonamento non pagato').'</text>';
 
-                echo '<circle class="" r="5" stroke-width="4" cx="10" cy="190" fill="'. self::COLOR_SUBSCRIPTION.'"  stroke="'. self::COLOR_PAYED.'"/>';
-                echo '<text x="20" y="195">'.Yii::t('app', 'Abbonamento pagato').'</text>';
+                echo '<circle class="" r="5" stroke-width="4" cx="10" cy="210" fill="'. self::COLOR_SUBSCRIPTION.'"  stroke="'. self::COLOR_PAYED.'"/>';
+                echo '<text x="20" y="215">'.Yii::t('app', 'Abbonamento pagato').'</text>';
             }
         echo '</svg>';
     }
