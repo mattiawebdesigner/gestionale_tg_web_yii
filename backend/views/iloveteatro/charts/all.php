@@ -4,7 +4,15 @@ use yii\helpers\Html;
 $this->title = Yii::t('app', 'Grafico generale di vendita')
 ?>
 <h1><?= Html::encode($this->title) ?></h1>
-<h3><?= Yii::t('app', 'Totale posti')?>: <?= $totalPlace ?></h3>
+<h3><?= Yii::t('app', 'Totale posti:{tot}',[
+    'tot' => $totalPlace,
+]) ?>
+</h3>
+<h3>
+    <?= Yii::t('app', 'Totale abbonamenti: {tot}',[
+        'tot' => $subscription,
+    ]) ?>
+</h3>
 
 <p>
     <?= Html::a('<i class="fa-solid fa-ticket"></i> ' . Yii::t('app', 'Torna ai biglietti'),
@@ -39,13 +47,13 @@ $this->title = Yii::t('app', 'Grafico generale di vendita')
                              2]);
 
             var options = {
-              title: '<?= Yii::t('app', 'Resoconto delle vendite totali') ?>',
+              title: '<?= Yii::t('app', 'Resoconto dei biglietti pagati') ?>',
               width: 600,
               height: 400,
               bar: {groupWidth: "95%"},
-              legend: { position: "none" },
+              legend: { position: "none" }
             };
-            var chart = new google.visualization.BarChart(document.getElementById("barchart_values"));
+            var chart = new google.visualization.BarChart(document.getElementById("ticket_chart"));
             chart.draw(view, options);
         }
     </script>
@@ -53,7 +61,7 @@ $this->title = Yii::t('app', 'Grafico generale di vendita')
     
     <?php if(isset($shows) && sizeof($shows) > 0) : ?>
         <!--Div that will hold the pie chart-->
-        <div id="barchart_values" style="width: 900px; height: auto;"></div>
+        <div id="ticket_chart" style="width: 900px; height: auto;"></div>
     <?php else : ?>
         <p class="alert alert-info"><?= Yii::t('app', 'Non ci sono biglietti venduti') ?></p>
     <?php endif; ?>

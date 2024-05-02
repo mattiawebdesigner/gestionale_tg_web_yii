@@ -368,6 +368,39 @@ class Postazioni{
     }
     
     /**
+     * Numero di ticket totali, in base al tipo
+     * (pagati, non pagati, crediti, ecc).
+     * 
+     * @param int $state Stato del posto (STATO_PAYED, ecc)
+     * @return int Numero totale di ticket trovati
+     */
+    public static function getNumberOfTicket($prenotazioni, int $state = self::STATO_PAYED){
+        $prenotazioni = json_decode($prenotazioni, true);
+        
+        $tot = 0;
+        if(isset($prenotazioni['platea'])){
+            foreach ($prenotazioni['platea'] as $file){
+                foreach ($file as $posti){
+                    foreach ($posti['posti'] as $posto => $info){
+                        if(isset($info['stato'])){
+                            $p_state = $info['stato'];
+                            if($p_state == $state){
+                                $tot ++;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        return $tot;
+    }
+    
+    public static function getNumberOfSubscription($prenotazioni){
+        return self::getNumberOfTicket($prenotazioni, self::STATO_SUBSCRIPTION_PAYED);
+    }
+    
+    /**
      * Visualizza i palchi
      * 
      * @param array $p Palchi
