@@ -12,10 +12,6 @@ $this->title = Yii::t('app', 'Ticket');
         ['iloveteatro/chart'],
         ['class' => 'btn btn-warning']) ?></p>
     
-    <p><?= Html::a('<i class="fa-solid fa-chart-gantt"></i>' . Yii::t('app', 'Abbonamenti'),
-        ['iloveteatro/chart'],
-        ['class' => 'btn btn-warning']) ?></p>
-    
     <strong><?= Html::a('Scarica il vademecum per le prenotazioni', 'http://www.teatralmentegioia.it/iloveteatro/frontend/web/images/Vademecum_prenotazioni.pdf', [
         'target' => '_blank',
     ]) ?></strong>
