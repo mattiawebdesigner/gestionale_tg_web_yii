@@ -7,6 +7,8 @@
 -- Versione del server: 5.6.51-91.0-log
 -- Versione PHP: 8.0.7
 
+-- USATO NELLA PRIMA VERSIONE DEL SISTEMA DI PRENOTAZIONI
+
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
