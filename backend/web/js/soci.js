@@ -54,7 +54,7 @@
                     var el = "<div class=\"row\">";
                     
                     el += "<p></p>";
-                    el = "<div class=\"total\">Total soci: <strong>"+risposta.length+"</strong></div>";
+                    el += "<div class=\"total\">Total soci: <strong>"+risposta.length+"</strong></div>";
                     el += "<p></p>";
                     
                     el += "<table class='table'>";
@@ -67,9 +67,9 @@
                         $.each(risposta, function(key, val){
 
                             el += "<tr>";
-                                el += "<td><a href=\""+link+"&id="+val.id+"\">"+val.cognome+" "+val.nome+"</a></td>"
-                                el += "<td>"+val.email+"</td>"
-                                el += "<td>"+val.indirizzo+"</td>"
+                                el += "<td><a href=\""+link+"&id="+val.id+"\">"+val.cognome+" "+val.nome+"</a></td>";
+                                el += "<td>"+val.email+"</td>";
+                                el += "<td>"+val.indirizzo+"</td>";
                             el += "</tr>";
                                     
                         });

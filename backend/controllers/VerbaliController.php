@@ -546,7 +546,7 @@ TESTO])
         //altrimenti per i verbali dove questa funzione non 
         //era ancora prevista verrà inserita la firma inserita
         //(e non l'immagine della firma)
-        $verbali = Verbali::find()->where("data_assemblea LIKE '".$anno."%'")->andWhere(['bozza' => 1])->all();
+        $verbali = Verbali::find()->where("data_assemblea LIKE '".$anno."%'")->andWhere(['bozza' => 1])->orderBy(['data_assemblea' => SORT_DESC])->all();
         foreach ($verbali as $verbale){
             if(is_numeric($verbale->firma)){
                 $firma = \backend\models\Firma::findOne(['socio' => $verbale->firma]);
@@ -572,7 +572,7 @@ TESTO])
     public function actionContentConvocazioni($anno) {
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         
-        $convocazioni = Convocazioni::find()->where("data_assemblea LIKE '".$anno."%'")->andWhere(['bozza' => 1])->all();
+        $convocazioni = Convocazioni::find()->where("data_assemblea LIKE '".$anno."%'")->andWhere(['bozza' => 1])->orderBy(['data_assemblea' => SORT_DESC])->all();
         
         //Recupero le firme registrate per il verbali
         //altrimenti per i verbali dove questa funzione non 
