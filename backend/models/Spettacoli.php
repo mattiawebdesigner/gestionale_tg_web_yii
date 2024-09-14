@@ -20,7 +20,6 @@ use Yii;
  * @property string $banner
  * @property string $locandina
  * @property string $sinossi
- * @property int $festival
  */
 class Spettacoli extends \yii\db\ActiveRecord
 {
@@ -40,7 +39,6 @@ class Spettacoli extends \yii\db\ActiveRecord
         return [
             [['spettacolo', 'data', 'ora_porta', 'ora_sipario'], 'required'],
             [['spettacolo', 'banner', 'locandina', 'sinossi', 'piantina'], 'string'],
-            [['festival'], 'integer'],
         ];
     }
 
@@ -58,7 +56,6 @@ class Spettacoli extends \yii\db\ActiveRecord
             'banner' => Yii::t('app', 'Banner spettacolo'),
             'locandina' => Yii::t('app', 'Locandina dello spettacolo'),
             'sinossi' => Yii::t('app', 'Sinossi dello spettacolo'),
-            'festival' => Yii::t('app', 'Festival'),
             'piantina' => Yii::t('app', 'Piantina'),
         ];
     }

@@ -1,4 +1,7 @@
 <?php
+/**
+ * Elenco degli spettacoli
+ */
 
 use yii\helpers\Html;
 use yii\grid\GridView;
@@ -8,7 +11,6 @@ use yii\grid\GridView;
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = Yii::t('app', 'Spettacoli');
-//$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Spettacoli'), 'url' => ['manage']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="verbali-index">
