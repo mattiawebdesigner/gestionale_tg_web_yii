@@ -4,7 +4,6 @@
  */
 
 use yii\helpers\Html;
-use yii\grid\GridView;
 use yii\widgets\ActiveForm;
 use dosamigos\tinymce\TinyMce;
 
@@ -33,6 +32,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'class' => 'btn btn-danger',
         ])  ?>
         <?= Html::a('<i class="fas fa-ticket"></i>', ['prenotazioni', 'spettacolo_id' => $model->id], ['class' => 'btn btn-warning']) ?>
+        <?= Html::a('<i class="fa-solid fa-arrow-up-right-from-square"></i> '.Yii::t('app', 'Prenota un biglietto '), ['prenotazione-ticket', 'spettacolo_id' => $model->id], ['class' => 'btn btn-warning']) ?>
     </div>
     
     <?= $form->field($model, 'spettacolo')->textInput([
