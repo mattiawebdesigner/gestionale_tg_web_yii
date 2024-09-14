@@ -25,7 +25,7 @@ $this->params['breadcrumbs'][] = $this->title;
     
     <div class="submit">
         <?= Html::submitButton('<i class="fas fa-save"></i> '.Yii::t('app', 'Salva'), ['class' => 'btn btn-success']) ?>
-        <?= Html::a('<i class="fas fa-trash-alt"></i>', ['/iloveteatro/delete-show', 'id' => $model->id],[
+        <?= Html::a('<i class="fas fa-trash-alt"></i>', ['delete', 'id' => $model->id],[
             'data' => [
                 'confirm' => Yii::t('app', 'Sei sicuro di voler cancellare questo spettacolo?'),
                 'method' => 'post',
