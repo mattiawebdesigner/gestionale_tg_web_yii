@@ -8,8 +8,7 @@ use yii\widgets\ActiveForm;
 use dosamigos\tinymce\TinyMce;
 
 /* @var $this yii\web\View */
-/* @var $searchModel backend\models\VerbaliSearch */
-/* @var $dataProvider yii\data\ActiveDataProvider */
+/* @var $model backend\models\Spettacoli */
 
 $this->title = Yii::t('app', '{name}', [
     'name' => $model->spettacolo,

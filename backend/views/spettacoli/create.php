@@ -7,8 +7,8 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $searchModel backend\models\VerbaliSearch */
-/* @var $dataProvider yii\data\ActiveDataProvider */
+/* @var $model backend\models\Spettacoli */
+/* @var $piantine backend\models\IltTeatroPiantina */
 
 $this->title = Yii::t('app', 'Nuovo spettacolo');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Spettacoli'), 'url' => ['manage']];
