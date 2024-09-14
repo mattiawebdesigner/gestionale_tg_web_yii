@@ -44,7 +44,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute'  => 'locandina',
                 'format' => 'raw',
                 'value' => function($data){
-                    return "<img src='{$data->locandina}' alt='Locandina spettacolo {$data->spettacolo}' style='width: 40%' />";
+                    return "<img src='{$data->locandina}' alt='Locandina spettacolo {$data->spettacolo}' style='width: 100px' />";
                 }
             ],
             [
