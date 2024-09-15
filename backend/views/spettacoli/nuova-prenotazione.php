@@ -1,24 +1,18 @@
 <?php
-/**
- * Aggiunge una nuova prenotazione per lo spettacolo
- */
-
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use backend\components\sistema_prenotazione_biglietti\Postazioni;
 
-$this->title = Yii::t('app', 'Nuova prenotazione {spettacolo}', [
+$this->title = Yii::t('app', 'Nuova prenotazione: {spettacolo}', [
     'spettacolo' => $model->spettacolo
 ]);
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Spettacoli'), 'url' => ['manage']];
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', "Spettacolo: {$model->spettacolo}"), 'url' => ['view-show', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = $this->title;
 ?>
 <h1><?= Html::encode($this->title) ?></h1>
 
 <div class="ticket-nuova-prenotazione">
+    
     <div id="sistema_prenotazione_biglietti">
-        <div id="theatre-place">
+        <div id="theatre-place" style="background-image: url(<?= $model->backgroundPiantina; ?>);"> 
             <?php $postazioni->get() ?>
         </div>
 
@@ -62,6 +56,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <table class="table table-striped"></table> 
         </div>
     </div>
+    
 </div>
 
 <?php
