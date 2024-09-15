@@ -59,7 +59,21 @@ $this->params['breadcrumbs'][] = $this->title;
             //'data_inserimento',
             //'ultima_modifica',
                     
-            ['class' => 'yii\grid\ActionColumn'],
+            //['class' => 'yii\grid\ActionColumn'],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'template'=>'{view-show}{delete}',
+                'buttons' => [
+                    'view-show' => 
+                        function ($url, $model){
+                            return Html::a('<i class="fa-solid fa-eye"></i> ', $url, [
+
+                                    'title' => Yii::t('yii', 'Create'),
+
+                            ]);
+                        }
+                ]
+            ]
         ],
     ]); ?>
     
