@@ -37,7 +37,7 @@ class Spettacoli extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['spettacolo', 'data', 'ora_porta', 'ora_sipario'], 'required'],
+            [['spettacolo', 'data', 'ora_porta', 'ora_sipario', 'backgroundPiantina', 'backgroundPosition'], 'required'],
             [['spettacolo', 'banner', 'locandina', 'sinossi', 'piantina'], 'string'],
         ];
     }
