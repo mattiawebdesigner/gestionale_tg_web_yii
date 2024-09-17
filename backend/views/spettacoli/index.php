@@ -1,14 +1,16 @@
 <?php
+/**
+ * Elenco degli spettacoli
+ */
 
 use yii\helpers\Html;
 use yii\grid\GridView;
 
 /* @var $this yii\web\View */
-/* @var $searchModel backend\models\VerbaliSearch */
+/* @var $searchModel backend\models\SpettacoliSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = Yii::t('app', 'Spettacoli');
-//$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Spettacoli'), 'url' => ['manage']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="verbali-index">
@@ -42,7 +44,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute'  => 'locandina',
                 'format' => 'raw',
                 'value' => function($data){
-                    return "<img src='{$data->locandina}' alt='Locandina spettacolo {$data->spettacolo}' style='width: 40%' />";
+                    return "<img src='{$data->locandina}' alt='Locandina spettacolo {$data->spettacolo}' style='width: 100px' />";
                 }
             ],
             [
@@ -57,7 +59,21 @@ $this->params['breadcrumbs'][] = $this->title;
             //'data_inserimento',
             //'ultima_modifica',
                     
-            ['class' => 'yii\grid\ActionColumn'],
+            //['class' => 'yii\grid\ActionColumn'],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'template'=>'{view-show}{delete}',
+                'buttons' => [
+                    'view-show' => 
+                        function ($url, $model){
+                            return Html::a('<i class="fa-solid fa-eye"></i> ', $url, [
+
+                                    'title' => Yii::t('yii', 'Create'),
+
+                            ]);
+                        }
+                ]
+            ]
         ],
     ]); ?>
     
