@@ -13,7 +13,7 @@ use dosamigos\tinymce\TinyMce;
 $this->title = Yii::t('app', '{name}', [
     'name' => $model->spettacolo,
 ]);
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Spettacoli'), 'url' => ['manage']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Spettacoli'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <h1><?= Html::encode($this->title) ?></h1>
