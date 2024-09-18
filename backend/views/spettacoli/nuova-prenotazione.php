@@ -6,6 +6,9 @@ use backend\components\sistema_prenotazione_biglietti\Postazioni;
 $this->title = Yii::t('app', 'Nuova prenotazione: {spettacolo}', [
     'spettacolo' => $model->spettacolo
 ]);
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Spettacoli'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', $model->spettacolo), 'url' => ['view-show', 'id' => $model->id]];
+$this->params['breadcrumbs'][] = $this->title;
 ?>
 <h1><?= Html::encode($this->title) ?></h1>
 
@@ -40,7 +43,7 @@ $this->title = Yii::t('app', 'Nuova prenotazione: {spettacolo}', [
                     </select>
                 </p>
                 <input type="hidden" name="dati[spettacolo_id]" value="<?= $model->id ?>" />
-                <input type="submit" value="Prenota" class="btn btn-iloveteatro" />
+                <input type="submit" value="Prenota" class="btn btn-crm" />
             <?php ActiveForm::end(); ?>
 
             <table class="table table-striped"></table>
@@ -52,7 +55,7 @@ $this->title = Yii::t('app', 'Nuova prenotazione: {spettacolo}', [
         <div id="theatre-reservations-delete">
             <?php $form = ActiveForm::begin(['options' => ['id' => 'reservations-delete-form']]); ?>
                 <input type="hidden" name="dati[spettacolo_id]" value="<?= $model->id ?>" />
-                <input type="submit" value="<?= Yii::t('app', 'Cancella prenotazioni'); ?>" class="btn btn-iloveteatro" />
+                <input type="submit" value="<?= Yii::t('app', 'Cancella prenotazioni'); ?>" class="btn btn-crm" />
 
                 <input type="hidden" name="reservations-delete" value="true" />
             <?php ActiveForm::end(); ?>

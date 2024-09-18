@@ -14,9 +14,6 @@
 
 :link, a, .dropdown-item:link, .dropdown-item:visited{color: var(--color-link-tg1);}
 .dropdown-item.active, .dropdown-item:active{color: white;}
-a.btn{color: var(--color-white);}
-a.btn.btn-outline-secondary{color: var(--color-black);}
-a.btn.btn-link{color: var(--color-blue);}
 
 body{
     /*background: url(.);
@@ -49,6 +46,10 @@ main .container{
     -o-border-radius: 0;
     border-radius: 0;
 }
+a.btn{color: var(--color-white);}
+a.btn.btn-outline-secondary{color: var(--color-black);}
+a.btn.btn-link{color: var(--color-blue);}
+.btn.btn-crm{background-color: var(--color-link-tg1);color:white;}
 .btn a{color: #fff;}
 .btn a:hover{text-decoration: none;}
 .btn-link a{color: var(--color-blue);}
