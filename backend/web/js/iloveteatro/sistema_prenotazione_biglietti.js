@@ -47,8 +47,7 @@
             let _seat               = jQuery(".seat.my-busy.not-payed", _PIANTINACONTENITORE);
             //Abbonamenti non pagati
             let _seat_subscription  = jQuery(".seat.my-busy.subscription-not-payed", _PIANTINACONTENITORE);
-            console.log(_PIANTINACONTENITORE);
-            console.log(_seat);
+            
             _seat.toggleClass("check");
             _seat_subscription.toggleClass("check");
             
@@ -86,7 +85,6 @@
                 _FORM_CANCELLAZIONE_CONTENITORE.hide();
                 jQuery(this).attr("r", radius/2);
                 
-                console.log(_FORM_BUY_CONTENITORE);
                 jQuery("form", _FORM_BUY_CONTENITORE).show();
                 
                 var el = jQuery(e.target);
@@ -282,7 +280,8 @@
         /**
         * Pulsante di rimozione della prenotazione
         */
-        jQuery("#theatre-reservations > table, #theatre-reservations-delete > table", _THIS).on("click", ".remove-reservation", (e)=>{
+        jQuery("#theatre-reservations > table, #theatre-reservations-delete > table, #theatre-reservations-buy > table", _THIS).on("click", ".remove-reservation", (e)=>{
+            
             var parent = jQuery(e.target).parent().parent();
             var id = parent.attr("id");
 
