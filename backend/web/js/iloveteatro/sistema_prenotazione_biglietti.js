@@ -284,8 +284,15 @@
             
             var parent = jQuery(e.target).parent().parent();
             var id = parent.attr("id");
+            
+            //Posto occupato sulla mappa
+            //Da deselezionare
+            var seat = jQuery("[data-id='"+id+"']", _THIS);
+            var old_stroke = seat.attr("old-stroke");
+            var old_fill   = seat.attr("old-fill");
+            seat.removeClass("reservation");
 
-            remove(id, jQuery("[data-id='"+id+"']"));
+            remove(id, jQuery("[data-id='"+id+"']"), old_fill, old_stroke);
         });
         
         
