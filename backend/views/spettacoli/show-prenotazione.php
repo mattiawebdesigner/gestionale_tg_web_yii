@@ -1,13 +1,6 @@
 <?php
-/**
- * Visualizza la prenotazione per poterla gestire
- * (settare pagamenti, cancellarla, ecc).
- * La gestione si fa mediante la piantina dello 
- * spettacolo stesso
- */
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-
 
 $this->title = Yii::t('app', 'Prenotazione: {cognome} {nome}', [
     'cognome' => $prenotazioni->cognome,
@@ -26,6 +19,10 @@ if(isset($nOfSeatState[$prenotazioni->email]['subcribers'])){
     $totNOfSeatPaid     += $nOfSeatState[$prenotazioni->email]['subcribers']['nOfSeatPaid'];
     $totNOfSeatNotPaid  += $nOfSeatState[$prenotazioni->email]['subcribers']['nOfSeatNotPaid'];
 }
+
+$this->title = Yii::t('app', 'Gestisci prenotazione: {spettacolo}', [
+    'spettacolo' => $spettacolo->spettacolo,
+]);
 ?>
 <h1><?= Html::encode( $this->title ) ?></h1>
 
@@ -93,7 +90,7 @@ if(isset($nOfSeatState[$prenotazioni->email]['subcribers'])){
         <div id="theatre-reservations-delete">
             <?php $form = ActiveForm::begin(['options' => ['id' => 'reservations-delete-form']]); ?>
                 <input type="hidden" name="dati[spettacolo_id]" value="<?= $spettacolo->id ?>" />
-                <input type="submit" value="<?= Yii::t('app', 'Cancella prenotazioni'); ?>" class="btn btn-iloveteatro" />
+                <input type="submit" value="<?= Yii::t('app', 'Cancella prenotazioni'); ?>" class="btn btn-crm" />
 
                 <input type="hidden" name="reservations-delete" value="true" />
             <?php ActiveForm::end(); ?>
@@ -106,7 +103,7 @@ if(isset($nOfSeatState[$prenotazioni->email]['subcribers'])){
             <?php $form = ActiveForm::begin(['options' => ['id' => 'reservations-buy-form']]); ?>
                 <input type="hidden" name="dati[spettacolo_id]" value="<?= $spettacolo->id ?>" />
                 <input type="hidden" name="dati[email]" value="<?= $prenotazioni->email ?>" />
-                <input type="submit" value="<?= Yii::t('app', 'Segna come pagate'); ?>" class="btn btn-iloveteatro" />
+                <input type="submit" value="<?= Yii::t('app', 'Segna come pagate'); ?>" class="btn btn-crm" />
 
                 <input type="hidden" name="reservations-buy" value="true" />
             <?php ActiveForm::end(); ?>

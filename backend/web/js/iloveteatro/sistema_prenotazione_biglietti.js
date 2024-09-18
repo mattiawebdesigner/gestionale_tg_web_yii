@@ -43,8 +43,12 @@
          * come pagati
          */
         jQuery(".buy-place", _THIS).on("click", function(e){
+            //Posti occupati da pagare
             let _seat               = jQuery(".seat.my-busy.not-payed", _PIANTINACONTENITORE);
+            //Abbonamenti non pagati
             let _seat_subscription  = jQuery(".seat.my-busy.subscription-not-payed", _PIANTINACONTENITORE);
+            console.log(_PIANTINACONTENITORE);
+            console.log(_seat);
             _seat.toggleClass("check");
             _seat_subscription.toggleClass("check");
             
