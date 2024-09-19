@@ -66,7 +66,14 @@ $this->params['breadcrumbs'][] = $this->title;
     
     <div class="description">
         <h3><?= Yii::t('app', 'Sinossi') ?></h3>
-        <?= $model->sinossi ?>
+        
+        <div class="flex gap-1">
+            <div><i class="fa-solid fa-calendar"></i> <?= date('d-m-Y', strtotime($model->data)) ?></div>
+            <div><i class="fa-solid fa-door-open"></i> <?= date("H:s", strtotime($model->ora_porta)) ?></div>
+            <div><i class="fa-solid fa-person-booth"></i> <?= date("H:s", strtotime($model->ora_sipario)) ?></div>
+        </div>
+        
+        <p><?= $model->sinossi ?></p>
     </div>
     
 </div>
