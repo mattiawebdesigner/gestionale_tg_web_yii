@@ -64,6 +64,11 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
     </div>
     
+    <div class="description">
+        <h3><?= Yii::t('app', 'Sinossi') ?></h3>
+        <?= $model->sinossi ?>
+    </div>
+    
 </div>
 
 <?php
