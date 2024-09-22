@@ -14,7 +14,6 @@ use backend\components\sistema_prenotazione_biglietti\Postazioni;
  * @property string $email
  * @property string $cellulare
  * @property string $spettacolo
- * @property int $pagato
  * @property date $data_registrazione
  * @property string $prenotazione
  * @property date $ultima_modifica
@@ -38,7 +37,7 @@ class SpettacoloPrenotazione extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['spettacolo', 'nome', 'cognome', 'email', 'cellulare', 'pagato'], 'required'],
+            [['spettacolo', 'nome', 'cognome', 'email', 'cellulare'], 'required'],
             [['nome', 'cognome', 'email', 'cellulare', 'prenotazione'], 'string'],
             [['data_registrazione', 'ultima_modifica'], 'safe']
         ];
@@ -56,7 +55,6 @@ class SpettacoloPrenotazione extends \yii\db\ActiveRecord
             'cognome' => Yii::t('app', 'Cognome'),
             'email' => Yii::t('app', 'Email'),
             'cellulare' => Yii::t('app', 'Cellulare'),
-            'pagato' => Yii::t('app', 'Il ticket è stato pagato?'),
             'data_registrazione' => Yii::t('app', 'Data della prenotazione'),
             'ultima_modifica' => Yii::t('app', 'Ultima modifica'),
             'prenotazione' => Yii::t('app', 'Prenotazione'),
