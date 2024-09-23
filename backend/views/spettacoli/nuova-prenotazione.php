@@ -31,7 +31,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     <input type="text" name="dati[cognome]" placeholder="Cogome" />
                 </p>
                 <p>
-                    <input type="email" name="dati[email]" placeholder="Email" />
+                    <input type="email" name="dati[email]" placeholder="Email" required />
                     <input type="text" name="dati[cellulare]" placeholder="Cellulare" />
                 </p>
                 <p>

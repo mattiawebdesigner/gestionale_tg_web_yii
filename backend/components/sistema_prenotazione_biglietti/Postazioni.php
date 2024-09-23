@@ -861,13 +861,14 @@ class Postazioni{
      * @return array Restituisce un array contenente gli stati dei posti
      *               prenotati.
      */
-    public static function nOfSeatState(string|array $posti, string|array $prenotazione) : array|false{
+    public static function nOfSeatState(string|array $posti, string|array $prenotazione) /*: array|false*/{
         $searchKey      = 'file';
         $searchKey2     = "posti";
         $searchKey3     = "stato";
-        $nOfSeatPaid    = 0;
-        $nOfSeatNotPaid = 0;
-        $nOfSeatPress   = 0;
+        $searchKey4     = "palco";
+        $nOfSeatPaid    = 0;//Numero di posti pagati
+        $nOfSeatNotPaid = 0;//Numero di posti non pagati
+        $nOfSeatPress   = 0;//Numero di posti riservati per la stampa
         $tot            = 0;//Numero di prenotazioni totali
         
         //Se i parametri sono di tipo stringa allora li converto in array
@@ -880,10 +881,81 @@ class Postazioni{
         }
         //-----------------------------------------------------------------
         
-        
         foreach ($posti as $k_p => $p_v){
-            if(isset($prenotazione[$k_p])){
+            if(isset($prenotazione[$k_p])){                
+                //Controllo se il posto contiene file o palchi
+                if(isset($posti[$k_p]['file'])){//se contiene file...
+                   //echo $k_p, " OK<br />";
+                    foreach ($posti[$k_p]['file'] as $k_fila => $posti){
+                        if(isset($prenotazione[$k_p][$searchKey][$k_fila])){
+                            foreach ($posti[$searchKey2] as $posto => $info){                            
+                                if(array_search($posto, $prenotazione[$k_p]['file'][$k_fila]['posti']) !== false){
+                                    if(isset($info[$searchKey3])){
+                                        switch ($info[$searchKey3]){
+                                            case self::STATO_PAYED:
+                                            case self::STATO_SUBSCRIPTION_PAYED:
+                                                $nOfSeatPaid ++;
+                                                break;
+                                            case self::STATO_NOT_PAYED:
+                                            case self::STATO_SUBSCRIPTION_NOT_PAYED:
+                                                $nOfSeatNotPaid ++;
+                                                break;
+                                            case self::STATO_CREDIT:
+                                                $nOfSeatPress ++;
+                                                break;
+                                        }
+                                    }
+
+                                    $tot ++;
+                                }
+                            }
+                        }
+                    }
+                }else{//se contiene palchi...
+                    foreach ($p_v[$searchKey4] as $k_palco => $file){//Ciclo i palchi
+                        /*echo "<pre>";
+                        print_r($prenotazione[$k_p][$searchKey4]);
+                        echo "</pre>";*/
+                        
+                        if(isset($prenotazione[$k_p][$searchKey4][$k_palco])){//Verifico se esiste una prenotazione per quel palco
+                            foreach ($file['fila'] as $k_fila => $posti){//Ciclo le file
+                                foreach ($posti[$searchKey2] as $posto => $info){//Ciclo i posti
+                                    //Verifico che esista la prenotazione per il posto specifico
+                                    if(isset($prenotazione[$k_p][$searchKey4][$k_palco]['fila'][$k_fila][$searchKey2]) && array_search($posto, $prenotazione[$k_p][$searchKey4][$k_palco]['fila'][$k_fila][$searchKey2]) !== false){
+                                        if(isset($info[$searchKey3])){
+                                            switch ($info[$searchKey3]){
+                                                case self::STATO_PAYED:
+                                                case self::STATO_SUBSCRIPTION_PAYED:
+                                                    $nOfSeatPaid ++;
+                                                    break;
+                                                case self::STATO_NOT_PAYED:
+                                                case self::STATO_SUBSCRIPTION_NOT_PAYED:
+                                                    $nOfSeatNotPaid ++;
+                                                    break;
+                                                case self::STATO_CREDIT:
+                                                    $nOfSeatPress ++;
+                                                    break;
+                                            }
+                                        }
+                                        
+                                        $tot ++;
+                                    }
+                                }
+                            }
+                        }
+                        /*foreach ($file as $k_fila => $posti){
+                            foreach ($posti as $posto => $info){
+                                echo "<pre>";
+                                print_r($info);
+                                echo "</pre>";
+                            }
+                        }*/
+                    }
+                    
+                }
+                
                 //Ciclo le file
+                /*
                 foreach ($posti[$k_p]['file'] as $k_fila => $posti){
                     if(isset($prenotazione[$k_p][$searchKey][$k_fila])){
                         foreach ($posti[$searchKey2] as $posto => $info){                            
@@ -903,12 +975,13 @@ class Postazioni{
                                             break;
                                     }
                                 }
-                                
+
                                 $tot ++;
                             }
                         }
                     }
                 }
+                 */
             }
             
         }
