@@ -26,7 +26,7 @@ $this->params['breadcrumbs'][] = $this->title;
     
     <div class="actions">
         <?= Html::a("<i class='fa-solid fa-ticket'></i> Inserisci una prenotazione", 
-                Url::toRoute(['iloveteatro/prenotazione-ticket', 'spettacolo_id' => $spettacolo->id]),
+                Url::toRoute(['prenotazione-ticket', 'spettacolo_id' => $spettacolo->id]),
                 ['class' => 'btn btn-warning']
         ) ?>
     </div>
