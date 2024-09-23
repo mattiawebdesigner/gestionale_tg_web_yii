@@ -20,7 +20,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     background-position-x: <?= (json_decode($model->backgroundPosition))->x; ?>;
                     background-position-y: <?= (json_decode($model->backgroundPosition))->y; ?>"
         > 
-            <?php $postazioni->get() ?>
+            <?php $postazioni->get(false) ?>
         </div>
 
         <?php // Sezione con l'elenco delle prenotazioni ?>
