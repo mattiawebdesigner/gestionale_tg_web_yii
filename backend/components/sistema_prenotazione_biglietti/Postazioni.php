@@ -116,7 +116,7 @@ class Postazioni{
                     if($k_fila === "file"){
                         $this->getPlatea ($v_fila, $k_posto, $guest);
                     }else{
-                        $this->getPalchi($v_fila, $k_posto);
+                        $this->getPalchi($v_fila, $k_posto, $guest);
                     }       
                 endforeach;
             endforeach;
@@ -145,9 +145,28 @@ class Postazioni{
                         }
                     }
                 }
+            }else{//Se ha anche i palchi
+                echo "<pre>";
+                //print_r($this->posti->$k_pp);
+                echo "</pre>";
+                
+                foreach ($v_pp['palco'] as $k_palco => $v_palco){
+                    foreach ($v_palco['file'] as $k_fila => $v_fila){
+                    
+                        foreach ($v_fila['posti'] as $p => $posto){                            
+                            if(isset($this->posti->$k_pp->palco->$k_palco->fila->$k_fila->posti->$posto->stato)){
+                                unset($this->posti->$k_pp->palco->$k_palco->fila->$k_fila->posti->$posto->stato);//Rimuovo lo stato che indica la prenotazione
+                            }
+                        }
+                        
+                    }
+                    
+                }
             }
         }
         //--------------------------------------------
+       
+        /*
         
         //Cancello le prenotazioni dell'utente
         foreach ($prenotazioni_da_cancellare as $k_p => $v_p){
@@ -178,6 +197,7 @@ class Postazioni{
             }
         }
         //--------------------------------------------
+        */
         
         return [
             'prenotazioni'  => (empty($prenotazioni))?null:$prenotazioni,
@@ -396,6 +416,11 @@ class Postazioni{
         return $tot;
     }
     
+    /**
+     * Restituisce il numero di abbonamenti
+     * @param string $prenotazioni Prenotazioni effettuate
+     * @return int
+     */
     public static function getNumberOfSubscription($prenotazioni){
         return self::getNumberOfTicket($prenotazioni, self::STATO_SUBSCRIPTION_PAYED);
     }
@@ -404,52 +429,179 @@ class Postazioni{
      * Visualizza i palchi
      * 
      * @param array $p Palchi
-     * @param tring $o Nome del posto
+     * @param string $nome Nome del posto (I Ordine, ecc)
+     * @param boolean $guest Se siamo nella sezione amministrazione (false) o
+     *                       pubblica (true)
      */
-    private function getPalchi($p, $o){
+    private function getPalchi($p, $nome, bool $guest){
+        $this->my_booked = (is_array($this->my_booked)) ? $this->my_booked : json_decode($this->my_booked, true);
+        
+        /*echo "<pre>";
+        var_dump($this->my_booked[$nome]['palco']);
+        print_r($this->my_booked[$nome]['palco'][key($this->my_booked[$nome]['palco'])]);
+        echo "</pre>";*/
+        
         foreach ($p as $k => $palco){
                                 
             foreach ($palco as $k2 => $fila){
                     foreach ($fila as $k3 => $posto){
                         if(is_object($posto)){
                             foreach ($posto as $k4 => $config){
-                                foreach ($config as $k5 => $v){
+                                foreach ($config as $k5 => $v){                  
                                     $x = $v->x;
                                     $y = $v->y;
-                                    $tipo_seduta = $v->tipo_seduta ?? self::TIPO_SEDUTA_DEFAULT;
                                     $visibilita = (isset($v->visibilita_ridotta) && $v->visibilita_ridotta ) ? "si" : "no";
-                                    $color = self::COLOR_FREE;
-                                    $class = "seat ";
-                                    if(isset($v->stato)){
+                                    $tipo_seduta = $v->tipo_seduta ?? self::TIPO_SEDUTA_DEFAULT;
+                                    $color_fill   = self::COLOR_FREE;
+                                    $color_stroke = self::COLOR_FREE;
+                                    $class = "seat";
+                                    
+                                    /*echo "<pre>";
+                                    print_r($this->my_booked[$nome]['palco'][$k]['fila'][$k3]['posti']??'NO');
+                                    echo "</pre>";*/
+                                    
+                                    //Colori per i posti prenotati da un utente
+                                    if(isset($this->my_booked[$nome]['palco'][$k]['fila'][$k3]['posti']) && $this->verificaPostoPrenotato($this->my_booked[$nome]['palco'][$k]['fila'][$k3]['posti'], $k5)){
+                                        if(isset($v->stato) && $this->controllaStato($v->stato)){                                            
+                                            $color_stroke = "black";
+                                            $color_fill   = self::COLOR_MY_BOOKED;
+                                            $class       .= " my-busy ";
+
+                                            if(isset($v->stato) && $this->controllaStato($v->stato)){
+                                                
+                                                switch ($v->stato){
+                                                    case self::STATO_NOT_PAYED:
+                                                        $class .= " busy not-payed";
+                                                        break;
+                                                    case self::STATO_PAYED:
+                                                        $color_stroke   = self::COLOR_PAYED;
+                                                        $class .= " busy";
+                                                       break;
+                                                    case self::STATO_CREDIT:
+                                                        $color_stroke = $color_fill = self::COLOR_CREDIT;
+                                                        $class .= " busy credit";
+                                                        break;
+                                                    case self::STATO_CREDIT_THEATRE:
+                                                        $color_stroke = $color_fill = self::COLOR_CREDIT_THEATRE;
+                                                        $class .= " busy credit";
+                                                        break;
+                                                    case self::STATO_CREDIT_JURYMAN:
+                                                        $color_stroke = $color_fill = self::COLOR_CREDIT_JURYMAN;
+                                                        $class .= " busy credit SI";
+                                                        break;
+                                                    case self::STATO_SUBSCRIPTION_NOT_PAYED:
+                                                        $color_stroke = $color_fill = self::COLOR_SUBSCRIPTION;
+                                                        $class .= " busy subscription-not-payed";
+                                                        break;
+                                                    case self::STATO_SUBSCRIPTION_PAYED:
+                                                        $color_stroke   = self::COLOR_PAYED;
+                                                        $color_fill     = self::COLOR_SUBSCRIPTION;
+                                                        $class .= " busy subscription-payed";
+                                                        break;
+                                                    case self::STATO_CREDIT_SPONSOR:
+                                                        $color_stroke = $color_fill = self::COLOR_CREDIT_SPONSOR;
+                                                        break;
+
+                                                }
+                                            }
+                                        }
+                                    }else if(isset($v->stato) && $this->controllaStato($v->stato)){//prenotazioni di altri utenti
                                         switch ($v->stato){
                                             case self::STATO_PAYED:
-                                               $color = self::COLOR_PAYED;
-                                                $class .= " busy";
-                                               break;
-                                            case self::STATO_CREDIT:
-                                                $color = self::COLOR_CREDIT;
+                                                $color_stroke = $color_fill = self::COLOR_PAYED;
                                                 $class .= " busy";
                                                 break;
                                             case self::STATO_NOT_PAYED:
-                                                $class .= "busy not-payed";
-                                                $color = self::COLOR_BOOKED;
+                                                $color_stroke = $color_fill = self::COLOR_BOOKED;
+                                                $class .= " busy";
+                                                break;
+                                            case self::STATO_CREDIT:
+                                                $color_stroke = $color_fill = self::COLOR_BOOKED;
+                                                $class .= " busy";
+
+                                                if($guest){
+                                                    //Stati dei posti non visualizzabili all'interno
+                                                    //della pagina del cliente ma solo nella
+                                                    //pagina di amministrazione.
+                                                    //Nella pagina del cliente vengono visualizzati
+                                                    //solo come posto occupato (pagato)
+                                                    $color_stroke = $color_fill = self::COLOR_PAYED;
+                                                }
+                                                break;
+                                            case self::STATO_CREDIT_THEATRE:
+                                                $color_stroke = $color_fill = self::COLOR_BOOKED;
+                                                $class .= " busy";
+
+                                                if($guest){
+                                                    //Stati dei posti non visualizzabili all'interno
+                                                    //della pagina del cliente ma solo nella
+                                                    //pagina di amministrazione.
+                                                    //Nella pagina del cliente vengono visualizzati
+                                                    //solo come posto occupato (pagato)
+                                                    $color_stroke = $color_fill = self::COLOR_PAYED;
+                                                }
+                                                break;
+                                            case self::STATO_CREDIT_JURYMAN:
+                                                $color_stroke = $color_fill = self::COLOR_CREDIT_JURYMAN;
+                                                $class .= " busy";
+
+                                                if($guest){
+                                                    //Stati dei posti non visualizzabili all'interno
+                                                    //della pagina del cliente ma solo nella
+                                                    //pagina di amministrazione.
+                                                    //Nella pagina del cliente vengono visualizzati
+                                                    //solo come posto occupato (pagato)
+                                                    $color_stroke = $color_fill = self::COLOR_PAYED;
+                                                }
+                                                break;
+                                            case self::STATO_SUBSCRIPTION_NOT_PAYED:
+                                                $color_stroke = $color_fill = self::COLOR_BOOKED;
+                                                $class .= " busy";
+                                                break;
+                                            case self::STATO_SUBSCRIPTION_PAYED:
+                                                $color_stroke = $color_fill = self::COLOR_BOOKED;
+                                                $class .= " busy";
+
+                                                if($guest){
+                                                    //Stati dei posti non visualizzabili all'interno
+                                                    //della pagina del cliente ma solo nella
+                                                    //pagina di amministrazione.
+                                                    //Nella pagina del cliente vengono visualizzati
+                                                    //solo come posto occupato (pagato)
+                                                    $color_stroke = $color_fill = self::COLOR_PAYED;
+                                                }
+                                                break;
+                                            case self::STATO_CREDIT_SPONSOR:
+                                                $color_stroke = $color_fill = self::COLOR_CREDIT_SPONSOR;
+                                                $class .= " busy";
+
+                                                if($guest){
+                                                    //Stati dei posti non visualizzabili all'interno
+                                                    //della pagina del cliente ma solo nella
+                                                    //pagina di amministrazione.
+                                                    //Nella pagina del cliente vengono visualizzati
+                                                    //solo come posto occupato (pagato)
+                                                    $color_stroke = $color_fill = self::COLOR_PAYED;
+                                                }
                                                 break;
                                         }
+
                                     }
+                                    
                                     //echo str_replace("_", " ", $o);
                                     echo '<circle class="'.$class.'" '
                                             . 'data-tooltip="Fila <strong>'.$k3.'</strong><br />Posto: <strong>'.$k5.'</strong><br />Tipo seduta: <strong>'.$tipo_seduta.'</strong><br />VisibilitÃ  ridotta: <strong>'.$visibilita.'</strong>" '
                                             . 'title="" '
-                                            . 'data-nome="'. (str_replace("_", " ", $o)).'" '
+                                            . 'data-nome="'. (str_replace("_", " ", $nome)).'" '
                                             . 'data-palco='.$k.' '
                                             . 'data-fila="'.$k3.'" '
                                             . 'data-posto="'.$k5.'" '
                                             . 'cx="'.$x.'" '
                                             . 'cy="'.$y.'" '
-                                            . 'r="3" '
-                                            . 'stroke="'.$color.'" '
-                                            . 'stroke-width="4" '
-                                            . 'fill="'.$color.'" />';
+                                            . 'r="5" '
+                                            . 'stroke="'.$color_stroke.'" '
+                                            . 'stroke-width="2" '
+                                            . 'fill="'.$color_fill.'" />';
                                 }
                             }
                         }else{
@@ -481,12 +633,12 @@ class Postazioni{
                                     . 'class="seat nn" '
                                     . 'data-fila="'.$k3.'" '
                                     . 'data-posto="'.$k5.'" '
-                                    . 'data-nome="'.str_replace("_", " ", $o).'" '
+                                    . 'data-nome="'.str_replace("_", " ", $nome).'" '
                                     . 'data-posti-totali="'.$postiTotali.'" '
                                     . 'data-posti-pagati="'.$postiPagati.'" '
                                     . 'data-posti-prenotati="'.$postiPrenotati.'" '
                                     . 'data-tooltip="Palco non numerato. I posti non sono assegnati" '
-                                    . 'data-nome="'. (str_replace("_", " ", $o)).'" '
+                                    . 'data-nome="'. (str_replace("_", " ", $nome)).'" '
                                     . 'data-palco="'.$k.'" />';
                             }
                             break;
@@ -505,7 +657,7 @@ class Postazioni{
      *                      di amministrazione (true) o in quella del cliente (false).
      */
     private function getPlatea($p, $nome, $guest){
-        $this->my_booked = json_decode($this->my_booked, true);
+        $this->my_booked = (is_array($this->my_booked)) ? $this->my_booked : json_decode($this->my_booked, true);
         
         //Ciclo sulle file
         foreach($p as $k_fila2 => $v_fila2) : 
@@ -528,6 +680,7 @@ class Postazioni{
                             $class       .= " my-busy ";
                             
                             if(isset($v_posizione->stato) && $this->controllaStato($v_posizione->stato)){
+
                                 switch ($v_posizione->stato){
                                     case self::STATO_NOT_PAYED:
                                         $class .= " busy not-payed";
@@ -546,7 +699,7 @@ class Postazioni{
                                         break;
                                     case self::STATO_CREDIT_JURYMAN:
                                         $color_stroke = $color_fill = self::COLOR_CREDIT_JURYMAN;
-                                        $class .= " busy credit SI";
+                                        $class .= " busy credit";
                                         break;
                                     case self::STATO_SUBSCRIPTION_NOT_PAYED:
                                         $color_stroke = $color_fill = self::COLOR_SUBSCRIPTION;
@@ -861,13 +1014,14 @@ class Postazioni{
      * @return array Restituisce un array contenente gli stati dei posti
      *               prenotati.
      */
-    public static function nOfSeatState(string|array $posti, string|array $prenotazione) : array|false{
+    public static function nOfSeatState(string|array $posti, string|array $prenotazione) /*: array|false*/{
         $searchKey      = 'file';
         $searchKey2     = "posti";
         $searchKey3     = "stato";
-        $nOfSeatPaid    = 0;
-        $nOfSeatNotPaid = 0;
-        $nOfSeatPress   = 0;
+        $searchKey4     = "palco";
+        $nOfSeatPaid    = 0;//Numero di posti pagati
+        $nOfSeatNotPaid = 0;//Numero di posti non pagati
+        $nOfSeatPress   = 0;//Numero di posti riservati per la stampa
         $tot            = 0;//Numero di prenotazioni totali
         
         //Se i parametri sono di tipo stringa allora li converto in array
@@ -880,10 +1034,81 @@ class Postazioni{
         }
         //-----------------------------------------------------------------
         
-        
         foreach ($posti as $k_p => $p_v){
-            if(isset($prenotazione[$k_p])){
+            if(isset($prenotazione[$k_p])){                
+                //Controllo se il posto contiene file o palchi
+                if(isset($posti[$k_p]['file'])){//se contiene file...
+                   //echo $k_p, " OK<br />";
+                    foreach ($posti[$k_p]['file'] as $k_fila => $posti){
+                        if(isset($prenotazione[$k_p][$searchKey][$k_fila])){
+                            foreach ($posti[$searchKey2] as $posto => $info){                            
+                                if(array_search($posto, $prenotazione[$k_p]['file'][$k_fila]['posti']) !== false){
+                                    if(isset($info[$searchKey3])){
+                                        switch ($info[$searchKey3]){
+                                            case self::STATO_PAYED:
+                                            case self::STATO_SUBSCRIPTION_PAYED:
+                                                $nOfSeatPaid ++;
+                                                break;
+                                            case self::STATO_NOT_PAYED:
+                                            case self::STATO_SUBSCRIPTION_NOT_PAYED:
+                                                $nOfSeatNotPaid ++;
+                                                break;
+                                            case self::STATO_CREDIT:
+                                                $nOfSeatPress ++;
+                                                break;
+                                        }
+                                    }
+
+                                    $tot ++;
+                                }
+                            }
+                        }
+                    }
+                }else{//se contiene palchi...
+                    foreach ($p_v[$searchKey4] as $k_palco => $file){//Ciclo i palchi
+                        /*echo "<pre>";
+                        print_r($prenotazione[$k_p][$searchKey4]);
+                        echo "</pre>";*/
+                        
+                        if(isset($prenotazione[$k_p][$searchKey4][$k_palco])){//Verifico se esiste una prenotazione per quel palco
+                            foreach ($file['fila'] as $k_fila => $posti){//Ciclo le file
+                                foreach ($posti[$searchKey2] as $posto => $info){//Ciclo i posti
+                                    //Verifico che esista la prenotazione per il posto specifico
+                                    if(isset($prenotazione[$k_p][$searchKey4][$k_palco]['fila'][$k_fila][$searchKey2]) && array_search($posto, $prenotazione[$k_p][$searchKey4][$k_palco]['fila'][$k_fila][$searchKey2]) !== false){
+                                        if(isset($info[$searchKey3])){
+                                            switch ($info[$searchKey3]){
+                                                case self::STATO_PAYED:
+                                                case self::STATO_SUBSCRIPTION_PAYED:
+                                                    $nOfSeatPaid ++;
+                                                    break;
+                                                case self::STATO_NOT_PAYED:
+                                                case self::STATO_SUBSCRIPTION_NOT_PAYED:
+                                                    $nOfSeatNotPaid ++;
+                                                    break;
+                                                case self::STATO_CREDIT:
+                                                    $nOfSeatPress ++;
+                                                    break;
+                                            }
+                                        }
+                                        
+                                        $tot ++;
+                                    }
+                                }
+                            }
+                        }
+                        /*foreach ($file as $k_fila => $posti){
+                            foreach ($posti as $posto => $info){
+                                echo "<pre>";
+                                print_r($info);
+                                echo "</pre>";
+                            }
+                        }*/
+                    }
+                    
+                }
+                
                 //Ciclo le file
+                /*
                 foreach ($posti[$k_p]['file'] as $k_fila => $posti){
                     if(isset($prenotazione[$k_p][$searchKey][$k_fila])){
                         foreach ($posti[$searchKey2] as $posto => $info){                            
@@ -903,12 +1128,13 @@ class Postazioni{
                                             break;
                                     }
                                 }
-                                
+
                                 $tot ++;
                             }
                         }
                     }
                 }
+                 */
             }
             
         }

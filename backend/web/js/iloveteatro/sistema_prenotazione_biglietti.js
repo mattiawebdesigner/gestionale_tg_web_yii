@@ -43,8 +43,11 @@
          * come pagati
          */
         jQuery(".buy-place", _THIS).on("click", function(e){
+            //Posti occupati da pagare
             let _seat               = jQuery(".seat.my-busy.not-payed", _PIANTINACONTENITORE);
+            //Abbonamenti non pagati
             let _seat_subscription  = jQuery(".seat.my-busy.subscription-not-payed", _PIANTINACONTENITORE);
+            
             _seat.toggleClass("check");
             _seat_subscription.toggleClass("check");
             
@@ -82,7 +85,6 @@
                 _FORM_CANCELLAZIONE_CONTENITORE.hide();
                 jQuery(this).attr("r", radius/2);
                 
-                console.log(_FORM_BUY_CONTENITORE);
                 jQuery("form", _FORM_BUY_CONTENITORE).show();
                 
                 var el = jQuery(e.target);
@@ -278,11 +280,19 @@
         /**
         * Pulsante di rimozione della prenotazione
         */
-        jQuery("#theatre-reservations > table, #theatre-reservations-delete > table", _THIS).on("click", ".remove-reservation", (e)=>{
+        jQuery("#theatre-reservations > table, #theatre-reservations-delete > table, #theatre-reservations-buy > table", _THIS).on("click", ".remove-reservation", (e)=>{
+            
             var parent = jQuery(e.target).parent().parent();
             var id = parent.attr("id");
+            
+            //Posto occupato sulla mappa
+            //Da deselezionare
+            var seat = jQuery("[data-id='"+id+"']", _THIS);
+            var old_stroke = seat.attr("old-stroke");
+            var old_fill   = seat.attr("old-fill");
+            seat.removeClass("reservation");
 
-            remove(id, jQuery("[data-id='"+id+"']"));
+            remove(id, jQuery("[data-id='"+id+"']"), old_fill, old_stroke);
         });
         
         

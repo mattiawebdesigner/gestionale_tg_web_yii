@@ -43,6 +43,11 @@ $this->title = Yii::$app->name." ".Yii::t('app', 'Gestionale');
                             <h3><?= Yii::t('app', 'Gestione dell\'albo d\'oro') ?></h3> <hr />
                             <?= $this->render('_index_roll_of_honor') ?>
                     <?php endif; ?>
+
+                    <?php if(Yii::$app->user->can("spettacoli")) : ?>
+                            <h3><?= Yii::t('app', 'Gestione spettacoli') ?></h3> <hr />
+                            <?= $this->render('_index_spettacoli') ?>
+                    <?php endif; ?>
                             
                     <?php if(Yii::$app->user->can("I Love Teatro")) : ?>
                             <h3><?= Yii::t('app', 'I Love Teatro') ?></h3> <hr />

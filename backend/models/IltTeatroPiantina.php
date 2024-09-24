@@ -26,7 +26,7 @@ class IltTeatroPiantina extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['teatro', 'piantina'], 'required'],
+            [['teatro', 'piantina', 'background', 'position'], 'required'],
             [['teatro'], 'string', 'max' => 100],
         ];
     }
@@ -40,6 +40,8 @@ class IltTeatroPiantina extends \yii\db\ActiveRecord
             'id' => Yii::t('app', 'ID'),
             'teatro' => Yii::t('app', 'Teatro'),
             'piantina' => Yii::t('app', 'Piantina'),
+            'background' => Yii::t('app', 'Sfondo'),
+            'position' => Yii::t('app', 'Posizione sfondo'),
         ];
     }
 }
