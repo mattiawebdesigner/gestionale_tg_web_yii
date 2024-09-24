@@ -64,7 +64,7 @@ $this->title = Yii::t('app', 'Gestisci prenotazione: {spettacolo}', [
         
         <div class="legend">
             <?php
-                \backend\components\sistema_prenotazione_biglietti\Postazioni::legend(false, true);
+                //\backend\components\sistema_prenotazione_biglietti\Postazioni::legend(false, true);
             ?>
         </div>
         
