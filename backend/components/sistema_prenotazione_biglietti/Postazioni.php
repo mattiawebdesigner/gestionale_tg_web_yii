@@ -145,11 +145,7 @@ class Postazioni{
                         }
                     }
                 }
-            }else{//Se ha anche i palchi
-                echo "<pre>";
-                //print_r($this->posti->$k_pp);
-                echo "</pre>";
-                
+            }else{//Se ha anche i palchi                
                 foreach ($v_pp['palco'] as $k_palco => $v_palco){
                     foreach ($v_palco['file'] as $k_fila => $v_fila){
                     
@@ -166,6 +162,62 @@ class Postazioni{
         }
         //--------------------------------------------
        
+        //Cancello le prenotazioni dell'utente
+        foreach ($prenotazioni_da_cancellare as $k_p => $v_p){
+            if(isset($v_p['palco'])){//Ci sono palchi
+                foreach ($v_p['palco'] as $palco => $file){
+                    foreach ($file['file'] as $fila => $posti){
+                        foreach ($posti as $posto){
+                            try{
+                                $key_to_remove = array_search($posto, $prenotazioni[$k_p]['palco'][$palco]['fila'][$fila]['posti']);
+
+                            } catch (\Exception $ex) {}
+                            
+                            if(empty($prenotazioni[$k_p]['palco'][$palco]['fila'][$fila]['posti'])){
+                                unset($prenotazioni[$k_p]['palco'][$palco]['fila'][$fila]['posti']);
+                            }
+                        }
+                        
+                        
+                        if(empty($prenotazioni[$k_p]['palco'][$palco]['fila'])){
+                            unset($prenotazioni[$k_p]['palco'][$palco]['fila']);
+                        }
+                    }
+                    
+                    if(empty($prenotazioni[$k_p]['palco'])){
+                        unset($prenotazioni[$k_p]['palco']);
+                    }
+                }
+            }else{//Non ci sono palchi
+                foreach ($v_p as $file){
+                    foreach ($file as $fila => $v_posti){
+                        foreach ($v_posti as $posti){
+                            foreach ($posti as $posto){
+                                //trovo la chiave del posto da rimuovere dalla prenotazione
+                                try{
+                                    $key_to_remove = array_search($posto, $prenotazioni[$k_p]['file'][$fila]['posti']);
+                                    unset($prenotazioni[$k_p]['file'][$fila]['posti'][$key_to_remove]);
+                                }catch(\Exception $ex){}
+
+                                if(empty($prenotazioni[$k_p]['file'][$fila]['posti'])){
+                                    unset($prenotazioni[$k_p]['file'][$fila]);
+                                }
+                            }
+                        }
+                    }
+
+                    if(empty($prenotazioni[$k_p]['file'])){
+                        unset($prenotazioni[$k_p]['file']);
+                    }
+                }
+            }
+            
+            if(empty($prenotazioni[$k_p])){
+                unset($prenotazioni[$k_p]);
+            }
+        }
+        
+        
         /*
         
         //Cancello le prenotazioni dell'utente
