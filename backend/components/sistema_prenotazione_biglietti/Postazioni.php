@@ -145,9 +145,28 @@ class Postazioni{
                         }
                     }
                 }
+            }else{//Se ha anche i palchi
+                echo "<pre>";
+                //print_r($this->posti->$k_pp);
+                echo "</pre>";
+                
+                foreach ($v_pp['palco'] as $k_palco => $v_palco){
+                    foreach ($v_palco['file'] as $k_fila => $v_fila){
+                    
+                        foreach ($v_fila['posti'] as $p => $posto){                            
+                            if(isset($this->posti->$k_pp->palco->$k_palco->fila->$k_fila->posti->$posto->stato)){
+                                unset($this->posti->$k_pp->palco->$k_palco->fila->$k_fila->posti->$posto->stato);//Rimuovo lo stato che indica la prenotazione
+                            }
+                        }
+                        
+                    }
+                    
+                }
             }
         }
         //--------------------------------------------
+       
+        /*
         
         //Cancello le prenotazioni dell'utente
         foreach ($prenotazioni_da_cancellare as $k_p => $v_p){
@@ -178,6 +197,7 @@ class Postazioni{
             }
         }
         //--------------------------------------------
+        */
         
         return [
             'prenotazioni'  => (empty($prenotazioni))?null:$prenotazioni,
