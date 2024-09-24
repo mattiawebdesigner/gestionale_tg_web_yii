@@ -84,7 +84,7 @@ $this->title = Yii::t('app', 'Gestisci prenotazione: {spettacolo}', [
                     <input type="text" name="dati[cellulare]" placeholder="Cellulare" value="<?= $prenotazioni->cellulare ?>" />
                 </p>
                 <input type="hidden" name="dati[spettacolo_id]" value="<?= $spettacolo->id ?>" />
-                <input type="submit" value="Prenota" class="btn btn-iloveteatro" />
+                <input type="submit" value="Prenota" class="btn btn-crm" />
             <?php ActiveForm::end(); ?>
 
             <table class="table table-striped"></table>
