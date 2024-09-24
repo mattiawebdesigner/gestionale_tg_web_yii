@@ -56,7 +56,11 @@ $this->title = Yii::t('app', 'Gestisci prenotazione: {spettacolo}', [
             <span class="mode-out d-none-n-i"><i class="fa-solid fa-dollar-sign"></i> <?= Yii::t('app', 'Esci dalla modalità prenotazioni come pagate') ?></span>
         </div>
         
-        <div id="theatre-place">
+        <div id="theatre-place" 
+             style="background-image: url(<?= $spettacolo->backgroundPiantina; ?>);
+                    background-position-x: <?= (json_decode($spettacolo->backgroundPosition))->x; ?>;
+                    background-position-y: <?= (json_decode($spettacolo->backgroundPosition))->y; ?>"
+        >
             <?php
             $postazioni->get(false);
             ?>
