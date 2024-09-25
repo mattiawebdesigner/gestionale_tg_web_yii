@@ -1,7 +1,7 @@
 /**
  * Gestione della piantina per la prenotazione dei biglietti
  * 
- * @version 1.0.0
+ * @version 1.1.0 Aggiunta gestione palchi non numerati
  * @param {jQuery} $
  * @returns {Object}
  */
@@ -144,11 +144,96 @@
            }
        });
        
+       /**
+        * Attivo l'evento di selezione del posto, valido SOLO per 
+        * i posti non numerati.
+        */
+       jQuery(".seat.nn").click((e)=>{
+            var el = jQuery(e.target);
+            let posti_totali    = jQuery(e.target).data("posti-totali");
+            let posti_prenotati = jQuery(e.target).data("posti-prenotati");
+            let max = posti_totali-posti_prenotati;
+
+            let box = `
+                <div id="prenotazione-posti-nn">
+                <div class="close">
+                <i class="fa-solid fa-xmark"></i>
+                </div>
+
+                <h5>Indica il numero di posti da prenotare</h5>
+
+                <input type="number" min="1" value="1" max="${max}" class="numero_posti_prenotati" />
+
+                <input type="submit" value="Seleziona" class="numero_posti" />
+                </div>
+            `;
+
+            jQuery("#theatre-place").append(box).on("click", ".close", (e)=>{
+                jQuery(e.target).parents("#prenotazione-posti-nn").remove();
+            }).on("click", "#prenotazione-posti-nn .numero_posti", (e)=>{//Click sul bottone di aggiunta dei posti non numerati
+                var prenotazioni = jQuery("#theatre-reservations > table");
+                var numero_posti = jQuery(".numero_posti_prenotati").val();
+
+                //alert(numero_posti);
+
+                var form    = jQuery("#theatre-reservations > form");
+                var nome    = el.data("nome");
+                var fila    = el.data("fila");
+                var posto   = el.data("posto");
+                var palco   = el.data("palco");
+                var id = (nome.replace(" ", "_"))+"-"+fila+"-"+posto;
+                if(palco !== undefined){
+                    id += "-"+palco;
+                }
+
+                //el.attr("data-id", id);
+                if(el.hasClass("reservation")){                    
+                    remove(id, el);
+                }else{
+                    for(let i=0; i<numero_posti; i ++){
+                        insert(prenotazioni, id, el, nome, fila, posto, palco);
+                    }
+                }
+
+                var form        = jQuery("#theatre-reservations > form");
+                var tableRow    = jQuery("#theatre-reservations > table tr");
+
+                if(tableRow.length === 0){
+                    form.hide();
+                }else{
+                    form.show();
+                }
+            }).on("keyup", ".numero_posti_prenotati", (e)=>{//Controllo se quando l'utente digita viene rispettato il numero massimo e minimo di posti prenotabili
+                let _this   = jQuery(e.target);
+                let _btn    = jQuery(".numero_posti", _THIS);
+                let max     = _this.attr("max");
+                
+                //Errore per valore massimo superato
+                if(parseInt(_this.val()) >  parseInt(max)){
+                    _btn.hide();//Nascondo il bottone di prenotazione posti non numerati
+                    jQuery("+ div", _this).remove();//Rimuovo box errore
+                    _this.after(`<div class="alert alert-danger max-error">Non puoi prenotare oltre ${max} posti</div>`);
+                }
+                
+                //Errore per valore minimo superato
+                if(parseInt(_this.val()) <  1){
+                    _btn.hide();//Nascondo il bottone di prenotazione posti non numerati
+                    jQuery("+ div", _this).remove();//Rimuovo box errore
+                    _this.after(`<div class="alert alert-danger min-error">Non puoi prenotare meno di un posto</div>`);
+                }
+                
+                if(parseInt(_this.val())>=1 && parseInt(_this.val()) <= max){
+                    jQuery("+ div", _this).remove();//Rimuovo box errore
+                    _btn.show();//Visualizzo il bottone di prenotazione posti non numerati
+                }                
+            });
+        });
+       
         /**
         * visualizza le prenotazioni da rimuovere
         */
         jQuery(".my-busy.not-payed:not(.seat.reservation), .my-busy.credit:not(.seat.reservation), .my-busy.credit:not(.seat.reservation)", _THIS).click((e)=>{
-            var el = jQuery(e.target);
+            var el      = jQuery(e.target);
             var nome    = el.data("nome");
             var fila    = el.data("fila");
             var posto   = el.data("posto");
