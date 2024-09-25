@@ -8,6 +8,9 @@ use Yii;
  * - Prenotazione
  * - Cancellazione di una prenotazione
  * - Visualizzazione dei dati delle prenotazioni
+ * 
+ * @version 2.0.0
+ * @copyright (c) 2022, MSD Technologies
  */
 class Postazioni{
     private $posti;
