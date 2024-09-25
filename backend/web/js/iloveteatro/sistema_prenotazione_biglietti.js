@@ -1,3 +1,10 @@
+/**
+ * Gestione della piantina per la prenotazione dei biglietti
+ * 
+ * @version 1.0.0
+ * @param {jQuery} $
+ * @returns {Object}
+ */
 (function( $ ) {
  
     $.fn.sistema_prenotazione_biglietti = function(options) {
