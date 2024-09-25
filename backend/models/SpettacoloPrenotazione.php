@@ -64,7 +64,7 @@ class SpettacoloPrenotazione extends \yii\db\ActiveRecord
     public static function totali($prenotazioni, $piantina){
         $nOfSeatBooked = 0;
         foreach ($prenotazioni as $prenotazione){            
-            $nOfSeatBooked += Postazioni::nOfSeatBooked($prenotazione->prenotazione, /*$prenotazione->abbonamento*/"");
+            $nOfSeatBooked += Postazioni::nOfSeatBooked($prenotazione->prenotazione, /*$prenotazione->abbonamento*/null);
         }
         //------------------------------
         $nOfSeatState   = [];

@@ -1020,22 +1020,24 @@ class Postazioni{
      * @return int Numero totale di prenotazioni
      */
     public static function nOfSeatBooked($prenotazione, $abbonamenti){
-        $searchKey = 'file';
+        $searchKey  = "file";
         $searchKey2 = "posti";
+        $searchKey3 = "palco";
+        $searchKey4 = "fila";
         $nOfSeatBooked = 0;
         
-        $func = function ($subarray) use ($searchKey, &$func, $searchKey2, &$nOfSeatBooked) {
-            $cont = 0;
-            
-            //Controllo se il valore di $subarray Ã¨ un array
+        $func = function ($subarray) use ($searchKey, &$func, $searchKey2, $searchKey3, $searchKey4, &$nOfSeatBooked) {
+            //Controllo se il valore di $subarray è un array
             //e non contiene la chiave cercata.
             //In questo caso si ripassa ala funzione stessa il valore
             //del nuovo sotto array
             if(!isset($subarray[$searchKey]) && is_array($subarray)){
                 $func($subarray[key($subarray)]);
             
-            //Se invece la chiave Ã¨ trovata calcolo
-            //restituisco i valori (solitamente un array)
+            //Controllo se il valore di $subarray è un array
+            //e non contiene la chiave cercata.
+            //In questo caso si ripassa ala funzione stessa il valore
+            //del nuovo sotto array
             }else{
                 if(isset($subarray[$searchKey])){
                     foreach($subarray[$searchKey] as $v){
@@ -1048,8 +1050,30 @@ class Postazioni{
                         }
                     }
                 }
+            }
+            
+            //Prenotazione tenendo in considerazione anche i palchi
+            if(!isset($subarray[$searchKey3]) && is_array($subarray)){
+                $func($subarray[key($subarray)]);
                 
-                return [$cont];
+            //Se invece la chiave è trovata calcolo
+            //restituisco i valori (solitamente un array)
+            }else{
+                if(isset($subarray[$searchKey3])){//Ci sono palchi
+                    foreach($subarray[$searchKey3] as $p){
+                        if(isset($p[$searchKey4])){
+                            foreach($p[$searchKey4] as $f){
+                                if(isset($f[$searchKey2])){
+                                    array_filter($f, function($sa) use (&$nOfSeatBooked){
+                                        foreach ($sa as $v){
+                                            $nOfSeatBooked ++;
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                    }
+                }
             }
             
         };
