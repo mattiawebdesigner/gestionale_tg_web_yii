@@ -498,11 +498,6 @@ class Postazioni{
     private function getPalchi($p, $nome, bool $guest){
         $this->my_booked = (is_array($this->my_booked)) ? $this->my_booked : json_decode($this->my_booked, true);
         
-        /*echo "<pre>";
-        var_dump($this->my_booked[$nome]['palco']);
-        print_r($this->my_booked[$nome]['palco'][key($this->my_booked[$nome]['palco'])]);
-        echo "</pre>";*/
-        
         foreach ($p as $k => $palco){
                                 
             foreach ($palco as $k2 => $fila){
@@ -517,10 +512,6 @@ class Postazioni{
                                     $color_fill   = self::COLOR_FREE;
                                     $color_stroke = self::COLOR_FREE;
                                     $class = "seat";
-                                    
-                                    /*echo "<pre>";
-                                    print_r($this->my_booked[$nome]['palco'][$k]['fila'][$k3]['posti']??'NO');
-                                    echo "</pre>";*/
                                     
                                     //Colori per i posti prenotati da un utente
                                     if(isset($this->my_booked[$nome]['palco'][$k]['fila'][$k3]['posti']) && $this->verificaPostoPrenotato($this->my_booked[$nome]['palco'][$k]['fila'][$k3]['posti'], $k5)){
@@ -668,6 +659,7 @@ class Postazioni{
                             }
                         }else{
                             if(isset($fila->non_numerato) && $fila->non_numerato){
+                                echo "PIPPO";
                                 $posti_liberi   = $fila->posti_totali-$fila->posti_prenotati;
                                 $class = "seat nn";
                                 $color          = "";
