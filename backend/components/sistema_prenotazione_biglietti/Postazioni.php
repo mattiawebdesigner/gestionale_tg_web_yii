@@ -345,23 +345,30 @@ class Postazioni{
                             break;
                     }
 
-                    //dati prenotazione utente
+                    //Aggiorno i dati della prenotazione dell'utente
                     $prenotazione_posti_utente[$k_pp]['file'][$v_fila]['posti'][] = $posto;
                 }
             }else if(isset($this->posti->$k_pp->palco)){//se ci sono dei palchi
                 foreach ($v_pp['palco'] as $k_palco => $v_palco){
                     $fila = $v_pp['fila'][$k_palco];
-                    if($fila == "non_numerato"){                        
+                    if($fila == "non_numerato"){//Palco non numerato
                         $this->posti->$k_pp->palco->$v_palco[0]->posti_prenotati += 1;
                         $conteggio_prenotazione_utente_non_numerato += 1;
                         
                         $prenotazione_posti_utente[$k_pp]['palco'][$v_palco]['non_numerato'] = $conteggio_prenotazione_utente_non_numerato;
-                        
-                    }else{
+                    } else {//Palco numerato
                         $posto = $v_pp['posto'][$k_palco];
-                        $this->posti->$k_pp->palco->$v_palco->fila->$fila->posti->$posto->stato = 0;
-
-                        //dati prenotazione utente
+                        
+                        switch ($this->posti->$k_pp->palco->$v_palco->fila->$fila->posti->$posto->stato){
+                            case self::STATO_NOT_PAYED:
+                                $this->posti->$k_pp->palco->$v_palco->fila->$fila->posti->$posto->stato = self::STATO_PAYED;
+                                break;
+                            case self::STATO_SUBSCRIPTION_NOT_PAYED:
+                                $this->posti->$k_pp->palco->$v_palco->fila->$fila->posti->$posto->stato = self::STATO_SUBSCRIPTION_PAYED;
+                                break;
+                        }
+                        
+                        //Aggiorno i dati della prenotazione dell'utente
                         $prenotazione_posti_utente[$k_pp]['palco'][$v_palco]['fila'][$fila]['posti'][] = $posto;
                     }
                 }
