@@ -290,7 +290,12 @@ class Postazioni{
             }else if(isset($this->posti->$k_pp->palco)){//se ci sono dei palchi
                 foreach ($v_pp['palco'] as $k_palco => $v_palco){
                     $fila = $v_pp['fila'][$k_palco];
-                    if($fila == "non_numerato"){                        
+                    
+                    if(
+                        $fila == "non_numerato"//Compatibilità con le versioni precedenti
+                        ||
+                        $fila == "Non assegnata"//usato dalla versione 2.0 (nuovo nome per i posti non numerati)
+                    ){
                         $this->posti->$k_pp->palco->$v_palco[0]->posti_prenotati += 1;
                         $conteggio_prenotazione_utente_non_numerato += 1;
                         
