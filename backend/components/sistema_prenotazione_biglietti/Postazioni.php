@@ -1145,32 +1145,38 @@ class Postazioni{
                     }
                 }else{//se contiene palchi...
                     foreach ($p_v[$searchKey4] as $k_palco => $file){//Ciclo i palchi
-                        /*echo "<pre>";
-                        print_r($prenotazione[$k_p][$searchKey4]);
-                        echo "</pre>";*/
                         
                         if(isset($prenotazione[$k_p][$searchKey4][$k_palco])){//Verifico se esiste una prenotazione per quel palco
-                            foreach ($file['fila'] as $k_fila => $posti){//Ciclo le file
-                                foreach ($posti[$searchKey2] as $posto => $info){//Ciclo i posti
-                                    //Verifico che esista la prenotazione per il posto specifico
-                                    if(isset($prenotazione[$k_p][$searchKey4][$k_palco]['fila'][$k_fila][$searchKey2]) && array_search($posto, $prenotazione[$k_p][$searchKey4][$k_palco]['fila'][$k_fila][$searchKey2]) !== false){
-                                        if(isset($info[$searchKey3])){
-                                            switch ($info[$searchKey3]){
-                                                case self::STATO_PAYED:
-                                                case self::STATO_SUBSCRIPTION_PAYED:
-                                                    $nOfSeatPaid ++;
-                                                    break;
-                                                case self::STATO_NOT_PAYED:
-                                                case self::STATO_SUBSCRIPTION_NOT_PAYED:
-                                                    $nOfSeatNotPaid ++;
-                                                    break;
-                                                case self::STATO_CREDIT:
-                                                    $nOfSeatPress ++;
-                                                    break;
+                            /*echo "<pre>";
+                            print_r($file);
+                            echo "</pre>";*/
+                            
+                            if(isset($file['fila'])){
+                                echo "OK FILA <br />";
+                                foreach ($file['fila'] as $k_fila => $posti){//Ciclo le file
+                                    foreach ($posti[$searchKey2] as $posto => $info){//Ciclo i posti
+                                        //Verifico che esista la prenotazione per il posto specifico
+                                        if(isset($prenotazione[$k_p][$searchKey4][$k_palco]['fila'][$k_fila][$searchKey2]) && array_search($posto, $prenotazione[$k_p][$searchKey4][$k_palco]['fila'][$k_fila][$searchKey2]) !== false){
+                                            if(isset($info[$searchKey3])){
+                                                switch ($info[$searchKey3]){
+                                                    case self::STATO_PAYED:
+                                                    case self::STATO_SUBSCRIPTION_PAYED:
+                                                        $nOfSeatPaid ++;
+                                                        break;
+                                                    case self::STATO_NOT_PAYED:
+                                                    case self::STATO_SUBSCRIPTION_NOT_PAYED:
+                                                        $nOfSeatNotPaid ++;
+                                                        break;
+                                                    case self::STATO_CREDIT:
+                                                        $nOfSeatPress ++;
+                                                        break;
+                                                }
                                             }
                                         }
                                     }
                                 }
+                            }else{
+                                echo "OK PALCO <br />";
                             }
                         }
                     }   
