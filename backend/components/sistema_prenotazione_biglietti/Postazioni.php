@@ -1145,14 +1145,8 @@ class Postazioni{
                     }
                 }else{//se contiene palchi...
                     foreach ($p_v[$searchKey4] as $k_palco => $file){//Ciclo i palchi
-                        
                         if(isset($prenotazione[$k_p][$searchKey4][$k_palco])){//Verifico se esiste una prenotazione per quel palco
-                            /*echo "<pre>";
-                            print_r($file);
-                            echo "</pre>";*/
-                            
                             if(isset($file['fila'])){
-                                echo "OK FILA <br />";
                                 foreach ($file['fila'] as $k_fila => $posti){//Ciclo le file
                                     foreach ($posti[$searchKey2] as $posto => $info){//Ciclo i posti
                                         //Verifico che esista la prenotazione per il posto specifico
@@ -1176,7 +1170,10 @@ class Postazioni{
                                     }
                                 }
                             }else{
-                                echo "OK PALCO <br />";
+                                foreach ($file as $k => $v){
+                                    $nOfSeatNotPaid += $prenotazione[$k_p][$searchKey4][$k_palco]['non_numerato'];//conto i posti non numerati e non pagati
+                                    $nOfSeatPaid    += $v['posti_pagati'];
+                                }
                             }
                         }
                     }   
