@@ -9,6 +9,8 @@
    --color-iloveteatro: #A91916;
 }
 
+small{font-size: x-small;}
+.c-red{color: darkred;}
 .b-image-center-center{background-position: center;}
 .b-image-norepeat{background-repeat: no-repeat;}
 .b-image-cover{background-size: cover;}
