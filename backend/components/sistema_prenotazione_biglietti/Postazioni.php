@@ -664,9 +664,13 @@ class Postazioni{
                             }
                         }else{
                             if(isset($fila->non_numerato) && $fila->non_numerato){
-                                echo "PIPPO";
+                                
                                 $posti_liberi   = $fila->posti_totali-$fila->posti_prenotati;
-                                $class = "seat nn";
+                                //classe per i posti da pagare
+                                $class_da_pagare = ($fila->posti_prenotati-$fila->posti_pagati)>0?" my-busy busy not-payed":($fila->posti_prenotati-$fila->posti_pagati);
+                                
+                                
+                                $class = "seat nn {$class_da_pagare}";
                                 $color          = "";
                                 $postiTotali    = $fila->posti_totali;
                                 $postiPagati    = $fila->posti_pagati;
@@ -689,7 +693,7 @@ class Postazioni{
                                     . 'title="" '
                                     . 'stroke="'.$color.'" '
                                     . 'fill="'.$color.'" '
-                                    . 'class="seat nn" '
+                                    . 'class="'.$class.'" '
                                     . 'data-fila="Non assegnata" '
                                     . 'data-posto="Non assegnato" '
                                     . 'data-nome="'.str_replace("_", " ", $nome).'" '
