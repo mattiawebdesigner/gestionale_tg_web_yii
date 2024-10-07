@@ -148,7 +148,7 @@
         * Attivo l'evento di selezione del posto, valido SOLO per 
         * i posti non numerati.
         */
-       jQuery(".seat.nn").click((e)=>{
+       jQuery(".seat.nn:not(.busy.not-payed)").click((e)=>{
             var el = jQuery(e.target);
             let posti_totali    = jQuery(e.target).data("posti-totali");
             let posti_prenotati = jQuery(e.target).data("posti-prenotati");
