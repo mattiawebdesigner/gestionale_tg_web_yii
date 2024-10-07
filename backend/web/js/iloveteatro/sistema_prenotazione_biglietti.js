@@ -74,15 +74,24 @@
                 
                 jQuery("form", _FORM_BUY_CONTENITORE).show();
                 
-                var el = jQuery(e.target);
-                var nome    = el.data("nome");
-                var fila    = el.data("fila");
-                var posto   = el.data("posto");
-                var palco   = el.data("palco");
-                var id      = (nome.replace(" ", "_"))+"-"+fila+"-"+posto;
-                
-                var prenotazioni = jQuery("#theatre-reservations-buy > table", _THIS);
-                insert(prenotazioni, id, el, nome, fila, posto, palco, "reservations-buy-form");
+                var el              = jQuery(e.target);
+                var nome            = el.data("nome");
+                var fila            = el.data("fila");
+                var posto           = el.data("posto");
+                var palco           = el.data("palco");
+                var id              = (nome.replace(" ", "_"))+"-"+fila+"-"+posto;
+                var classes         = jQuery(e.target).attr("class");//Classi del posto selezionato
+                var prenotazioni    = jQuery("#theatre-reservations-buy > table", _THIS);
+                //Gestisco l'eccezione per i posti non numerati
+                if(classes.includes("nn")){                    
+                    insert(
+                            prenotazioni, id, el, nome, fila, posto, palco, "reservations-buy-form", 
+                            COLOR_BOOKED, COLOR_BOOKED, TYPE_TICKET, true
+                    );
+                }else{
+                    
+                    insert(prenotazioni, id, el, nome, fila, posto, palco, "reservations-buy-form");
+                }
             });
             
             /**
@@ -148,7 +157,7 @@
         * Attivo l'evento di selezione del posto, valido SOLO per 
         * i posti non numerati.
         */
-       jQuery(".seat.nn:not(.busy.not-payed)").click((e)=>{
+       jQuery(".seat.nn:not").click((e)=>{
             var el = jQuery(e.target);
             let posti_totali    = jQuery(e.target).data("posti-totali");
             let posti_prenotati = jQuery(e.target).data("posti-prenotati");
@@ -315,18 +324,35 @@
         * Inserisce l'elemento nella pagina
         * 
         * @param {[Object object]} prenotazioni 
+        * Prenotazioni dei posti effettuate
         * @param {int} id
+        * ID associato al posto, usato per indicare la riga giusta
+        * nella tabella generata
         * @param {[Object object]} el
-        * @param {string} nome
-        * @param {string} fila
+        * Elemento target
+        * @param {string} nome 
+        * Nome della posizione del posto (es.: platea, I ordine, balconata, ecc.)
+        * @param {string} fila 
+        * Fila associata al posto
         * @param {string} posto 
-        * @param {string} palco
+        * Posto da inserire nella tabella generata
+        * @param {string} palco 
+        * Palco associato al
+        * posto (se il posto prevede un palco), di default vale null
         * @param {string} formClass
+        * Classe da assegnare al form associato alla generazione della tabella
         * @param {string} fill
+        * Colore di sfondo del posto selezionato
         * @param {string} stroke
+        * Colore della linea del posto selezionato
         * @param {string} type Tipo di inserimento (Abbonamento o Ticket)
+        * @param {boolean} non_numerato 
+        * Usato per aggiungere i dati per segnare come pagato i posti non numerati
         */
-        function insert(prenotazioni, id, el, nome, fila, posto, palco = undefined, formClass = "reservations-form", fill = COLOR_BOOKED, stroke = COLOR_BOOKED, type = TYPE_TICKET){
+        function insert(prenotazioni, id, el, nome, 
+                        fila, posto, palco = undefined, formClass = "reservations-form", 
+                        fill = COLOR_BOOKED, stroke = COLOR_BOOKED, type = TYPE_TICKET,
+                        non_numerato = false){
             el.attr("fill", fill);
             el.attr("stroke", stroke);
             el.addClass("reservation busy");
@@ -337,6 +363,14 @@
                 insert += "<td>Palco: <strong>"+palco+"</strong> <input type='hidden' name='"+type+"["+nome+"][palco][]' form='"+formClass+"' value='"+palco+"' /></td>";
             }else{
                 insert += "<td></td>";
+            }
+            
+            if(non_numerato){
+                console.log("OK");
+                
+                let box_prenotazioni = `
+                    
+                `;
             }
 
             insert += "<td>Fila: <strong>" + fila + "</strong>  " + 
