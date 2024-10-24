@@ -564,6 +564,8 @@ class Postazioni{
                                             }
                                         }
                                     }else if(isset($v->stato) && $this->controllaStato($v->stato)){//prenotazioni di altri utenti
+                                        
+                                        
                                         switch ($v->stato){
                                             case self::STATO_PAYED:
                                                 $color_stroke = $color_fill = self::COLOR_PAYED;
@@ -665,6 +667,7 @@ class Postazioni{
                         }else{
                             if(isset($fila->non_numerato) && $fila->non_numerato){
                                 
+                                    
                                 $posti_liberi   = $fila->posti_totali-$fila->posti_prenotati;
                                 //classe per i posti da pagare
                                 $class_da_pagare = ($fila->posti_prenotati-$fila->posti_pagati)>0?" my-busy busy not-payed":($fila->posti_prenotati-$fila->posti_pagati);
