@@ -520,13 +520,14 @@ class Postazioni{
                                     
                                     //Colori per i posti prenotati da un utente
                                     if(isset($this->my_booked[$nome]['palco'][$k]['fila'][$k3]['posti']) && $this->verificaPostoPrenotato($this->my_booked[$nome]['palco'][$k]['fila'][$k3]['posti'], $k5)){
+                                        
+                                        
                                         if(isset($v->stato) && $this->controllaStato($v->stato)){                                            
                                             $color_stroke = "black";
                                             $color_fill   = self::COLOR_MY_BOOKED;
                                             $class       .= " my-busy ";
 
-                                            if(isset($v->stato) && $this->controllaStato($v->stato)){
-                                                
+                                            //if(isset($v->stato) && $this->controllaStato($v->stato)){
                                                 switch ($v->stato){
                                                     case self::STATO_NOT_PAYED:
                                                         $class .= " busy not-payed";
@@ -561,7 +562,7 @@ class Postazioni{
                                                         break;
 
                                                 }
-                                            }
+                                            //}
                                         }
                                     }else if(isset($v->stato) && $this->controllaStato($v->stato)){//prenotazioni di altri utenti
                                         
@@ -666,11 +667,15 @@ class Postazioni{
                             }
                         }else{
                             if(isset($fila->non_numerato) && $fila->non_numerato){
-                                
-                                    
+                                /*
+                                 * RIVEDERE ASSOCIA A TUTTI GLI UTENTI
+                                 * LA PRENOTAZIONE DEI POSTI DI UN UTENTE SPECIFICO
+                                 */
                                 $posti_liberi   = $fila->posti_totali-$fila->posti_prenotati;
                                 //classe per i posti da pagare
-                                $class_da_pagare = ($fila->posti_prenotati-$fila->posti_pagati)>0?" my-busy busy not-payed":($fila->posti_prenotati-$fila->posti_pagati);
+                                $class_da_pagare = ($fila->posti_prenotati-$fila->posti_pagati)>0
+                                                    ? " my-busy busy not-payed"
+                                                    : ($fila->posti_prenotati-$fila->posti_pagati);
                                 
                                 
                                 $class = "seat nn {$class_da_pagare}";
@@ -706,6 +711,12 @@ class Postazioni{
                                     . 'data-tooltip="Palco non numerato. I posti non sono assegnati" '
                                     . 'data-nome="'. (str_replace("_", " ", $nome)).'" '
                                     . 'data-palco="'.$k.'" />';
+                                
+                                
+                                echo "<pre>";
+                                print_r($this->my_booked);
+                                echo "</pre>";
+                                
                             }
                             break;
                         }
