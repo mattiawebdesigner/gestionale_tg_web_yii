@@ -148,13 +148,15 @@ class Postazioni{
                         }
                     }
                 }
-            }else{//Se ha anche i palchi                
+            }else{//Se ha anche i palchi
                 foreach ($v_pp['palco'] as $k_palco => $v_palco){
                     foreach ($v_palco['file'] as $k_fila => $v_fila){
-                    
-                        foreach ($v_fila['posti'] as $p => $posto){                            
+                        foreach ($v_fila['posti'] as $p => $posto){
                             if(isset($this->posti->$k_pp->palco->$k_palco->fila->$k_fila->posti->$posto->stato)){
                                 unset($this->posti->$k_pp->palco->$k_palco->fila->$k_fila->posti->$posto->stato);//Rimuovo lo stato che indica la prenotazione
+                            }else if($k_fila === "non_numerato"){
+                                //Decremento i posti attualmente prenotati (dal totale dei posti)
+                                $this->posti->$k_pp->palco->$k_palco[0]->posti_prenotati -= $prenotazioni_da_cancellare[$k_pp]['palco'][$k_palco]['file'][$k_fila]['posti'][0];
                             }
                         }
                         
@@ -173,8 +175,17 @@ class Postazioni{
                         foreach ($posti as $posto){
                             try{
                                 $key_to_remove = array_search($posto, $prenotazioni[$k_p]['palco'][$palco]['fila'][$fila]['posti']);
-
-                            } catch (\Exception $ex) {}
+                            } catch (\Exception $ex) {
+                                try{
+                                    $prenotazioni[$k_p]['palco'][$palco]['non_numerato'] -= $prenotazioni_da_cancellare[$k_pp]['palco'][$k_palco]['file'][$k_fila]['posti'][0];
+                                    
+                                    //Non ci sono più posti non numerati prenotati
+                                    //Rimuovo la prenotazione del tutto
+                                    if($prenotazioni[$k_p]['palco'][$palco]['non_numerato'] === 0){
+                                        unset($prenotazioni[$k_p]);
+                                    }
+                                } catch (Exception $ex) {}
+                            }
                             
                             if(empty($prenotazioni[$k_p]['palco'][$palco]['fila'][$fila]['posti'])){
                                 unset($prenotazioni[$k_p]['palco'][$palco]['fila'][$fila]['posti']);
@@ -219,40 +230,6 @@ class Postazioni{
                 unset($prenotazioni[$k_p]);
             }
         }
-        
-        
-        /*
-        
-        //Cancello le prenotazioni dell'utente
-        foreach ($prenotazioni_da_cancellare as $k_p => $v_p){
-            foreach ($v_p as $file){
-                foreach ($file as $fila => $v_posti){
-                    foreach ($v_posti as $posti){
-                        foreach ($posti as $posto){
-                            //trovo la chiave del posto da rimuovere dalla prenotazione
-                            try{
-                                $key_to_remove = array_search($posto, $prenotazioni[$k_p]['file'][$fila]['posti']);
-                                unset($prenotazioni[$k_p]['file'][$fila]['posti'][$key_to_remove]);
-                            }catch(\Exception $ex){}
-                            
-                            if(empty($prenotazioni[$k_p]['file'][$fila]['posti'])){
-                                unset($prenotazioni[$k_p]['file'][$fila]);
-                            }
-                        }
-                    }
-                }
-                
-                if(empty($prenotazioni[$k_p]['file'])){
-                    unset($prenotazioni[$k_p]['file']);
-                }
-            }
-            
-            if(empty($prenotazioni[$k_p])){
-                unset($prenotazioni[$k_p]);
-            }
-        }
-        //--------------------------------------------
-        */
         
         return [
             'prenotazioni'  => (empty($prenotazioni))?null:$prenotazioni,
