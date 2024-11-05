@@ -90,6 +90,40 @@ $this->title = Yii::t('app', 'Gestisci prenotazione: {spettacolo}', [
             <table class="table table-striped"></table>
         </div>
         
+        <?php // Posti non numerati prenotati ?>
+        Da gestire cancellazione posti non numerati
+        <div id="theatre-reservations-delete-nn-place" class="flex flex-row gap-1">
+            <div><?= Yii::t('app', 'Posti non numerati prenotati: '); ?> </div>
+            <div>
+                <?php foreach($postazioni->getMyBooked() as $k => $v): ?>
+                    <?php if(is_array($v)): ?>
+                        <?php foreach($v as $k1 => $v1): ?>
+                            <?php if($k1 === "palco"): ?>
+                                <?php foreach($v1 as $k2 => $v2): ?>
+                                    <?php foreach($v2 as $k3 => $v3): ?>
+                                        <?php if($k3 === "non_numerato"): ?>
+                                            <input type="number" form="reservations-nn-delete-form" value="<?= $v3 ?>" min="0" max="<?= $v3 ?>" />
+                                        <?php endif; ?>
+                                    <?php endforeach; ?>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+            </div>
+            <div>
+                <?php $form = ActiveForm::begin(['options' => ['id' => 'reservations-nn-delete-form']]); ?>
+                    <input type="hidden" name="dati[spettacolo_id]" value="<?= $spettacolo->id ?>" />
+                    
+                    <button type="submit" class="btn btn-crm remove-reservation fa fa-trash-alt">
+                        
+                    </button>
+
+                    <input type="hidden" name="reservations-delete" value="true" />
+                <?php ActiveForm::end(); ?>
+            </div>
+        </div>
+        
         <?php // Sezione per confermare la cancellazione di una prenotazione ?>
         <div id="theatre-reservations-delete">
             <?php $form = ActiveForm::begin(['options' => ['id' => 'reservations-delete-form']]); ?>
@@ -115,7 +149,7 @@ $this->title = Yii::t('app', 'Gestisci prenotazione: {spettacolo}', [
             <table class="table table-striped"></table> 
         </div>
     </div>
-
+    
 </div>
 
 <?php

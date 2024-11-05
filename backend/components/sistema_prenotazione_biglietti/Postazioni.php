@@ -713,9 +713,9 @@ class Postazioni{
                                     . 'data-palco="'.$k.'" />';
                                 
                                 
-                                echo "<pre>";
+                                /*echo "<pre>";
                                 print_r($this->my_booked);
-                                echo "</pre>";
+                                echo "</pre>";*/
                                 
                             }
                             break;
@@ -723,6 +723,16 @@ class Postazioni{
                     }
             }
         }
+    }
+    
+    /**
+     * Restituisce le prenotazioni prenotate e/o pagate
+     * dell'utente
+     * 
+     * @return array Prenotazione posti
+     */
+    public function getMyBooked(){
+        return $this->my_booked;
     }
     
     /**
