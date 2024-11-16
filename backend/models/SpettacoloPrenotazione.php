@@ -64,7 +64,7 @@ class SpettacoloPrenotazione extends \yii\db\ActiveRecord
     public static function totali($prenotazioni, $piantina){
         $nOfSeatBooked = 0;
         foreach ($prenotazioni as $prenotazione){            
-            $nOfSeatBooked += Postazioni::nOfSeatBooked($prenotazione->prenotazione, /*$prenotazione->abbonamento*/"");
+            $nOfSeatBooked += Postazioni::nOfSeatBooked($prenotazione->prenotazione, /*$prenotazione->abbonamento*/null);
         }
         //------------------------------
         $nOfSeatState   = [];
@@ -77,12 +77,12 @@ class SpettacoloPrenotazione extends \yii\db\ActiveRecord
                 $nOfSeatState[$prenotazione->email]['tot'] = $res['tot'];
             }
             
-            /*if(!is_null($prenotazione->abbonamento)){
+            if(isset($prenotazione->abbonamento) && !is_null($prenotazione->abbonamento)){
                 $subscriber = Postazioni::nOfSeatState($piantina, $prenotazione->abbonamento);
                 $nOfSeatState[$prenotazione->email]['subcribers']['nOfSeatPaid'] = $subscriber['nOfSeatPaid'];
                 $nOfSeatState[$prenotazione->email]['subcribers']['nOfSeatNotPaid'] = $subscriber['nOfSeatNotPaid'];
                 $nOfSeatState[$prenotazione->email]['subcribers']['tot'] = $subscriber['tot'];
-            }*/
+            }
         }
         
         return [

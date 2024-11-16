@@ -56,7 +56,11 @@ $this->title = Yii::t('app', 'Gestisci prenotazione: {spettacolo}', [
             <span class="mode-out d-none-n-i"><i class="fa-solid fa-dollar-sign"></i> <?= Yii::t('app', 'Esci dalla modalità prenotazioni come pagate') ?></span>
         </div>
         
-        <div id="theatre-place">
+        <div id="theatre-place" 
+             style="background-image: url(<?= $spettacolo->backgroundPiantina; ?>);
+                    background-position-x: <?= (json_decode($spettacolo->backgroundPosition))->x; ?>;
+                    background-position-y: <?= (json_decode($spettacolo->backgroundPosition))->y; ?>"
+        >
             <?php
             $postazioni->get(false);
             ?>
@@ -80,10 +84,47 @@ $this->title = Yii::t('app', 'Gestisci prenotazione: {spettacolo}', [
                     <input type="text" name="dati[cellulare]" placeholder="Cellulare" value="<?= $prenotazioni->cellulare ?>" />
                 </p>
                 <input type="hidden" name="dati[spettacolo_id]" value="<?= $spettacolo->id ?>" />
-                <input type="submit" value="Prenota" class="btn btn-iloveteatro" />
+                <input type="submit" value="Prenota" class="btn btn-crm" />
             <?php ActiveForm::end(); ?>
 
             <table class="table table-striped"></table>
+        </div>
+        
+        <?php // Posti non numerati prenotati ?>
+        <div id="theatre-reservations-delete-nn-place" class="flex flex-row gap-1">
+            <div><?= Yii::t('app', 'Posti non numerati prenotati: '); ?> </div>
+            <div>
+                <?php foreach($postazioni->getMyBooked() as $k => $v): ?>
+                    <?php if(is_array($v)): ?>
+                        <?php foreach($v as $k1 => $v1): ?>
+                            <?php if($k1 === "palco"): ?>
+                                <?php foreach($v1 as $k2 => $v2): ?>
+                                    <?php foreach($v2 as $k3 => $v3): ?>
+                                        <?php if($k3 === "non_numerato"): $show_nn_trash = true ?>
+                                            <input type="number" name="nn-place" form="reservations-nn-delete-form" value="<?= $v3 ?>" min="0" max="<?= $v3 ?>" />
+                                            <input type="hidden" name="prenotazione[<?= $k ?>][nome][]" form="reservations-nn-delete-form" value="<?= $k ?>"  />
+                                            <input type="hidden" name="prenotazione[<?= $k ?>][palco][]" form="reservations-nn-delete-form" value="<?= $k2 ?>" />
+                                            <input type="hidden" name="prenotazione[<?= $k ?>][fila][]" form="reservations-nn-delete-form" value="non_numerato" />
+                                            <input type="hidden" name="prenotazione[<?= $k ?>][posto][]" form="reservations-nn-delete-form" value="non_numerato" />
+                                        <?php endif; ?>
+                                    <?php endforeach; ?>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+                                            
+                <?php if(!($show_nn_trash ?? false)){ echo 0; }?>
+            </div>
+            <div>
+                <?php if($show_nn_trash ?? false) : $form = ActiveForm::begin(['options' => ['id' => 'reservations-nn-delete-form']]); ?>
+                    <input type="hidden" name="dati[spettacolo_id]" value="<?= $spettacolo->id ?>" />
+                    
+                    <button type="submit" class="btn btn-crm remove-reservation fa fa-trash-alt"></button>
+
+                    <input type="hidden" name="reservations-delete" value="true" />
+                <?php ActiveForm::end(); endif; ?>
+            </div>
         </div>
         
         <?php // Sezione per confermare la cancellazione di una prenotazione ?>
@@ -111,7 +152,7 @@ $this->title = Yii::t('app', 'Gestisci prenotazione: {spettacolo}', [
             <table class="table table-striped"></table> 
         </div>
     </div>
-
+    
 </div>
 
 <?php
