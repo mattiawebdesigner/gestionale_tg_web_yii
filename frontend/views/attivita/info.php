@@ -7,7 +7,7 @@ use yii\widgets\ActiveForm;
 /* @var $model backend\models\Attivita */
 
 $this->title = $model->nome;
-$this->params['breadcrumbs'][] = $this->title;
+//$this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>
 <div id="next" class="attivita-view">
@@ -21,14 +21,14 @@ $this->params['breadcrumbs'][] = $this->title;
 			</div>
 			
 			<div class="content">
-				<div class="place"><i class="fas fa-map-pin"></i> <?= $model->luogo ?></div>
-				<div class="date"><i class="fas fa-calendar-alt"></i> <?= $model->data_attivita ?></div>
-				<?php if($model->pagamento == "yes") : ?>
-				<div class="date"><i class="fas fa-euro-sign"></i> <?= $model->costo ?></div>
-				<?php endif; ?>
-				<div class="chair">
-					<i class="fas fa-chair"></i> <?= $model->posti_disponibili == null ? "Nessuna limitazione" : $model->posti_disponibili-$posti_occupati ?>
-				</div>
+                            <div class="place"><i class="fas fa-map-pin"></i> <?= $model->luogo ?></div>
+                            <div class="date"><i class="fas fa-calendar-alt"></i> <?= $model->data_attivita ?></div>
+                            <?php if($model->pagamento == "yes") : ?>
+                            <div class="date"><i class="fas fa-euro-sign"></i> <?= $model->costo ?></div>
+                            <?php endif; ?>
+                            <div class="chair">
+                                <i class="fas fa-chair"></i> <?= $model->posti_disponibili == null ? "Nessuna limitazione di posti" : $model->posti_disponibili-$posti_occupati." posti prenotati su ".$model->posti_disponibili." posti totali" ?>
+                            </div>
 			</div>
 				
 			<?php if( ($model->posti_disponibili-$posti_occupati) == 0 && $model->posti_disponibili!=null) : ?>

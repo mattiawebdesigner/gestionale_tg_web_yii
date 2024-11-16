@@ -1,5 +1,26 @@
 
-#next{
+#next .title{
+    text-align: center;
+    font-size: 2rem;
+    font-variant-caps: all-small-caps;
+}
+#next .wrapper,
+#next .wrapper .img{
+    height: 500px;
+    background-size: contain;
+    margin: 0 auto;
+}
+#next .wrapper .img{
+    width: 1000px;
+    background-size: 1000px;
+}
+#next .canceled > i{color: darkred;}
+#next .place > i, #next .date > i, #next .description > i{color: #dca600;}
+#next .payment > i{color: darkgreen;}
+#next .reservation > i{color: darkgreen;}
+#next .content{
+    padding: 1.5rem 10px}
+/*#next{
 	border: 0px solid;
 	display: table;
 	width: 100%;
@@ -7,6 +28,10 @@
 #next .canyon{height: 10px;}
 #next > .row{
 	display: table-row;
+	width: 100%;
+}
+#next > .row > .col{
+	display: table-cell;
 	width: 100%;
 }
 #next .content{
@@ -40,7 +65,7 @@
 	background-position: center; 
 	width: 100%;
 	height: 100%;
-}
+}*/
 
 @media screen and (max-width: 1920px) {
 }
