@@ -8,6 +8,9 @@ use Yii;
  * - Prenotazione
  * - Cancellazione di una prenotazione
  * - Visualizzazione dei dati delle prenotazioni
+ * 
+ * @version 2.0.0
+ * @copyright (c) 2022, MSD Technologies
  */
 class Postazioni{
     private $posti;
@@ -146,16 +149,14 @@ class Postazioni{
                     }
                 }
             }else{//Se ha anche i palchi
-                echo "<pre>";
-                //print_r($this->posti->$k_pp);
-                echo "</pre>";
-                
                 foreach ($v_pp['palco'] as $k_palco => $v_palco){
                     foreach ($v_palco['file'] as $k_fila => $v_fila){
-                    
-                        foreach ($v_fila['posti'] as $p => $posto){                            
+                        foreach ($v_fila['posti'] as $p => $posto){
                             if(isset($this->posti->$k_pp->palco->$k_palco->fila->$k_fila->posti->$posto->stato)){
                                 unset($this->posti->$k_pp->palco->$k_palco->fila->$k_fila->posti->$posto->stato);//Rimuovo lo stato che indica la prenotazione
+                            }else if($k_fila === "non_numerato"){
+                                //Decremento i posti attualmente prenotati (dal totale dei posti)
+                                $this->posti->$k_pp->palco->$k_palco[0]->posti_prenotati -= $prenotazioni_da_cancellare[$k_pp]['palco'][$k_palco]['file'][$k_fila]['posti'][0];
                             }
                         }
                         
@@ -166,29 +167,62 @@ class Postazioni{
         }
         //--------------------------------------------
        
-        /*
-        
         //Cancello le prenotazioni dell'utente
         foreach ($prenotazioni_da_cancellare as $k_p => $v_p){
-            foreach ($v_p as $file){
-                foreach ($file as $fila => $v_posti){
-                    foreach ($v_posti as $posti){
+            if(isset($v_p['palco'])){//Ci sono palchi
+                foreach ($v_p['palco'] as $palco => $file){
+                    foreach ($file['file'] as $fila => $posti){
                         foreach ($posti as $posto){
-                            //trovo la chiave del posto da rimuovere dalla prenotazione
                             try{
-                                $key_to_remove = array_search($posto, $prenotazioni[$k_p]['file'][$fila]['posti']);
-                                unset($prenotazioni[$k_p]['file'][$fila]['posti'][$key_to_remove]);
-                            }catch(\Exception $ex){}
+                                $key_to_remove = array_search($posto, $prenotazioni[$k_p]['palco'][$palco]['fila'][$fila]['posti']);
+                            } catch (\Exception $ex) {
+                                try{
+                                    $prenotazioni[$k_p]['palco'][$palco]['non_numerato'] -= $prenotazioni_da_cancellare[$k_pp]['palco'][$k_palco]['file'][$k_fila]['posti'][0];
+                                    
+                                    //Non ci sono più posti non numerati prenotati
+                                    //Rimuovo la prenotazione del tutto
+                                    if($prenotazioni[$k_p]['palco'][$palco]['non_numerato'] === 0){
+                                        unset($prenotazioni[$k_p]);
+                                    }
+                                } catch (Exception $ex) {}
+                            }
                             
-                            if(empty($prenotazioni[$k_p]['file'][$fila]['posti'])){
-                                unset($prenotazioni[$k_p]['file'][$fila]);
+                            if(empty($prenotazioni[$k_p]['palco'][$palco]['fila'][$fila]['posti'])){
+                                unset($prenotazioni[$k_p]['palco'][$palco]['fila'][$fila]['posti']);
+                            }
+                        }
+                        
+                        
+                        if(empty($prenotazioni[$k_p]['palco'][$palco]['fila'])){
+                            unset($prenotazioni[$k_p]['palco'][$palco]['fila']);
+                        }
+                    }
+                    
+                    if(empty($prenotazioni[$k_p]['palco'])){
+                        unset($prenotazioni[$k_p]['palco']);
+                    }
+                }
+            }else{//Non ci sono palchi
+                foreach ($v_p as $file){
+                    foreach ($file as $fila => $v_posti){
+                        foreach ($v_posti as $posti){
+                            foreach ($posti as $posto){
+                                //trovo la chiave del posto da rimuovere dalla prenotazione
+                                try{
+                                    $key_to_remove = array_search($posto, $prenotazioni[$k_p]['file'][$fila]['posti']);
+                                    unset($prenotazioni[$k_p]['file'][$fila]['posti'][$key_to_remove]);
+                                }catch(\Exception $ex){}
+
+                                if(empty($prenotazioni[$k_p]['file'][$fila]['posti'])){
+                                    unset($prenotazioni[$k_p]['file'][$fila]);
+                                }
                             }
                         }
                     }
-                }
-                
-                if(empty($prenotazioni[$k_p]['file'])){
-                    unset($prenotazioni[$k_p]['file']);
+
+                    if(empty($prenotazioni[$k_p]['file'])){
+                        unset($prenotazioni[$k_p]['file']);
+                    }
                 }
             }
             
@@ -196,8 +230,6 @@ class Postazioni{
                 unset($prenotazioni[$k_p]);
             }
         }
-        //--------------------------------------------
-        */
         
         return [
             'prenotazioni'  => (empty($prenotazioni))?null:$prenotazioni,
@@ -235,7 +267,12 @@ class Postazioni{
             }else if(isset($this->posti->$k_pp->palco)){//se ci sono dei palchi
                 foreach ($v_pp['palco'] as $k_palco => $v_palco){
                     $fila = $v_pp['fila'][$k_palco];
-                    if($fila == "non_numerato"){                        
+                    
+                    if(
+                        $fila == "non_numerato"//Compatibilità con le versioni precedenti
+                        ||
+                        $fila == "Non assegnata"//usato dalla versione 2.0 (nuovo nome per i posti non numerati)
+                    ){
                         $this->posti->$k_pp->palco->$v_palco[0]->posti_prenotati += 1;
                         $conteggio_prenotazione_utente_non_numerato += 1;
                         
@@ -293,23 +330,30 @@ class Postazioni{
                             break;
                     }
 
-                    //dati prenotazione utente
+                    //Aggiorno i dati della prenotazione dell'utente
                     $prenotazione_posti_utente[$k_pp]['file'][$v_fila]['posti'][] = $posto;
                 }
             }else if(isset($this->posti->$k_pp->palco)){//se ci sono dei palchi
                 foreach ($v_pp['palco'] as $k_palco => $v_palco){
                     $fila = $v_pp['fila'][$k_palco];
-                    if($fila == "non_numerato"){                        
+                    if($fila == "non_numerato"){//Palco non numerato
                         $this->posti->$k_pp->palco->$v_palco[0]->posti_prenotati += 1;
                         $conteggio_prenotazione_utente_non_numerato += 1;
                         
                         $prenotazione_posti_utente[$k_pp]['palco'][$v_palco]['non_numerato'] = $conteggio_prenotazione_utente_non_numerato;
-                        
-                    }else{
+                    } else {//Palco numerato
                         $posto = $v_pp['posto'][$k_palco];
-                        $this->posti->$k_pp->palco->$v_palco->fila->$fila->posti->$posto->stato = 0;
-
-                        //dati prenotazione utente
+                        
+                        switch ($this->posti->$k_pp->palco->$v_palco->fila->$fila->posti->$posto->stato){
+                            case self::STATO_NOT_PAYED:
+                                $this->posti->$k_pp->palco->$v_palco->fila->$fila->posti->$posto->stato = self::STATO_PAYED;
+                                break;
+                            case self::STATO_SUBSCRIPTION_NOT_PAYED:
+                                $this->posti->$k_pp->palco->$v_palco->fila->$fila->posti->$posto->stato = self::STATO_SUBSCRIPTION_PAYED;
+                                break;
+                        }
+                        
+                        //Aggiorno i dati della prenotazione dell'utente
                         $prenotazione_posti_utente[$k_pp]['palco'][$v_palco]['fila'][$fila]['posti'][] = $posto;
                     }
                 }
@@ -436,11 +480,6 @@ class Postazioni{
     private function getPalchi($p, $nome, bool $guest){
         $this->my_booked = (is_array($this->my_booked)) ? $this->my_booked : json_decode($this->my_booked, true);
         
-        /*echo "<pre>";
-        var_dump($this->my_booked[$nome]['palco']);
-        print_r($this->my_booked[$nome]['palco'][key($this->my_booked[$nome]['palco'])]);
-        echo "</pre>";*/
-        
         foreach ($p as $k => $palco){
                                 
             foreach ($palco as $k2 => $fila){
@@ -456,19 +495,16 @@ class Postazioni{
                                     $color_stroke = self::COLOR_FREE;
                                     $class = "seat";
                                     
-                                    /*echo "<pre>";
-                                    print_r($this->my_booked[$nome]['palco'][$k]['fila'][$k3]['posti']??'NO');
-                                    echo "</pre>";*/
-                                    
                                     //Colori per i posti prenotati da un utente
                                     if(isset($this->my_booked[$nome]['palco'][$k]['fila'][$k3]['posti']) && $this->verificaPostoPrenotato($this->my_booked[$nome]['palco'][$k]['fila'][$k3]['posti'], $k5)){
+                                        
+                                        
                                         if(isset($v->stato) && $this->controllaStato($v->stato)){                                            
                                             $color_stroke = "black";
                                             $color_fill   = self::COLOR_MY_BOOKED;
                                             $class       .= " my-busy ";
 
-                                            if(isset($v->stato) && $this->controllaStato($v->stato)){
-                                                
+                                            //if(isset($v->stato) && $this->controllaStato($v->stato)){
                                                 switch ($v->stato){
                                                     case self::STATO_NOT_PAYED:
                                                         $class .= " busy not-payed";
@@ -503,9 +539,11 @@ class Postazioni{
                                                         break;
 
                                                 }
-                                            }
+                                            //}
                                         }
                                     }else if(isset($v->stato) && $this->controllaStato($v->stato)){//prenotazioni di altri utenti
+                                        
+                                        
                                         switch ($v->stato){
                                             case self::STATO_PAYED:
                                                 $color_stroke = $color_fill = self::COLOR_PAYED;
@@ -606,8 +644,18 @@ class Postazioni{
                             }
                         }else{
                             if(isset($fila->non_numerato) && $fila->non_numerato){
+                                /*
+                                 * RIVEDERE ASSOCIA A TUTTI GLI UTENTI
+                                 * LA PRENOTAZIONE DEI POSTI DI UN UTENTE SPECIFICO
+                                 */
                                 $posti_liberi   = $fila->posti_totali-$fila->posti_prenotati;
-                                $class = "seat nn";
+                                //classe per i posti da pagare
+                                $class_da_pagare = ($fila->posti_prenotati-$fila->posti_pagati)>0
+                                                    ? " my-busy busy not-payed"
+                                                    : ($fila->posti_prenotati-$fila->posti_pagati);
+                                
+                                
+                                $class = "seat nn {$class_da_pagare}";
                                 $color          = "";
                                 $postiTotali    = $fila->posti_totali;
                                 $postiPagati    = $fila->posti_pagati;
@@ -630,9 +678,9 @@ class Postazioni{
                                     . 'title="" '
                                     . 'stroke="'.$color.'" '
                                     . 'fill="'.$color.'" '
-                                    . 'class="seat nn" '
-                                    . 'data-fila="'.$k3.'" '
-                                    . 'data-posto="'.$k5.'" '
+                                    . 'class="'.$class.'" '
+                                    . 'data-fila="Non assegnata" '
+                                    . 'data-posto="Non assegnato" '
                                     . 'data-nome="'.str_replace("_", " ", $nome).'" '
                                     . 'data-posti-totali="'.$postiTotali.'" '
                                     . 'data-posti-pagati="'.$postiPagati.'" '
@@ -640,12 +688,28 @@ class Postazioni{
                                     . 'data-tooltip="Palco non numerato. I posti non sono assegnati" '
                                     . 'data-nome="'. (str_replace("_", " ", $nome)).'" '
                                     . 'data-palco="'.$k.'" />';
+                                
+                                
+                                /*echo "<pre>";
+                                print_r($this->my_booked);
+                                echo "</pre>";*/
+                                
                             }
                             break;
                         }
                     }
             }
         }
+    }
+    
+    /**
+     * Restituisce le prenotazioni prenotate e/o pagate
+     * dell'utente
+     * 
+     * @return array Prenotazione posti
+     */
+    public function getMyBooked(){
+        return $this->my_booked;
     }
     
     /**
@@ -966,22 +1030,24 @@ class Postazioni{
      * @return int Numero totale di prenotazioni
      */
     public static function nOfSeatBooked($prenotazione, $abbonamenti){
-        $searchKey = 'file';
+        $searchKey  = "file";
         $searchKey2 = "posti";
+        $searchKey3 = "palco";
+        $searchKey4 = "fila";
         $nOfSeatBooked = 0;
         
-        $func = function ($subarray) use ($searchKey, &$func, $searchKey2, &$nOfSeatBooked) {
-            $cont = 0;
-            
-            //Controllo se il valore di $subarray Ã¨ un array
+        $func = function ($subarray) use ($searchKey, &$func, $searchKey2, $searchKey3, $searchKey4, &$nOfSeatBooked) {
+            //Controllo se il valore di $subarray è un array
             //e non contiene la chiave cercata.
             //In questo caso si ripassa ala funzione stessa il valore
             //del nuovo sotto array
             if(!isset($subarray[$searchKey]) && is_array($subarray)){
                 $func($subarray[key($subarray)]);
             
-            //Se invece la chiave Ã¨ trovata calcolo
-            //restituisco i valori (solitamente un array)
+            //Controllo se il valore di $subarray è un array
+            //e non contiene la chiave cercata.
+            //In questo caso si ripassa ala funzione stessa il valore
+            //del nuovo sotto array
             }else{
                 if(isset($subarray[$searchKey])){
                     foreach($subarray[$searchKey] as $v){
@@ -994,8 +1060,30 @@ class Postazioni{
                         }
                     }
                 }
+            }
+            
+            //Prenotazione tenendo in considerazione anche i palchi
+            if(!isset($subarray[$searchKey3]) && is_array($subarray)){
+                $func($subarray[key($subarray)]);
                 
-                return [$cont];
+            //Se invece la chiave è trovata calcolo
+            //restituisco i valori (solitamente un array)
+            }else{
+                if(isset($subarray[$searchKey3])){//Ci sono palchi
+                    foreach($subarray[$searchKey3] as $p){
+                        if(isset($p[$searchKey4])){
+                            foreach($p[$searchKey4] as $f){
+                                if(isset($f[$searchKey2])){
+                                    array_filter($f, function($sa) use (&$nOfSeatBooked){
+                                        foreach ($sa as $v){
+                                            $nOfSeatBooked ++;
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                    }
+                }
             }
             
         };
@@ -1022,7 +1110,6 @@ class Postazioni{
         $nOfSeatPaid    = 0;//Numero di posti pagati
         $nOfSeatNotPaid = 0;//Numero di posti non pagati
         $nOfSeatPress   = 0;//Numero di posti riservati per la stampa
-        $tot            = 0;//Numero di prenotazioni totali
         
         //Se i parametri sono di tipo stringa allora li converto in array
         //decodificando il json
@@ -1035,10 +1122,9 @@ class Postazioni{
         //-----------------------------------------------------------------
         
         foreach ($posti as $k_p => $p_v){
-            if(isset($prenotazione[$k_p])){                
+            if(isset($prenotazione[$k_p])){
                 //Controllo se il posto contiene file o palchi
                 if(isset($posti[$k_p]['file'])){//se contiene file...
-                   //echo $k_p, " OK<br />";
                     foreach ($posti[$k_p]['file'] as $k_fila => $posti){
                         if(isset($prenotazione[$k_p][$searchKey][$k_fila])){
                             foreach ($posti[$searchKey2] as $posto => $info){                            
@@ -1058,92 +1144,53 @@ class Postazioni{
                                                 break;
                                         }
                                     }
-
-                                    $tot ++;
                                 }
                             }
                         }
                     }
                 }else{//se contiene palchi...
                     foreach ($p_v[$searchKey4] as $k_palco => $file){//Ciclo i palchi
-                        /*echo "<pre>";
-                        print_r($prenotazione[$k_p][$searchKey4]);
-                        echo "</pre>";*/
-                        
                         if(isset($prenotazione[$k_p][$searchKey4][$k_palco])){//Verifico se esiste una prenotazione per quel palco
-                            foreach ($file['fila'] as $k_fila => $posti){//Ciclo le file
-                                foreach ($posti[$searchKey2] as $posto => $info){//Ciclo i posti
-                                    //Verifico che esista la prenotazione per il posto specifico
-                                    if(isset($prenotazione[$k_p][$searchKey4][$k_palco]['fila'][$k_fila][$searchKey2]) && array_search($posto, $prenotazione[$k_p][$searchKey4][$k_palco]['fila'][$k_fila][$searchKey2]) !== false){
-                                        if(isset($info[$searchKey3])){
-                                            switch ($info[$searchKey3]){
-                                                case self::STATO_PAYED:
-                                                case self::STATO_SUBSCRIPTION_PAYED:
-                                                    $nOfSeatPaid ++;
-                                                    break;
-                                                case self::STATO_NOT_PAYED:
-                                                case self::STATO_SUBSCRIPTION_NOT_PAYED:
-                                                    $nOfSeatNotPaid ++;
-                                                    break;
-                                                case self::STATO_CREDIT:
-                                                    $nOfSeatPress ++;
-                                                    break;
+                            if(isset($file['fila'])){
+                                foreach ($file['fila'] as $k_fila => $posti){//Ciclo le file
+                                    foreach ($posti[$searchKey2] as $posto => $info){//Ciclo i posti
+                                        //Verifico che esista la prenotazione per il posto specifico
+                                        if(isset($prenotazione[$k_p][$searchKey4][$k_palco]['fila'][$k_fila][$searchKey2]) && array_search($posto, $prenotazione[$k_p][$searchKey4][$k_palco]['fila'][$k_fila][$searchKey2]) !== false){
+                                            if(isset($info[$searchKey3])){
+                                                switch ($info[$searchKey3]){
+                                                    case self::STATO_PAYED:
+                                                    case self::STATO_SUBSCRIPTION_PAYED:
+                                                        $nOfSeatPaid ++;
+                                                        break;
+                                                    case self::STATO_NOT_PAYED:
+                                                    case self::STATO_SUBSCRIPTION_NOT_PAYED:
+                                                        $nOfSeatNotPaid ++;
+                                                        break;
+                                                    case self::STATO_CREDIT:
+                                                        $nOfSeatPress ++;
+                                                        break;
+                                                }
                                             }
                                         }
-                                        
-                                        $tot ++;
                                     }
+                                }
+                            }else{
+                                foreach ($file as $k => $v){
+                                    $nOfSeatNotPaid += $prenotazione[$k_p][$searchKey4][$k_palco]['non_numerato'];//conto i posti non numerati e non pagati
+                                    $nOfSeatPaid    += $v['posti_pagati'];
                                 }
                             }
                         }
-                        /*foreach ($file as $k_fila => $posti){
-                            foreach ($posti as $posto => $info){
-                                echo "<pre>";
-                                print_r($info);
-                                echo "</pre>";
-                            }
-                        }*/
-                    }
-                    
+                    }   
                 }
-                
-                //Ciclo le file
-                /*
-                foreach ($posti[$k_p]['file'] as $k_fila => $posti){
-                    if(isset($prenotazione[$k_p][$searchKey][$k_fila])){
-                        foreach ($posti[$searchKey2] as $posto => $info){                            
-                            if(array_search($posto, $prenotazione[$k_p]['file'][$k_fila]['posti']) !== false){
-                                if(isset($info[$searchKey3])){
-                                    switch ($info[$searchKey3]){
-                                        case self::STATO_PAYED:
-                                        case self::STATO_SUBSCRIPTION_PAYED:
-                                            $nOfSeatPaid ++;
-                                            break;
-                                        case self::STATO_NOT_PAYED:
-                                        case self::STATO_SUBSCRIPTION_NOT_PAYED:
-                                            $nOfSeatNotPaid ++;
-                                            break;
-                                        case self::STATO_CREDIT:
-                                            $nOfSeatPress ++;
-                                            break;
-                                    }
-                                }
-
-                                $tot ++;
-                            }
-                        }
-                    }
-                }
-                 */
             }
-            
         }
         
         return [
             'nOfSeatPaid'       => $nOfSeatPaid,
             'nOfSeatNotPaid'    => $nOfSeatNotPaid,
             'nOfSeatPress'      => $nOfSeatPress,
-            'tot'               => $tot,
+            'tot'               => $nOfSeatPaid+$nOfSeatNotPaid+$nOfSeatPress,
         ];
     }
     

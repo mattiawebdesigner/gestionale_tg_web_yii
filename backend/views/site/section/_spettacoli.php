@@ -5,7 +5,7 @@
 use yii\helpers\Url;
 ?>
 <div class="col-lg-4">
-    <h2><i class="fa-solid fa-masks-theater"></i> <?= Yii::t('app', 'Gestione spettacoli') ?></h2>
+    <h2><i class="fa-solid fa-masks-theater"></i> <?= Yii::t('app', 'Gestione spettacoli') ?> <small class="c-red"><?= Yii::t('app', 'beta') ?></small></h2>
 
     <p><?= Yii::t('app', <<<DOC
             Gestione degli spettacoli teatrali con possibilità di 
