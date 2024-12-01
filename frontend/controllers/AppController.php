@@ -70,6 +70,7 @@ class AppController extends Controller
         
         foreach($model as $v){
             $v->foto = "https://www.teatralmentegioia.it/crm/backend/web/".$v->foto;
+            $v->data_attivita = date("d-m-Y H:i", strtotime($v->data_attivita));
         }
         
         return $model;
