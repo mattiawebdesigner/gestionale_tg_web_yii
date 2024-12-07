@@ -9,6 +9,7 @@ use Yii;
 use backend\models\Attivita;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
+use yii\helpers\Url;
 
 /**
  * AttivitaController implements the CRUD actions for Attivita model.
@@ -75,5 +76,54 @@ class AppController extends Controller
         }
         
         return $model;
+    }
+    
+    /**
+     * Invia email di prenotazione
+     * 
+     * @param type $email
+     * @param type $api_key
+     * @return string|array
+     */
+    public function actionAttivitaPrenotazioneSendEmail($id, $email, $posti, $api_key){
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        
+        if(self::API_KEY <> $api_key) return [];
+        
+        $model          = Attivita::findOne($id);
+        
+        $events         = $model->nome;
+        $date_time      = $model->data_attivita;
+        $place          = $model->luogo;
+        $reserved_seats = $posti;
+        $image          = Yii::$app->params['backendWeb'].$model->foto;
+        $base           = Url::to(['/attivita/prenotazioni', 'attivita_id' => $id, 'email' => $email], true);
+        
+        $res_email = Yii::$app->mailer->compose(['html' =>'layouts/html'], ['content' => <<<TESTO
+<h1>
+    <b>Teatralmente Gioia</b> <br />
+    <img src="https://www.teatralmentegioia.it/crm/frontend/web/images/loghi/logo.png" style="max-width: 150px;max-height: 50px;" />
+</h1>
+
+<img src="{$image}" style="width: 150px" />
+<h2>Prenotazione modificata con successo!</h2>
+<h3>Evento: {$events}</h3>
+
+<p><strong>Email di prenotazione</strong>: {$email}</p>max-
+<p><strong>Data e orario di inizio</strong>: {$date_time}</p>
+<p><strong>Luogo dell'evento</strong>: {$place}</p>
+<p><strong>Posti prenotati</strong>: {$reserved_seats}</p>
+
+<p>Per annullare la prenotazione puoi cliccare sul seguente link: <a href="{$base}">disdici</a> </p>
+
+<p>Si consiglia di conservare questa email.</p>
+TESTO])
+->setFrom(["noreply@teatralmentegioia.it" => "Teatralmente Gioia"])
+->setTo([Yii::$app->params['reservationEmail'], $email])
+->setSubject(Yii::t('app', 'Modifica prenotazione, ').$events.' | '.Yii::$app->name)
+->send();
+
+        return $res_email;
+        
     }
 }
