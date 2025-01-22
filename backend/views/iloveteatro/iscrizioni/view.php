@@ -65,7 +65,7 @@ $this->title = $model->compagnia;
     <div class="flex gap-1 flex-wrap-wrap">
         <?php foreach($allegati as $allegato) : ?>
         <div>
-            <?= Html::a(Yii::t('app', 'Documento di iscrizione'), 
+            <?= Html::a(Yii::t('app', $allegato->nome), 
                         $allegato->allegato, 
                     ['target' => '_blank']) ?>
         </div>
