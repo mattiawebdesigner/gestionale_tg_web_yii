@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 89.46.111.61:3306
--- Creato il: Gen 15, 2022 alle 08:15
+-- Creato il: Gen 28, 2025 alle 11:24
 -- Versione del server: 5.6.51-91.0-log
 -- Versione PHP: 8.0.7
 
@@ -24,678 +24,726 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `anno`
+-- Struttura della tabella `ilt_album`
 --
 
-CREATE TABLE `anno` (
-  `anno` year(4) NOT NULL
+CREATE TABLE `ilt_album` (
+  `id` bigint(20) NOT NULL,
+  `nome` varchar(255) NOT NULL,
+  `descrizione` varchar(350) DEFAULT NULL,
+  `data_creazione` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `ultima_modifica` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `ilt_album_commenti`
+--
+
+CREATE TABLE `ilt_album_commenti` (
+  `album` bigint(20) NOT NULL,
+  `commento` bigint(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `ilt_album_foto`
+--
+
+CREATE TABLE `ilt_album_foto` (
+  `album` bigint(20) NOT NULL,
+  `foto` bigint(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `ilt_allegati`
+--
+
+CREATE TABLE `ilt_allegati` (
+  `id` bigint(20) NOT NULL,
+  `nome` varchar(350) NOT NULL,
+  `allegato` varchar(300) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `ilt_articoli`
+--
+
+CREATE TABLE `ilt_articoli` (
+  `id` bigint(20) NOT NULL,
+  `titolo` varchar(255) NOT NULL,
+  `contenuto` longtext NOT NULL,
+  `data_pubblicazione` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `inizio_pubblicazione` datetime DEFAULT NULL,
+  `fine_pubblicazione` datetime DEFAULT NULL,
+  `immagine_in_evidenza` varchar(300) DEFAULT NULL,
+  `meta_description` varchar(100) DEFAULT NULL,
+  `meta_keyword` varchar(100) DEFAULT NULL,
+  `commenti` tinyint(4) NOT NULL DEFAULT '0',
+  `categoria` bigint(20) DEFAULT NULL,
+  `pubblicato` tinyint(4) NOT NULL DEFAULT '1' COMMENT '0: Cestinato\r\n1: Bozza\r\n10: Pubblicato'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `ilt_articoli_commenti`
+--
+
+CREATE TABLE `ilt_articoli_commenti` (
+  `articolo` bigint(20) NOT NULL,
+  `commento` bigint(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `ilt_categorie`
+--
+
+CREATE TABLE `ilt_categorie` (
+  `id` bigint(20) NOT NULL,
+  `categoria` varchar(255) NOT NULL,
+  `categorie_padre` bigint(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `ilt_commenti`
+--
+
+CREATE TABLE `ilt_commenti` (
+  `id` bigint(20) NOT NULL,
+  `commento` varchar(500) NOT NULL,
+  `data` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `approvato` tinyint(4) NOT NULL COMMENT '0: Non approvato\n1: Da approvare\n10: Approvato'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `ilt_commenti_foto`
+--
+
+CREATE TABLE `ilt_commenti_foto` (
+  `commento` bigint(20) NOT NULL,
+  `foto` bigint(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `ilt_festival`
+--
+
+CREATE TABLE `ilt_festival` (
+  `id` bigint(20) NOT NULL,
+  `anno` year(4) NOT NULL,
+  `inizio` date NOT NULL,
+  `fine` date NOT NULL,
+  `edizione` varchar(15) NOT NULL,
+  `inizio_pubblicazione` datetime DEFAULT NULL,
+  `fine_pubblicazione` datetime DEFAULT NULL,
+  `regolamenti` varchar(300) NOT NULL,
+  `descrizione` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `ilt_festival_allegati`
+--
+
+CREATE TABLE `ilt_festival_allegati` (
+  `festival` bigint(20) NOT NULL,
+  `allegato` bigint(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `ilt_festival_sponsor`
+--
+
+CREATE TABLE `ilt_festival_sponsor` (
+  `sponsor` bigint(20) NOT NULL,
+  `festival` bigint(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `anno_sociale`
+-- Struttura della tabella `ilt_fila`
 --
 
-CREATE TABLE `anno_sociale` (
-  `anno` year(4) NOT NULL,
-  `quotaSocioOrdinario` decimal(4,2) NOT NULL,
-  `quotaSocioSostenitore` decimal(4,2) NOT NULL
+CREATE TABLE `ilt_fila` (
+  `id` int(11) NOT NULL,
+  `nome_fila` varchar(2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `attivita`
+-- Struttura della tabella `ilt_foto`
 --
 
-CREATE TABLE `attivita` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `nome` varchar(150) NOT NULL,
-  `foto` varchar(255) NOT NULL,
-  `descrizione` text NOT NULL,
-  `data_ultima_modifica` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `data_inserimento` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `luogo` varchar(100) NOT NULL,
-  `data_attivita` datetime DEFAULT NULL COMMENT '\r\n',
-  `costo` decimal(4,2) NOT NULL DEFAULT '0.00',
-  `pagamento` enum('yes','no') NOT NULL DEFAULT 'no',
-  `prenotazione` enum('yes','no') NOT NULL DEFAULT 'no',
-  `posti_disponibili` int(11) DEFAULT NULL,
-  `annullato` enum('yes','no') NOT NULL DEFAULT 'no'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
--- Struttura della tabella `auth_assignment`
---
-
-CREATE TABLE `auth_assignment` (
-  `item_name` varchar(64) NOT NULL,
-  `user_id` bigint(20) UNSIGNED NOT NULL,
-  `created_at` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
--- Struttura della tabella `auth_item`
---
-
-CREATE TABLE `auth_item` (
-  `name` varchar(64) NOT NULL,
-  `type` int(11) NOT NULL,
-  `description` text,
-  `rule_name` varchar(64) DEFAULT NULL,
-  `data` text,
-  `created_at` int(11) DEFAULT NULL,
-  `updated_at` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
--- Struttura della tabella `auth_item_child`
---
-
-CREATE TABLE `auth_item_child` (
-  `parent` varchar(64) NOT NULL,
-  `child` varchar(64) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
--- Struttura della tabella `auth_rule`
---
-
-CREATE TABLE `auth_rule` (
-  `name` varchar(64) NOT NULL,
-  `data` text,
-  `created_at` int(11) DEFAULT NULL,
-  `updated_at` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
--- Struttura della tabella `categorie`
---
-
-CREATE TABLE `categorie` (
-  `categoria_id` bigint(20) NOT NULL,
-  `categoria` varchar(50) NOT NULL,
-  `descrizione` text
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
--- Struttura della tabella `convocazioni`
---
-
-CREATE TABLE `convocazioni` (
-  `numero_protocollo` varchar(10) NOT NULL,
-  `ordine_del_giorno` varchar(255) NOT NULL,
-  `oggetto` varchar(255) NOT NULL,
-  `data` date NOT NULL,
-  `data_inserimento` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `ultima_modifica` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `tipo` smallint(6) NOT NULL,
-  `contenuto` mediumtext NOT NULL,
-  `firma` varchar(255) NOT NULL,
-  `delega` enum('yes','no') NOT NULL DEFAULT 'yes'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
--- Struttura della tabella `documentazione`
---
-
-CREATE TABLE `documentazione` (
+CREATE TABLE `ilt_foto` (
   `id` bigint(20) NOT NULL,
-  `link` varchar(255) NOT NULL,
-  `mime` varchar(25) NOT NULL,
-  `visibile_socio` enum('yes','no') NOT NULL DEFAULT 'yes',
-  `fileName` varchar(255) NOT NULL,
-  `data_inserimento` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `ultima_modifica` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `url` varchar(300) NOT NULL,
+  `alt_text` varchar(80) DEFAULT NULL,
+  `title_text` varchar(80) DEFAULT NULL,
+  `posizione` int(11) NOT NULL,
+  `descrizione` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `immagini`
+-- Struttura della tabella `ilt_impostazioni`
 --
 
-CREATE TABLE `immagini` (
+CREATE TABLE `ilt_impostazioni` (
   `id` bigint(20) NOT NULL,
-  `link` varchar(255) NOT NULL,
-  `prodotto_id` bigint(20) NOT NULL
+  `impostazione` varchar(50) NOT NULL,
+  `valore` varchar(65000) NOT NULL,
+  `struttura` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `ilt_iscrizioni`
+--
+
+CREATE TABLE `ilt_iscrizioni` (
+  `id` bigint(20) NOT NULL,
+  `compagnia` varchar(150) NOT NULL,
+  `codice_fiscale_compagnia` char(11) DEFAULT NULL,
+  `partita_iva` char(11) DEFAULT NULL,
+  `nome_referente` varchar(50) NOT NULL,
+  `cognome_referente` varchar(50) NOT NULL,
+  `codice_fiscale_referente` char(16) NOT NULL,
+  `festival` bigint(20) NOT NULL,
+  `attivo` int(11) NOT NULL DEFAULT '1' COMMENT '1: Da approvare\r\n2: Iscrizione rifiutata\r\n9: Cancellato\r\n10: Iscritto',
+  `email` varchar(150) NOT NULL,
+  `pec` varchar(150) NOT NULL,
+  `federazione` varchar(255) NOT NULL COMMENT 'UILT, FITA, TAI, ...',
+  `numeroIscrizione` varchar(50) NOT NULL COMMENT 'Numero di iscrizione ad una federazione'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `intestazione`
+-- Struttura della tabella `ilt_iscrizioni_allegati`
 --
 
-CREATE TABLE `intestazione` (
+CREATE TABLE `ilt_iscrizioni_allegati` (
+  `iscrizione` bigint(20) NOT NULL,
+  `allegato` bigint(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `ilt_ordine`
+--
+
+CREATE TABLE `ilt_ordine` (
+  `id` int(11) NOT NULL,
+  `ordine` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `ilt_palco`
+--
+
+CREATE TABLE `ilt_palco` (
+  `id` int(11) NOT NULL,
+  `ordine` int(11) NOT NULL,
+  `palco` int(11) NOT NULL,
+  `visibilita_ridotta` int(11) NOT NULL DEFAULT '0' COMMENT '0: No\r\n10: Si',
+  `fila` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `ilt_partner`
+--
+
+CREATE TABLE `ilt_partner` (
   `id` bigint(20) NOT NULL,
+  `partner` varchar(150) NOT NULL,
+  `note` text,
+  `tipo_di_sponsorizzazione` varchar(255) NOT NULL,
+  `postazioni` varchar(255) NOT NULL,
+  `ordinamento` int(11) NOT NULL DEFAULT '1',
   `logo` varchar(255) NOT NULL,
-  `nome` varchar(50) NOT NULL,
-  `cap` char(5) NOT NULL,
-  `citta` varchar(60) NOT NULL,
-  `provincia` varchar(50) NOT NULL,
-  `codice_fiscale` char(16) NOT NULL,
-  `piva` char(11) NOT NULL,
-  `sito` varchar(30) NOT NULL,
+  `sito_internet` varchar(255) DEFAULT NULL,
+  `festival` bigint(20) NOT NULL,
+  `tipologia_di_partner` smallint(6) DEFAULT '0' COMMENT '0: sponsor\r\n1: partner pubbliche amministrazioni o associazioni'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `ilt_platea`
+--
+
+CREATE TABLE `ilt_platea` (
+  `id` int(11) NOT NULL,
+  `fila` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `ilt_posto`
+--
+
+CREATE TABLE `ilt_posto` (
+  `id` int(11) NOT NULL,
+  `posto` int(11) NOT NULL,
+  `fila` int(11) NOT NULL,
+  `tipo_di_seduta` int(11) NOT NULL DEFAULT '1' COMMENT '1: Poltrona\r\n2: Sedia\r\n3: Sgabello'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `ilt_premi`
+--
+
+CREATE TABLE `ilt_premi` (
+  `id` bigint(20) NOT NULL,
+  `premio` varchar(155) NOT NULL,
+  `nome` varchar(155) NOT NULL,
+  `icona` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `ilt_premi_festival`
+--
+
+CREATE TABLE `ilt_premi_festival` (
+  `premio` bigint(20) NOT NULL,
+  `festival` bigint(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `ilt_prenotazione`
+--
+
+CREATE TABLE `ilt_prenotazione` (
+  `id` bigint(20) NOT NULL,
+  `nome` varchar(255) NOT NULL,
+  `cognome` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `cellulare` varchar(255) NOT NULL,
+  `spettacolo` int(11) NOT NULL,
+  `posto` int(11) DEFAULT NULL,
+  `pagato` int(11) NOT NULL DEFAULT '0' COMMENT '10: Pagato\r\n0: Non pagato',
+  `data_registrazione` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `prenotazione` longtext,
+  `ultima_modifica` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `abbonamento` longtext
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `ilt_spettacolo`
+--
+
+CREATE TABLE `ilt_spettacolo` (
+  `id` int(11) NOT NULL,
+  `spettacolo` varchar(255) NOT NULL,
+  `data` date NOT NULL,
+  `ora_porta` time NOT NULL,
+  `ora_sipario` time NOT NULL,
+  `banner` varchar(255) NOT NULL,
+  `locandina` varchar(255) NOT NULL,
+  `festival` bigint(20) NOT NULL,
+  `sinossi` longtext,
+  `piantina` longtext NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `ilt_sponsor`
+--
+
+CREATE TABLE `ilt_sponsor` (
+  `id` bigint(20) NOT NULL,
+  `sponsor` varchar(50) NOT NULL,
+  `url` varchar(255) DEFAULT NULL,
   `immagine` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `intestazione_social`
+-- Struttura della tabella `ilt_teatro_piantina`
 --
 
-CREATE TABLE `intestazione_social` (
-  `id_intestazione` bigint(20) NOT NULL,
-  `id_social` bigint(20) NOT NULL
+CREATE TABLE `ilt_teatro_piantina` (
+  `id` bigint(20) NOT NULL,
+  `teatro` varchar(100) NOT NULL,
+  `piantina` longtext NOT NULL,
+  `background` varchar(255) DEFAULT NULL,
+  `position` varchar(100) NOT NULL COMMENT 'Posizione dello sfondo della piantina'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `media`
+-- Struttura della tabella `ilt_vincitori`
 --
 
-CREATE TABLE `media` (
-  `id` bigint(20) NOT NULL,
-  `nome` varchar(255) NOT NULL,
-  `link` varchar(255) NOT NULL,
-  `mime` varchar(10) NOT NULL
+CREATE TABLE `ilt_vincitori` (
+  `iscrizione` bigint(20) NOT NULL,
+  `premio` bigint(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
--- Struttura della tabella `nominativo`
---
-
-CREATE TABLE `nominativo` (
-  `id` bigint(20) UNSIGNED ZEROFILL NOT NULL,
-  `nome` varchar(50) NOT NULL,
-  `cognome` varchar(50) NOT NULL,
-  `data_inserimento` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `data_ultima_modifica` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `data_di_nascita` date DEFAULT NULL,
-  `foto` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
--- Struttura della tabella `partecipazione`
---
-
-CREATE TABLE `partecipazione` (
-  `attivita` bigint(20) UNSIGNED ZEROFILL NOT NULL,
-  `nominativo` bigint(20) UNSIGNED ZEROFILL NOT NULL,
-  `data_partecipazione` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
--- Struttura della tabella `prenotazioni`
---
-
-CREATE TABLE `prenotazioni` (
-  `id` bigint(20) NOT NULL,
-  `prenotazioni` int(11) NOT NULL,
-  `email` varchar(255) NOT NULL,
-  `attivita_id` bigint(20) UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
--- Struttura della tabella `prodotto`
---
-
-CREATE TABLE `prodotto` (
-  `id` bigint(20) NOT NULL,
-  `nome` varchar(50) NOT NULL,
-  `categoria_id` bigint(20) NOT NULL,
-  `descrizione` text NOT NULL,
-  `quantita` bigint(20) NOT NULL,
-  `data_inserimento` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `proprietario_id` bigint(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
--- Struttura della tabella `proprietario`
---
-
-CREATE TABLE `proprietario` (
-  `id` bigint(20) NOT NULL,
-  `proprietario` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
--- Struttura della tabella `rendiconto`
---
-
-CREATE TABLE `rendiconto` (
-  `id` bigint(20) NOT NULL,
-  `nome` varchar(255) NOT NULL,
-  `data_inserimento` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `ultima_modifica` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `anno` year(4) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Struttura della tabella `rendiconto_voci`
---
-
-CREATE TABLE `rendiconto_voci` (
-  `id_rendiconto` bigint(20) NOT NULL,
-  `id_voce` bigint(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Struttura della tabella `soci`
---
-
-CREATE TABLE `soci` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `nome` varchar(40) NOT NULL,
-  `cognome` varchar(40) NOT NULL,
-  `email` varchar(100) DEFAULT NULL,
-  `data_registrazione` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `data_di_nascita` date NOT NULL,
-  `indirizzo` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
--- Struttura della tabella `social`
---
-
-CREATE TABLE `social` (
-  `id` bigint(20) NOT NULL,
-  `social` varchar(50) NOT NULL,
-  `icona` varchar(50) NOT NULL COMMENT 'Icona fontawesome'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Struttura della tabella `socio_anno_sociale`
---
-
-CREATE TABLE `socio_anno_sociale` (
-  `socio` bigint(20) UNSIGNED NOT NULL,
-  `anno` year(4) NOT NULL,
-  `data_registrazione` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `sostenitore` enum('si','no') NOT NULL,
-  `validita` enum('si','no') NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
--- Struttura della tabella `tipo_verbali`
---
-
-CREATE TABLE `tipo_verbali` (
-  `id` smallint(6) NOT NULL,
-  `tipologia` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
--- Struttura della tabella `utenti`
---
-
-CREATE TABLE `utenti` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `nome` varchar(50) NOT NULL,
-  `cognome` varchar(50) NOT NULL,
-  `email` varchar(150) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  `data_di_registrazione` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `data_ultima_modifica` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `indirizzo` varchar(120) DEFAULT NULL,
-  `status` smallint(6) NOT NULL COMMENT '0 = Deleted, 9 = Inactive, 10 = Active',
-  `password_hash` varchar(255) NOT NULL,
-  `auth_key` varchar(255) NOT NULL,
-  `socio_id` bigint(20) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
--- Struttura della tabella `verbali`
---
-
-CREATE TABLE `verbali` (
-  `numero_protocollo` varchar(10) NOT NULL,
-  `oggetto` varchar(255) NOT NULL,
-  `ordine_del_giorno` varchar(255) NOT NULL,
-  `data` date NOT NULL,
-  `ora_inizio` time NOT NULL,
-  `ora_fine` time NOT NULL,
-  `data_inserimento` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `ultima_modifica` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `firma` varchar(100) NOT NULL,
-  `tipo` smallint(11) NOT NULL,
-  `contenuto` mediumtext NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
--- Struttura della tabella `voci`
---
-
-CREATE TABLE `voci` (
-  `id` bigint(20) NOT NULL,
-  `voce` varchar(255) NOT NULL,
-  `prezzo` decimal(7,2) NOT NULL DEFAULT '0.00',
-  `data_contabile` date NOT NULL,
-  `data_inserimento` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `ultima_modifica` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `tipologia` enum('entrata','uscita') NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Indici per le tabelle scaricate
 --
 
 --
--- Indici per le tabelle `anno`
+-- Indici per le tabelle `ilt_album`
 --
-ALTER TABLE `anno`
-  ADD PRIMARY KEY (`anno`);
-
---
--- Indici per le tabelle `anno_sociale`
---
-ALTER TABLE `anno_sociale`
-  ADD PRIMARY KEY (`anno`);
-
---
--- Indici per le tabelle `attivita`
---
-ALTER TABLE `attivita`
+ALTER TABLE `ilt_album`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indici per le tabelle `auth_assignment`
+-- Indici per le tabelle `ilt_album_commenti`
 --
-ALTER TABLE `auth_assignment`
-  ADD PRIMARY KEY (`item_name`,`user_id`),
-  ADD KEY `user_id` (`user_id`);
+ALTER TABLE `ilt_album_commenti`
+  ADD PRIMARY KEY (`album`,`commento`),
+  ADD KEY `fk_album_has_commenti_commenti1_idx` (`commento`),
+  ADD KEY `fk_album_has_commenti_album1_idx` (`album`);
 
 --
--- Indici per le tabelle `auth_item`
+-- Indici per le tabelle `ilt_album_foto`
 --
-ALTER TABLE `auth_item`
-  ADD PRIMARY KEY (`name`),
-  ADD KEY `rule_name` (`rule_name`),
-  ADD KEY `type` (`type`);
+ALTER TABLE `ilt_album_foto`
+  ADD PRIMARY KEY (`album`,`foto`),
+  ADD KEY `fk_album_has_foto_foto1_idx` (`foto`),
+  ADD KEY `fk_album_has_foto_album1_idx` (`album`);
 
 --
--- Indici per le tabelle `auth_item_child`
+-- Indici per le tabelle `ilt_allegati`
 --
-ALTER TABLE `auth_item_child`
-  ADD PRIMARY KEY (`parent`,`child`),
-  ADD KEY `child` (`child`);
+ALTER TABLE `ilt_allegati`
+  ADD PRIMARY KEY (`id`);
 
 --
--- Indici per le tabelle `auth_rule`
+-- Indici per le tabelle `ilt_articoli`
 --
-ALTER TABLE `auth_rule`
-  ADD PRIMARY KEY (`name`);
-
---
--- Indici per le tabelle `categorie`
---
-ALTER TABLE `categorie`
-  ADD PRIMARY KEY (`categoria_id`);
-
---
--- Indici per le tabelle `convocazioni`
---
-ALTER TABLE `convocazioni`
-  ADD PRIMARY KEY (`numero_protocollo`),
-  ADD KEY `tipo` (`tipo`);
-
---
--- Indici per le tabelle `immagini`
---
-ALTER TABLE `immagini`
+ALTER TABLE `ilt_articoli`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `immagini_ibfk_1` (`prodotto_id`);
+  ADD KEY `fk_articoli_categorie1_idx` (`categoria`);
 
 --
--- Indici per le tabelle `intestazione`
+-- Indici per le tabelle `ilt_articoli_commenti`
 --
-ALTER TABLE `intestazione`
-  ADD PRIMARY KEY (`id`);
+ALTER TABLE `ilt_articoli_commenti`
+  ADD PRIMARY KEY (`articolo`,`commento`),
+  ADD KEY `fk_articoli_has_commenti_commenti1_idx` (`commento`),
+  ADD KEY `fk_articoli_has_commenti_articoli1_idx` (`articolo`);
 
 --
--- Indici per le tabelle `intestazione_social`
+-- Indici per le tabelle `ilt_categorie`
 --
-ALTER TABLE `intestazione_social`
-  ADD PRIMARY KEY (`id_intestazione`,`id_social`),
-  ADD KEY `id_social` (`id_social`);
-
---
--- Indici per le tabelle `media`
---
-ALTER TABLE `media`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indici per le tabelle `nominativo`
---
-ALTER TABLE `nominativo`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indici per le tabelle `partecipazione`
---
-ALTER TABLE `partecipazione`
-  ADD PRIMARY KEY (`attivita`,`nominativo`),
-  ADD KEY `nominativo` (`nominativo`);
-
---
--- Indici per le tabelle `prenotazioni`
---
-ALTER TABLE `prenotazioni`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indici per le tabelle `prodotto`
---
-ALTER TABLE `prodotto`
+ALTER TABLE `ilt_categorie`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `categoria_id` (`categoria_id`),
-  ADD KEY `proprietario_id` (`proprietario_id`);
+  ADD KEY `fk_categorie_categorie1_idx` (`categorie_padre`);
 
 --
--- Indici per le tabelle `proprietario`
+-- Indici per le tabelle `ilt_commenti`
 --
-ALTER TABLE `proprietario`
+ALTER TABLE `ilt_commenti`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indici per le tabelle `rendiconto`
+-- Indici per le tabelle `ilt_commenti_foto`
 --
-ALTER TABLE `rendiconto`
+ALTER TABLE `ilt_commenti_foto`
+  ADD PRIMARY KEY (`commento`,`foto`),
+  ADD KEY `fk_commenti_has_foto_foto1_idx` (`foto`),
+  ADD KEY `fk_commenti_has_foto_commenti1_idx` (`commento`);
+
+--
+-- Indici per le tabelle `ilt_festival`
+--
+ALTER TABLE `ilt_festival`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indici per le tabelle `ilt_festival_allegati`
+--
+ALTER TABLE `ilt_festival_allegati`
+  ADD PRIMARY KEY (`festival`,`allegato`),
+  ADD KEY `allegato` (`allegato`);
+
+--
+-- Indici per le tabelle `ilt_festival_sponsor`
+--
+ALTER TABLE `ilt_festival_sponsor`
+  ADD PRIMARY KEY (`sponsor`,`festival`),
+  ADD KEY `festival` (`festival`);
+
+--
+-- Indici per le tabelle `ilt_fila`
+--
+ALTER TABLE `ilt_fila`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indici per le tabelle `ilt_foto`
+--
+ALTER TABLE `ilt_foto`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indici per le tabelle `ilt_impostazioni`
+--
+ALTER TABLE `ilt_impostazioni`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indici per le tabelle `ilt_iscrizioni`
+--
+ALTER TABLE `ilt_iscrizioni`
+  ADD PRIMARY KEY (`id`,`festival`),
+  ADD KEY `fk_iscrizioni_festival1_idx` (`festival`);
+
+--
+-- Indici per le tabelle `ilt_iscrizioni_allegati`
+--
+ALTER TABLE `ilt_iscrizioni_allegati`
+  ADD PRIMARY KEY (`iscrizione`,`allegato`),
+  ADD KEY `fk_iscrizioni_has_allegati_allegati1_idx` (`allegato`),
+  ADD KEY `fk_iscrizioni_has_allegati_iscrizioni_idx` (`iscrizione`);
+
+--
+-- Indici per le tabelle `ilt_ordine`
+--
+ALTER TABLE `ilt_ordine`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indici per le tabelle `ilt_palco`
+--
+ALTER TABLE `ilt_palco`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `anno` (`anno`);
+  ADD KEY `palco_ibfk_1` (`ordine`),
+  ADD KEY `fila` (`fila`);
 
 --
--- Indici per le tabelle `rendiconto_voci`
+-- Indici per le tabelle `ilt_partner`
 --
-ALTER TABLE `rendiconto_voci`
-  ADD PRIMARY KEY (`id_rendiconto`,`id_voce`) USING BTREE,
-  ADD KEY `id_voce` (`id_voce`);
-
---
--- Indici per le tabelle `soci`
---
-ALTER TABLE `soci`
+ALTER TABLE `ilt_partner`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `email` (`email`);
+  ADD KEY `festival` (`festival`);
 
 --
--- Indici per le tabelle `social`
+-- Indici per le tabelle `ilt_platea`
 --
-ALTER TABLE `social`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indici per le tabelle `socio_anno_sociale`
---
-ALTER TABLE `socio_anno_sociale`
-  ADD PRIMARY KEY (`socio`,`anno`),
-  ADD KEY `anno` (`anno`);
-
---
--- Indici per le tabelle `tipo_verbali`
---
-ALTER TABLE `tipo_verbali`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indici per le tabelle `utenti`
---
-ALTER TABLE `utenti`
+ALTER TABLE `ilt_platea`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `email` (`email`);
+  ADD KEY `fila` (`fila`);
 
 --
--- Indici per le tabelle `verbali`
+-- Indici per le tabelle `ilt_posto`
 --
-ALTER TABLE `verbali`
-  ADD PRIMARY KEY (`numero_protocollo`),
-  ADD KEY `tipo` (`tipo`);
+ALTER TABLE `ilt_posto`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `posto_ibfk_1` (`fila`);
 
 --
--- Indici per le tabelle `voci`
+-- Indici per le tabelle `ilt_premi`
 --
-ALTER TABLE `voci`
+ALTER TABLE `ilt_premi`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indici per le tabelle `ilt_premi_festival`
+--
+ALTER TABLE `ilt_premi_festival`
+  ADD PRIMARY KEY (`premio`,`festival`),
+  ADD KEY `festival` (`festival`);
+
+--
+-- Indici per le tabelle `ilt_prenotazione`
+--
+ALTER TABLE `ilt_prenotazione`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `spettacolo` (`spettacolo`),
+  ADD KEY `posto` (`posto`);
+
+--
+-- Indici per le tabelle `ilt_spettacolo`
+--
+ALTER TABLE `ilt_spettacolo`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `festival` (`festival`);
+
+--
+-- Indici per le tabelle `ilt_sponsor`
+--
+ALTER TABLE `ilt_sponsor`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indici per le tabelle `ilt_teatro_piantina`
+--
+ALTER TABLE `ilt_teatro_piantina`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indici per le tabelle `ilt_vincitori`
+--
+ALTER TABLE `ilt_vincitori`
+  ADD PRIMARY KEY (`iscrizione`,`premio`),
+  ADD KEY `premio` (`premio`);
 
 --
 -- AUTO_INCREMENT per le tabelle scaricate
 --
 
 --
--- AUTO_INCREMENT per la tabella `attivita`
+-- AUTO_INCREMENT per la tabella `ilt_album`
 --
-ALTER TABLE `attivita`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT per la tabella `categorie`
---
-ALTER TABLE `categorie`
-  MODIFY `categoria_id` bigint(20) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT per la tabella `immagini`
---
-ALTER TABLE `immagini`
+ALTER TABLE `ilt_album`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT per la tabella `intestazione`
+-- AUTO_INCREMENT per la tabella `ilt_allegati`
 --
-ALTER TABLE `intestazione`
+ALTER TABLE `ilt_allegati`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT per la tabella `media`
+-- AUTO_INCREMENT per la tabella `ilt_articoli`
 --
-ALTER TABLE `media`
+ALTER TABLE `ilt_articoli`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT per la tabella `nominativo`
+-- AUTO_INCREMENT per la tabella `ilt_categorie`
 --
-ALTER TABLE `nominativo`
-  MODIFY `id` bigint(20) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT per la tabella `prenotazioni`
---
-ALTER TABLE `prenotazioni`
+ALTER TABLE `ilt_categorie`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT per la tabella `prodotto`
+-- AUTO_INCREMENT per la tabella `ilt_commenti`
 --
-ALTER TABLE `prodotto`
+ALTER TABLE `ilt_commenti`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT per la tabella `proprietario`
+-- AUTO_INCREMENT per la tabella `ilt_festival`
 --
-ALTER TABLE `proprietario`
+ALTER TABLE `ilt_festival`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT per la tabella `rendiconto`
+-- AUTO_INCREMENT per la tabella `ilt_fila`
 --
-ALTER TABLE `rendiconto`
+ALTER TABLE `ilt_fila`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT per la tabella `ilt_foto`
+--
+ALTER TABLE `ilt_foto`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT per la tabella `soci`
+-- AUTO_INCREMENT per la tabella `ilt_impostazioni`
 --
-ALTER TABLE `soci`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT per la tabella `social`
---
-ALTER TABLE `social`
+ALTER TABLE `ilt_impostazioni`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT per la tabella `tipo_verbali`
+-- AUTO_INCREMENT per la tabella `ilt_iscrizioni`
 --
-ALTER TABLE `tipo_verbali`
-  MODIFY `id` smallint(6) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `ilt_iscrizioni`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT per la tabella `utenti`
+-- AUTO_INCREMENT per la tabella `ilt_ordine`
 --
-ALTER TABLE `utenti`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+ALTER TABLE `ilt_ordine`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT per la tabella `voci`
+-- AUTO_INCREMENT per la tabella `ilt_palco`
 --
-ALTER TABLE `voci`
+ALTER TABLE `ilt_palco`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT per la tabella `ilt_partner`
+--
+ALTER TABLE `ilt_partner`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT per la tabella `ilt_platea`
+--
+ALTER TABLE `ilt_platea`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT per la tabella `ilt_posto`
+--
+ALTER TABLE `ilt_posto`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT per la tabella `ilt_premi`
+--
+ALTER TABLE `ilt_premi`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT per la tabella `ilt_prenotazione`
+--
+ALTER TABLE `ilt_prenotazione`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT per la tabella `ilt_spettacolo`
+--
+ALTER TABLE `ilt_spettacolo`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT per la tabella `ilt_sponsor`
+--
+ALTER TABLE `ilt_sponsor`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT per la tabella `ilt_teatro_piantina`
+--
+ALTER TABLE `ilt_teatro_piantina`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
@@ -703,83 +751,123 @@ ALTER TABLE `voci`
 --
 
 --
--- Limiti per la tabella `auth_assignment`
+-- Limiti per la tabella `ilt_album_commenti`
 --
-ALTER TABLE `auth_assignment`
-  ADD CONSTRAINT `auth_assignment_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `utenti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `auth_assignment_ibfk_2` FOREIGN KEY (`item_name`) REFERENCES `auth_item` (`name`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `ilt_album_commenti`
+  ADD CONSTRAINT `fk_album_has_commenti_album1` FOREIGN KEY (`album`) REFERENCES `ilt_album` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_album_has_commenti_commenti1` FOREIGN KEY (`commento`) REFERENCES `ilt_commenti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Limiti per la tabella `auth_item`
+-- Limiti per la tabella `ilt_album_foto`
 --
-ALTER TABLE `auth_item`
-  ADD CONSTRAINT `auth_item_ibfk_1` FOREIGN KEY (`rule_name`) REFERENCES `auth_rule` (`name`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `ilt_album_foto`
+  ADD CONSTRAINT `fk_album_has_foto_album1` FOREIGN KEY (`album`) REFERENCES `ilt_album` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_album_has_foto_foto1` FOREIGN KEY (`foto`) REFERENCES `ilt_foto` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Limiti per la tabella `auth_item_child`
+-- Limiti per la tabella `ilt_articoli`
 --
-ALTER TABLE `auth_item_child`
-  ADD CONSTRAINT `auth_item_child_ibfk_1` FOREIGN KEY (`child`) REFERENCES `auth_item` (`name`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `auth_item_child_ibfk_2` FOREIGN KEY (`parent`) REFERENCES `auth_item` (`name`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `ilt_articoli`
+  ADD CONSTRAINT `fk_articoli_categorie1` FOREIGN KEY (`categoria`) REFERENCES `ilt_categorie` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Limiti per la tabella `convocazioni`
+-- Limiti per la tabella `ilt_articoli_commenti`
 --
-ALTER TABLE `convocazioni`
-  ADD CONSTRAINT `convocazioni_ibfk_1` FOREIGN KEY (`tipo`) REFERENCES `tipo_verbali` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `ilt_articoli_commenti`
+  ADD CONSTRAINT `fk_articoli_has_commenti_articoli1` FOREIGN KEY (`articolo`) REFERENCES `ilt_articoli` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_articoli_has_commenti_commenti1` FOREIGN KEY (`commento`) REFERENCES `ilt_commenti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Limiti per la tabella `immagini`
+-- Limiti per la tabella `ilt_categorie`
 --
-ALTER TABLE `immagini`
-  ADD CONSTRAINT `immagini_ibfk_1` FOREIGN KEY (`prodotto_id`) REFERENCES `prodotto` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `ilt_categorie`
+  ADD CONSTRAINT `fk_categorie_categorie1` FOREIGN KEY (`categorie_padre`) REFERENCES `ilt_categorie` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
 --
--- Limiti per la tabella `intestazione_social`
+-- Limiti per la tabella `ilt_commenti_foto`
 --
-ALTER TABLE `intestazione_social`
-  ADD CONSTRAINT `intestazione_social_ibfk_1` FOREIGN KEY (`id_intestazione`) REFERENCES `intestazione` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `intestazione_social_ibfk_2` FOREIGN KEY (`id_social`) REFERENCES `social` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `ilt_commenti_foto`
+  ADD CONSTRAINT `fk_commenti_has_foto_commenti1` FOREIGN KEY (`commento`) REFERENCES `ilt_commenti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_commenti_has_foto_foto1` FOREIGN KEY (`foto`) REFERENCES `ilt_foto` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
--- Limiti per la tabella `partecipazione`
+-- Limiti per la tabella `ilt_festival_allegati`
 --
-ALTER TABLE `partecipazione`
-  ADD CONSTRAINT `partecipazione_ibfk_1` FOREIGN KEY (`attivita`) REFERENCES `attivita` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `partecipazione_ibfk_2` FOREIGN KEY (`nominativo`) REFERENCES `nominativo` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `ilt_festival_allegati`
+  ADD CONSTRAINT `ilt_festival_allegati_ibfk_1` FOREIGN KEY (`allegato`) REFERENCES `ilt_allegati` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `ilt_festival_allegati_ibfk_2` FOREIGN KEY (`festival`) REFERENCES `ilt_festival` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Limiti per la tabella `prodotto`
+-- Limiti per la tabella `ilt_festival_sponsor`
 --
-ALTER TABLE `prodotto`
-  ADD CONSTRAINT `prodotto_ibfk_1` FOREIGN KEY (`categoria_id`) REFERENCES `categorie` (`categoria_id`),
-  ADD CONSTRAINT `prodotto_ibfk_2` FOREIGN KEY (`proprietario_id`) REFERENCES `proprietario` (`id`);
+ALTER TABLE `ilt_festival_sponsor`
+  ADD CONSTRAINT `ilt_festival_sponsor_ibfk_1` FOREIGN KEY (`festival`) REFERENCES `ilt_festival` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `ilt_festival_sponsor_ibfk_2` FOREIGN KEY (`sponsor`) REFERENCES `ilt_sponsor` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Limiti per la tabella `rendiconto`
+-- Limiti per la tabella `ilt_iscrizioni`
 --
-ALTER TABLE `rendiconto`
-  ADD CONSTRAINT `rendiconto_ibfk_1` FOREIGN KEY (`anno`) REFERENCES `anno` (`anno`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `ilt_iscrizioni`
+  ADD CONSTRAINT `fk_iscrizioni_festival1` FOREIGN KEY (`festival`) REFERENCES `ilt_festival` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
--- Limiti per la tabella `rendiconto_voci`
+-- Limiti per la tabella `ilt_iscrizioni_allegati`
 --
-ALTER TABLE `rendiconto_voci`
-  ADD CONSTRAINT `rendiconto_voci_ibfk_1` FOREIGN KEY (`id_rendiconto`) REFERENCES `rendiconto` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `rendiconto_voci_ibfk_2` FOREIGN KEY (`id_voce`) REFERENCES `voci` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `ilt_iscrizioni_allegati`
+  ADD CONSTRAINT `fk_iscrizioni_has_allegati_allegati1` FOREIGN KEY (`allegato`) REFERENCES `ilt_allegati` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_iscrizioni_has_allegati_iscrizioni` FOREIGN KEY (`iscrizione`) REFERENCES `ilt_iscrizioni` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Limiti per la tabella `socio_anno_sociale`
+-- Limiti per la tabella `ilt_palco`
 --
-ALTER TABLE `socio_anno_sociale`
-  ADD CONSTRAINT `socio_anno_sociale_ibfk_1` FOREIGN KEY (`anno`) REFERENCES `anno_sociale` (`anno`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `socio_anno_sociale_ibfk_2` FOREIGN KEY (`socio`) REFERENCES `soci` (`id`);
+ALTER TABLE `ilt_palco`
+  ADD CONSTRAINT `ilt_palco_ibfk_1` FOREIGN KEY (`ordine`) REFERENCES `ilt_ordine` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `ilt_palco_ibfk_2` FOREIGN KEY (`fila`) REFERENCES `ilt_fila` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Limiti per la tabella `verbali`
+-- Limiti per la tabella `ilt_partner`
 --
-ALTER TABLE `verbali`
-  ADD CONSTRAINT `verbali_ibfk_1` FOREIGN KEY (`tipo`) REFERENCES `tipo_verbali` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `ilt_partner`
+  ADD CONSTRAINT `ilt_partner_ibfk_1` FOREIGN KEY (`festival`) REFERENCES `ilt_festival` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Limiti per la tabella `ilt_platea`
+--
+ALTER TABLE `ilt_platea`
+  ADD CONSTRAINT `ilt_platea_ibfk_1` FOREIGN KEY (`fila`) REFERENCES `ilt_fila` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Limiti per la tabella `ilt_posto`
+--
+ALTER TABLE `ilt_posto`
+  ADD CONSTRAINT `ilt_posto_ibfk_1` FOREIGN KEY (`fila`) REFERENCES `ilt_fila` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Limiti per la tabella `ilt_premi_festival`
+--
+ALTER TABLE `ilt_premi_festival`
+  ADD CONSTRAINT `ilt_premi_festival_ibfk_1` FOREIGN KEY (`festival`) REFERENCES `ilt_festival` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `ilt_premi_festival_ibfk_2` FOREIGN KEY (`premio`) REFERENCES `ilt_premi` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Limiti per la tabella `ilt_prenotazione`
+--
+ALTER TABLE `ilt_prenotazione`
+  ADD CONSTRAINT `ilt_prenotazione_ibfk_1` FOREIGN KEY (`spettacolo`) REFERENCES `ilt_spettacolo` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `ilt_prenotazione_ibfk_2` FOREIGN KEY (`posto`) REFERENCES `ilt_posto` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Limiti per la tabella `ilt_spettacolo`
+--
+ALTER TABLE `ilt_spettacolo`
+  ADD CONSTRAINT `ilt_spettacolo_ibfk_1` FOREIGN KEY (`festival`) REFERENCES `ilt_festival` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Limiti per la tabella `ilt_vincitori`
+--
+ALTER TABLE `ilt_vincitori`
+  ADD CONSTRAINT `ilt_vincitori_ibfk_1` FOREIGN KEY (`iscrizione`) REFERENCES `ilt_iscrizioni` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `ilt_vincitori_ibfk_2` FOREIGN KEY (`premio`) REFERENCES `ilt_premi` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

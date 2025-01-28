@@ -1,3 +1,6 @@
+/**
+Gestione utenti
+*/
 drop table if exists `auth_assignment`;
 drop table if exists `auth_item_child`;
 drop table if exists `auth_item`;
