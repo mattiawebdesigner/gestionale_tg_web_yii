@@ -42,8 +42,9 @@ $this->title = Yii::t('app', 'Iscritti al festival');
 
         //'id',
         'compagnia',
-        'codice_fiscale_compagnia',
-        'partita_iva',
+        'titolo_spettacolo', 
+        //'codice_fiscale_compagnia',
+        //'partita_iva',
         'nome_referente',
         'cognome_referente',
         'codice_fiscale_referente',

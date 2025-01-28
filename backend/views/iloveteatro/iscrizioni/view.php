@@ -57,7 +57,8 @@ $this->title = $model->compagnia;
                         return Yii::t('app', 'Iscrizione da approvare');
                     }
                 },
-            ]
+            ],
+            'titolo_spettacolo'
         ],
     ]) ?>
     

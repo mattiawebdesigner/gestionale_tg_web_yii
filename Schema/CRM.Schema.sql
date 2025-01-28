@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 89.46.111.61:3306
--- Creato il: Gen 28, 2025 alle 11:24
+-- Creato il: Gen 28, 2025 alle 11:42
 -- Versione del server: 5.6.51-91.0-log
 -- Versione PHP: 8.0.7
 
@@ -235,7 +235,8 @@ CREATE TABLE `ilt_iscrizioni` (
   `email` varchar(150) NOT NULL,
   `pec` varchar(150) NOT NULL,
   `federazione` varchar(255) NOT NULL COMMENT 'UILT, FITA, TAI, ...',
-  `numeroIscrizione` varchar(50) NOT NULL COMMENT 'Numero di iscrizione ad una federazione'
+  `numeroIscrizione` varchar(50) NOT NULL COMMENT 'Numero di iscrizione ad una federazione',
+  `titolo_spettacolo` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------

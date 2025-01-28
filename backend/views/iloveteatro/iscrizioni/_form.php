@@ -18,6 +18,9 @@ use yii\helpers\Html;
         <?= $form->field($model, 'codice_fiscale_referente')->textInput(['maxlength' => true]) ?>
         <?= $form->field($model, 'festival')->hiddenInput(['value' => $festival->id])->label(false) ?>
         
+        <hr />
+        <?= $form->field($model, 'titolo_spettacolo')->textInput(['maxlength' => true]) ?>
+        
         <?= $form->field($pdf, 'multipleFile[]')->fileInput(['multiple' => true])->label(Yii::t('app', 'Allegati')) ?>
    </div>
     <?php ActiveForm::end(); ?>

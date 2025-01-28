@@ -15,7 +15,11 @@ use Yii;
  * @property string $cognome_referente
  * @property string $codice_fiscale_referente
  * @property int $festival
- * @property int $attivo
+ * @property int $email
+ * @property string $pec
+ * @property string $federazione
+ * @property string $numeroIscrizione
+ * @property string $titolo_spettacolo
  *
  * @property IltAllegati[] $allegatos
  * @property IltFestival $festival0
@@ -52,6 +56,7 @@ class IltIscrizioni extends \yii\db\ActiveRecord
             [['compagnia', 'nome_referente', 'cognome_referente', 'codice_fiscale_referente', 'festival'], 'required'],
             [['festival', 'attivo'], 'integer'],
             [['compagnia'], 'string', 'max' => 150],
+            [['titolo_spettacolo'], 'string', 'max' => 100],
             [['codice_fiscale_compagnia'], 'string', 'max' => 16],
             [['partita_iva'], 'string', 'max' => 11],
             [['nome_referente', 'cognome_referente'], 'string', 'max' => 50],
@@ -75,6 +80,11 @@ class IltIscrizioni extends \yii\db\ActiveRecord
             'codice_fiscale_referente' => Yii::t('app', 'C.F. Referente'),
             'festival' => Yii::t('app', 'Festival'),
             'attivo' => Yii::t('app', 'Stato iscrizione'),
+            'email' => Yii::t('app', 'Email'),
+            'pec' => Yii::t('app', 'PEC'),
+            'federazione' => Yii::t('app', 'Federazione'),
+            'numeroIscrizione' => Yii::t('app', 'Numero di iscrizione alla federazione'),
+            'titolo_spettacolo' => Yii::t('app', 'Titolo dello spettacolo'),
         ];
     }
 

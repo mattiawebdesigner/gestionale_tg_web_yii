@@ -1,7 +1,6 @@
 <?php
 use backend\models\IltIscrizioni;
 use yii\helpers\Html;
-use yii\widgets\DetailView;
 
 $this->title = $model->compagnia;
 ?>
