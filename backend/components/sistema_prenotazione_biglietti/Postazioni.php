@@ -690,10 +690,6 @@ class Postazioni{
                                     . 'data-palco="'.$k.'" />';
                                 
                                 
-                                /*echo "<pre>";
-                                print_r($this->my_booked);
-                                echo "</pre>";*/
-                                
                             }
                             break;
                         }
@@ -1006,11 +1002,6 @@ class Postazioni{
     public static function updatePiantina(array $prenotazione, $piantina, $nuova_prenotazione = true){
         //non Ã¨ una prenotazione valida
         if(!is_array($prenotazione)){return false;}
-        
-        /*echo "<pre>";
-        print_r($prenotazione);
-        echo "</pre>";*/
-        
         foreach ($piantina as $k_piantina => $v_piantina){
             if(strtolower($k_piantina) === "platea"){
                $piantina = self::updatePrenotazionePlatea($v_piantina, $prenotazione, $piantina);
@@ -1259,10 +1250,7 @@ class Postazioni{
     private static function updatePrenotazioneOrdini(array $ordine, array $prenotazione, array $piantina, string $tipo){
         $stati_posti_prenotati = [];
         foreach ($ordine['palco'] as $palco => $file){
-            //echo "2) updatePrenotazioneOrdini<br />";
             if(isset($file['fila'])){//Per palchi numerati
-                //echo "2.1) Palco numerato => <b>$palco</b><br />";
-                
                 $tmp = self::updatePosti($file['fila'], null, $prenotazione, $piantina, $tipo, $palco);
                 
                 if(sizeof($tmp) > 0){
@@ -1270,7 +1258,6 @@ class Postazioni{
                     $piantina                          = $tmp['piantina'];
                 }
             }else{//Per palchi non numerati
-                //echo "2.1) Palco non numerato => <b>$palco</b><br />";
             }
             
             $piantina = self::restoreStato($piantina, $stati_posti_prenotati);
@@ -1295,10 +1282,7 @@ class Postazioni{
                 $stati_posti_prenotati['platea'][] = $tmp['stato_posti_prenotati'];
                 $piantina                          = $tmp['piantina'];
             }
-        }
-        
-        //$piantina = self::restoreStato($piantina, $stati_posti_prenotati);
-        
+        }        
         
         return $piantina;
     }
@@ -1328,17 +1312,11 @@ class Postazioni{
             foreach ($posti as $fila => $v_posti){                
                 foreach ($v_posti['posti'] as $posto => $dati_posto){
                     if(isset($dati_posto['stato'])){
-                        //echo "3) updatePosti() <b>$tipo</b> [con stato prenotato]<br />";
-                        
                         $res = self::deleteStato($prenotazione, $fila, $posto, $piantina, $tipo, $palco);
                     }
                 }
             } 
        }
-        
-        /*echo "<pre>";
-        print_r($res);
-        echo "</pre>";*/
         
         return $res;
     }
@@ -1360,18 +1338,11 @@ class Postazioni{
         $stati_posti_prenotati = [];        
         if(isset($prenotazione[$tipo]['file'][$fila]['posti'])){
             foreach ($prenotazione[$tipo]['file'][$fila]['posti'] as $k_posto => $v_posto){
-                /*echo "<pre>";
-                print_r($piantina->$tipo->file->$fila->posti->posto->stato);
-                echo "</pre>";
-                return array();*/
-                
-                //if(isset($piantina[$tipo]['file'][$fila]['posti'][$posto]['stato'])){
                 if(isset($piantina->$tipo->file->$fila->posti->posto->stato)){
                     $stati_posti_prenotati[$tipo][$fila][$v_posto] = $piantina[$tipo]['file'][$fila]['posti'][$posto]['stato'];
                 }
             }
         }else if(isset ($piantina->$tipo->palco->$palco->fila->$fila->posti->$posto->stato)){//Ordini
-            //echo "4) deleteStato() <br />";
             $stati_posti_prenotati[$tipo][][$palco][$fila][$posto] = $piantina[$tipo]['palco'][$palco]['fila'][$fila]['posti'][$posto]['stato'];
         }
         
@@ -1381,9 +1352,7 @@ class Postazioni{
                 unset($piantina->$tipo->file->$fila->posti->$k_posto->stato);
             }
         }else{//Ordini
-            foreach ($piantina[$tipo]['palco'][$palco]['fila'][$fila]['posti'] as $k_posto => $v_posto){
-                //echo "$tipo => Palco $palco Fila $fila Posto $k_posto<br />";
-                
+            foreach ($piantina[$tipo]['palco'][$palco]['fila'][$fila]['posti'] as $k_posto => $v_posto){                
                 unset($piantina[$tipo]['palco'][$palco]['fila'][$fila]['posti'][$k_posto]['stato']);
             }
         }
@@ -1405,14 +1374,8 @@ class Postazioni{
      * @return array Piantina con gli stati ripristinati
      */
     private static function restoreStato($piantina, array $stati_prentazione){
-        //echo "5) restoreStato()<br />";
-        
-        /*echo "<pre>";
-        print_r($stati_prentazione);
-        echo "</pre>";*/
 
         foreach ($stati_prentazione as $k_prenotazione => $v_prenotazione){
-            //echo $k_prenotazione;
             foreach ($v_prenotazione as $file_palchi){                
                 if(isset($piantina->$k_prenotazione->file)){
                     foreach($file_palchi as $fila => $posti){
@@ -1421,30 +1384,12 @@ class Postazioni{
                         }
                     }
                 } else {
-                    /*echo "<pre>";
-                    print_r($file_palchi);
-                    echo "</pre>";*/
-                    
-                    //[I Ordine]['palco'][$palco]['fila'][$fila]['posti'][$posto]['stato']
-                    
                     foreach ($file_palchi[$k_prenotazione] as $palchi){
                         foreach ($palchi as $palco => $file){
                             foreach ($file as $fila => $posti){
                                 foreach ($posti as $posto => $stato){
-                                    //echo " ==> ", $palco, " - ", $fila, " - ", $posto, "<br />";
-                                    //echo "$k_prenotazione => Palco $palco Fila $fila Posto $posto<br />";
-                                    
+                                   
                                     $piantina[$k_prenotazione]['palco'][$palco]['fila'][$fila]['posti'][$posto]['stato'] = $stato;
-                                    
-                                    //echo var_dump($piantina[$k_prenotazione]['palco'][$palco]['fila'][$fila]['posti'][$posto]['stato']);
-                                    /*echo "<pre>";
-                                    print_r($piantina[$k_prenotazione]['palco'][$palco]['fila'][$fila]['posti'][$posto]);
-                                    echo "</pre>";*/
-                                    
-                                    /*echo "<pre>";
-                                    print_r($piantina[$k_prenotazione]['palco'][$palco]['fila'][$fila]['posti'][$posto]);
-                                    echo "</pre>";*/
-                                    
                                     
                                     
                                 }
