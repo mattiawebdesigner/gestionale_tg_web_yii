@@ -47,7 +47,7 @@ $this->title = Yii::t('app', 'Gestisci prenotazione: {spettacolo}', [
             <span class="mode-out d-none-n-i"><i class="fa-solid fa-dollar-sign"></i> <?= Yii::t('app', 'Esci dalla modalità prenotazioni come pagate') ?></span>
         </div>
         
-        <div id="theatre-place" style="background-image: url(https://www.teatralmentegioia.it/crm/backend/web/iloveteatro/piantine/piantina_teatro_rossini_gioia_del_colle.gif);background-position-x: 3px;background-position-y: 31px;">>
+        <div id="theatre-place" style="background-image: url(https://www.teatralmentegioia.it/crm/backend/web/iloveteatro/piantine/piantina_teatro_rossini_gioia_del_colle.gif);background-position-x: 3px;background-position-y: 4px;">
             <?php
             $postazioni->get(false);
             ?>
