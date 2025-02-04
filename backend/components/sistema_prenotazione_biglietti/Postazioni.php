@@ -148,7 +148,7 @@ class Postazioni{
                         }
                     }
                 }
-            }else{//Se ha anche i palchi
+            }else{//Se ha anche i palchi                
                 foreach ($v_pp['palco'] as $k_palco => $v_palco){
                     foreach ($v_palco['file'] as $k_fila => $v_fila){
                         foreach ($v_fila['posti'] as $p => $posto){
