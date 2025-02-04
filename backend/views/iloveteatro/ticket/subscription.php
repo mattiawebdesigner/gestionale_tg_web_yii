@@ -9,7 +9,7 @@ $this->title = Yii::t('app', 'Nuovo abbonamento');
 
 <div class="ticket-subscription">
     <div id="sistema_prenotazione_biglietti">
-        <div id="theatre-place"style="background-image: url(https://www.teatralmentegioia.it/crm/backend/web/iloveteatro/piantine/piantina_teatro_rossini_gioia_del_colle.gif);background-position-x:3px;background-position-y:4px;">
+        <div id="theatre-place" style="background-image: url(https://www.teatralmentegioia.it/crm/backend/web/iloveteatro/piantine/piantina_teatro_rossini_gioia_del_colle.gif);background-position-x:3px;background-position-y:4px;">
             <?php
             $postazioni->get(false);
             ?>

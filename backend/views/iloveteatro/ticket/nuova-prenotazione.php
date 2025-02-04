@@ -12,7 +12,7 @@ $this->title = Yii::t('app', 'Nuova prenotazione: {spettacolo}', [
 <div class="ticket-nuova-prenotazione">
     
     <div id="sistema_prenotazione_biglietti">
-        <div id="theatre-place">
+        <div id="theatre-place"  style="background-image: url(https://www.teatralmentegioia.it/crm/backend/web/iloveteatro/piantine/piantina_teatro_rossini_gioia_del_colle.gif);background-position-x:3px;background-position-y:4px;">
             <?php $postazioni->get() ?>
         </div>
 
