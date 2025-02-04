@@ -1473,5 +1473,4 @@ class Postazioni{
         }
     }
     
-    
 }
