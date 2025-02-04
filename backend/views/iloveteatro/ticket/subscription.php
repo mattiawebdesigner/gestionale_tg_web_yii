@@ -33,6 +33,7 @@ $this->title = Yii::t('app', 'Nuovo abbonamento');
                         <option value="<?= Postazioni::STATO_CREDIT_THEATRE ?>"><?= Yii::t('app', Postazioni::CREDIT_DROPDOWN[Postazioni::STATO_CREDIT_THEATRE]) ?></option>
                         <option value="<?= Postazioni::STATO_NOT_PAYED ?>" selected="selected"><?= Yii::t('app', Postazioni::CREDIT_DROPDOWN[Postazioni::STATO_NOT_PAYED]) ?></option>
                         <option value="<?= Postazioni::STATO_CREDIT_JURYMAN ?>" selected="selected"><?= Yii::t('app', Postazioni::CREDIT_DROPDOWN[Postazioni::STATO_CREDIT_JURYMAN]) ?></option>
+                        <option value="<?= Postazioni::STATO_CREDIT_SPONSOR ?>"><?= Yii::t('app', Postazioni::CREDIT_DROPDOWN[Postazioni::STATO_CREDIT_SPONSOR]) ?></option>
                     </select>
                 </p>
                 <input type="submit" value="Prenota" class="btn btn-iloveteatro" />

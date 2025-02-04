@@ -68,10 +68,10 @@ class Postazioni{
     public const STATO_NOT_PAYED       = 0;//Non Pagato
     
     //Stati CREDIT
-    public const STATO_CREDIT          = 11;//Stampa
-    public const STATO_CREDIT_THEATRE  = 12;//Compagnia teatrale
-    public const STATO_CREDIT_JURYMAN  = 13;//Giurato del festival
-    public const STATO_CREDIT_SPONSOR  = 16;//sponsor del festival
+    public const STATO_CREDIT                      = 11;//Stampa
+    public const STATO_CREDIT_THEATRE              = 12;//Compagnia teatrale
+    public const STATO_CREDIT_JURYMAN              = 13;//Giurato del festival
+    public const STATO_CREDIT_SPONSOR              = 16;//sponsor del festival
     
     /**==========================================
      * Dati per il database
@@ -744,7 +744,7 @@ class Postazioni{
                             $class       .= " my-busy ";
                             
                             if(isset($v_posizione->stato) && $this->controllaStato($v_posizione->stato)){
-
+                                
                                 switch ($v_posizione->stato){
                                     case self::STATO_NOT_PAYED:
                                         $class .= " busy not-payed";
@@ -766,7 +766,7 @@ class Postazioni{
                                         $class .= " busy credit";
                                         break;
                                     case self::STATO_SUBSCRIPTION_NOT_PAYED:
-                                        $color_stroke = $color_fill = self::COLOR_SUBSCRIPTION;
+                                        $color_stroke = $color_fill = self::COLOR_SUBSCRIPTION; 
                                         $class .= " busy subscription-not-payed";
                                         break;
                                     case self::STATO_SUBSCRIPTION_PAYED:
