@@ -16,7 +16,7 @@ $this->title = Yii::t('app', 'Nuovo abbonamento');
         </div>
 
         <?php // Sezione con l'elenco delle prenotazioni ?>
-        <div id="theatre-reservations">
+        <div id="theatre-reservations" style="margin-top: 44px;">
             <?php $form = ActiveForm::begin(['options' => ['id' => 'reservations-form']]); ?>
                 <p>
                     <input type="text" name="dati[nome]" placeholder="Nome" required="required" />
