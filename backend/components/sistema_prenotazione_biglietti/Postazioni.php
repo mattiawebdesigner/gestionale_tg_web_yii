@@ -5,11 +5,11 @@ use Yii;
 
 /**
  * Gestisce la piantina di un teatro permettendo le seguenti azioni:
- * - Prenotazione
- * - Cancellazione di una prenotazione
+ * - Prenotazione per ticket/abbonamento
+ * - Cancellazione di una prenotazione per ticket/abbonamento
  * - Visualizzazione dei dati delle prenotazioni
  * 
- * @version 2.0.0
+ * @version 2.0.1
  * @copyright (c) 2022, MSD Technologies
  */
 class Postazioni{
