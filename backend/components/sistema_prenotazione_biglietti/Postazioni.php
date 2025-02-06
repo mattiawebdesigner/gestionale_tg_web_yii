@@ -497,8 +497,6 @@ class Postazioni{
                                     
                                     //Colori per i posti prenotati da un utente
                                     if(isset($this->my_booked[$nome]['palco'][$k]['fila'][$k3]['posti']) && $this->verificaPostoPrenotato($this->my_booked[$nome]['palco'][$k]['fila'][$k3]['posti'], $k5)){
-                                        
-                                        
                                         if(isset($v->stato) && $this->controllaStato($v->stato)){                                            
                                             $color_stroke = "black";
                                             $color_fill   = self::COLOR_MY_BOOKED;
@@ -643,6 +641,7 @@ class Postazioni{
                                 }
                             }
                         }else{
+                            //Gestione dei posti non numerati
                             if(isset($fila->non_numerato) && $fila->non_numerato){
                                 /*
                                  * RIVEDERE ASSOCIA A TUTTI GLI UTENTI
@@ -653,7 +652,6 @@ class Postazioni{
                                 $class_da_pagare = ($fila->posti_prenotati-$fila->posti_pagati)>0
                                                     ? " my-busy busy not-payed"
                                                     : ($fila->posti_prenotati-$fila->posti_pagati);
-                                
                                 
                                 $class = "seat nn {$class_da_pagare}";
                                 $color          = "";
@@ -670,7 +668,7 @@ class Postazioni{
                                     $color = self::COLOR_FREE;
                                 }
                                 
-                                echo '<rect x="425" '
+                                /*echo '<rect x="425" '
                                     . 'width="150" '
                                     . 'height="40" '
                                     . 'rx="10" '
@@ -688,7 +686,7 @@ class Postazioni{
                                     . 'data-tooltip="Palco non numerato. I posti non sono assegnati" '
                                     . 'data-nome="'. (str_replace("_", " ", $nome)).'" '
                                     . 'data-palco="'.$k.'" />';
-                                
+                                */
                                 
                             }
                             break;
