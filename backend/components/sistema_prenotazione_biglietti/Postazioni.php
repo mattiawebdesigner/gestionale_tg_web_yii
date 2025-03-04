@@ -135,11 +135,13 @@ class Postazioni{
     public function cancellaPrenotazione(string $prenotazioni_da_cancellare, string $prenotazioni){
         $prenotazioni_da_cancellare = json_decode($prenotazioni_da_cancellare, true);
         $prenotazioni               = json_decode($prenotazioni, true);
-        //$prenotazione_posti_utente = [];
         
+        /*echo "<pre>";
+        print_r($prenotazioni_da_cancellare);
+        echo "</pre>";*/
+                
         //Modifico i posti prenotati
         foreach($prenotazioni_da_cancellare as $k_pp => $v_pp){
-            //$prenotazione_posti_utente[$k_pp] = [];
             if(isset($this->posti->$k_pp->file)){//Se ha solo file
                 foreach ($v_pp['file'] as $k_fila => $v_fila){
                     foreach ($v_pp['file'][$k_fila]['posti'] as $p => $posto){
@@ -159,9 +161,7 @@ class Postazioni{
                                 $this->posti->$k_pp->palco->$k_palco[0]->posti_prenotati -= $prenotazioni_da_cancellare[$k_pp]['palco'][$k_palco]['file'][$k_fila]['posti'][0];
                             }
                         }
-                        
                     }
-                    
                 }
             }
         }
