@@ -438,7 +438,7 @@ class Postazioni{
      * @param int $state Stato del posto (STATO_PAYED, ecc)
      * @return int Numero totale di ticket trovati
      */
-    public static function getNumberOfTicket($prenotazioni, int $state = self::STATO_PAYED){
+    public static function getNumberOfTicket($prenotazioni, int|array $state = [self::STATO_PAYED, self::STATO_SUBSCRIPTION_PAYED]){
         $prenotazioni = json_decode($prenotazioni, true);
         
         $tot = 0;
@@ -448,8 +448,16 @@ class Postazioni{
                     foreach ($posti['posti'] as $posto => $info){
                         if(isset($info['stato'])){
                             $p_state = $info['stato'];
-                            if($p_state == $state){
-                                $tot ++;
+                            if(is_array($state)){
+                                foreach ($state as $s){
+                                    if($p_state == $s){
+                                        $tot ++;
+                                    }
+                                }
+                            }else{
+                                if($p_state == $state){
+                                    $tot ++;
+                                }
                             }
                         }
                     }

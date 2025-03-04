@@ -31,7 +31,7 @@ $this->title = Yii::t('app', 'Grafico generale di vendita')
               <?php
               $cont = 0;
               foreach($shows as $show){
-                  echo "[", $show[0], ", ", $show[1],", ", "'#" . str_pad(dechex(mt_rand(0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT), "']";
+                  echo "[", "'".str_replace(["'", '"'], ["\'", '\"'], $show[0])."'", ", ", $show[1],", ", "'#" . str_pad(dechex(mt_rand(0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT), "']";
 
                   if(++ $cont <> sizeof($shows)){echo ", ";}
               }
