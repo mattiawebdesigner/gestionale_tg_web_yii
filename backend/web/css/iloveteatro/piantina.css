@@ -19,11 +19,11 @@
     position: relative;
     width: 998px;
     height: 748px;
-    /*background-image: url(../../iloveteatro/piantine/piantina_teatro_rossini_gioia_del_colle.gif);*/
+    background-image: url(../../iloveteatro/piantine/piantina_teatro_rossini_gioia_del_colle.gif);
     /*background-image: url(../../iloveteatro/piantine/map-s-cuore-gioia-del-colle.png);*/
     background-repeat: no-repeat;
     background-size: 100%;
-    background-position: -347px -261px;
+    background-position: 0;
 }
 #theatre-place .platea{
     width: 300px;
