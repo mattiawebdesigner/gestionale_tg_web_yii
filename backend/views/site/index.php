@@ -1,7 +1,7 @@
 <?php
 /* @var $this yii\web\View */
 
-$this->title = Yii::$app->name." ".Yii::t('app', 'Gestionale');
+$this->title = Yii::t('app', 'Gestionale');
 ?>
 <div class="site-index">
 
