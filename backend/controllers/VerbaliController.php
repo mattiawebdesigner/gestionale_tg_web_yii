@@ -87,7 +87,7 @@ class VerbaliController extends Controller
                 $delega->data_creazione = date('Y-m-d');
                 $delega->convocazione_id = $model->numero_protocollo;
                 
-                if($delega->save()){                    
+                if($delega->save()){
                     $delegante  = \backend\models\Utenti::find()->where(['id' => $delega->delegante])->one()->cognome.' '.\backend\models\Utenti::find()->where(['id' => $delega->delegante])->one()->nome;
                     $delegato   = \backend\models\Utenti::find()->where(['id' => $delega->delegante])->one()->cognome.' '.\backend\models\Utenti::find()->where(['id' => $delega->delegato])->one()->nome;
                     
@@ -97,7 +97,7 @@ class VerbaliController extends Controller
                         'delegante' => $delegante,
                         'delegato'  => $delegato,
                         'delega'    => $delega,
-                    ]);
+                    ]); 
                     $footer = $this->renderPartial('_pdf-footer');
                     
                     $cssInline = <<<CSS
