@@ -10,17 +10,22 @@ use yii\helpers\Html;
     </div>
     
     <div>
+        <?= $form->field($model, 'titolo_spettacolo')->textInput(['maxlength' => true]) ?>
+        <?= $form->field($model, 'autore_spettacolo')->textInput(['maxlength' => true]) ?>
+        
+        <hr />
+        
         <?= $form->field($model, 'compagnia')->textInput(['maxlength' => true]) ?>
         <?= $form->field($model, 'codice_fiscale_compagnia')->textInput(['maxlength' => true]) ?>
         <?= $form->field($model, 'partita_iva')->textInput(['maxlength' => true]) ?>
+        <?= $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
+        
+        <hr />
+        
         <?= $form->field($model, 'nome_referente')->textInput(['maxlength' => true]) ?>
         <?= $form->field($model, 'cognome_referente')->textInput(['maxlength' => true]) ?>
         <?= $form->field($model, 'codice_fiscale_referente')->textInput(['maxlength' => true]) ?>
         <?= $form->field($model, 'festival')->hiddenInput(['value' => $festival->id])->label(false) ?>
-        
-        <hr />
-        <?= $form->field($model, 'titolo_spettacolo')->textInput(['maxlength' => true]) ?>
-        <?= $form->field($model, 'autore_spettacolo')->textInput(['maxlength' => true]) ?>
         
         <?= $form->field($pdf, 'multipleFile[]')->fileInput(['multiple' => true])->label(Yii::t('app', 'Allegati')) ?>
    </div>
