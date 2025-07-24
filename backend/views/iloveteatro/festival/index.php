@@ -155,6 +155,19 @@ $this->title = $title . " | I Love Teatro";
                     </div>
                 </div>  
             </div>
+            
+            <div class="row">
+                <div class="col col-sm-6 flex flex-flow-wrap paste">
+                    <div>
+                        <?= $form->field($pdfMultiple, 'multipleFile[]')
+                                ->fileInput(['multiple' => true, "accept" => ".pdf"])
+                                ->label("Carica gli allegati aggiuntivi", [
+                                    'class' => 'file-btn btn btn-large control-label'
+                                ]) ?>
+                        <div class="filenames"></div>
+                    </div>
+                </div>  
+            </div>
         </div>
     
     <?php ActiveForm::end(); ?>
@@ -175,6 +188,8 @@ $this->title = $title . " | I Love Teatro";
         <?php endif; ?>
     </div>
     <?php endif; ?>
+    
+    <h3><?= Yii::t('app', 'Allegati aggiuntivi') ?></h3>
 </div>
 
 <?php

@@ -15,6 +15,9 @@ use Yii;
  */
 class IltFestivalAllegati extends \yii\db\ActiveRecord
 {
+    const TIPO0 = 0;
+    const TIPO1 = 1;
+    
     /**
      * {@inheritdoc}
      */
@@ -30,7 +33,7 @@ class IltFestivalAllegati extends \yii\db\ActiveRecord
     {
         return [
             [['festival', 'allegato'], 'required'],
-            [['festival', 'allegato'], 'integer'],
+            [['festival', 'allegato', 'tipo'], 'integer'],
             [['festival', 'allegato'], 'unique', 'targetAttribute' => ['festival', 'allegato']],
             [['allegato'], 'exist', 'skipOnError' => true, 'targetClass' => IltAllegati::className(), 'targetAttribute' => ['allegato' => 'id']],
             [['festival'], 'exist', 'skipOnError' => true, 'targetClass' => IltFestival::className(), 'targetAttribute' => ['festival' => 'id']],
