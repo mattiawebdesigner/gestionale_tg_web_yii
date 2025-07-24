@@ -20,6 +20,7 @@ use yii\helpers\Html;
         
         <hr />
         <?= $form->field($model, 'titolo_spettacolo')->textInput(['maxlength' => true]) ?>
+        <?= $form->field($model, 'autore_spettacolo')->textInput(['maxlength' => true]) ?>
         
         <?= $form->field($pdf, 'multipleFile[]')->fileInput(['multiple' => true])->label(Yii::t('app', 'Allegati')) ?>
    </div>

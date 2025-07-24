@@ -20,6 +20,7 @@ use Yii;
  * @property string $federazione
  * @property string $numeroIscrizione
  * @property string $titolo_spettacolo
+ * @property string $autore_spettacolo
  *
  * @property IltAllegati[] $allegatos
  * @property IltFestival $festival0
@@ -57,6 +58,7 @@ class IltIscrizioni extends \yii\db\ActiveRecord
             [['festival', 'attivo'], 'integer'],
             [['compagnia'], 'string', 'max' => 150],
             [['titolo_spettacolo'], 'string', 'max' => 100],
+            [['autore_spettacolo'], 'string', 'max' => 50],
             [['codice_fiscale_compagnia'], 'string', 'max' => 16],
             [['partita_iva'], 'string', 'max' => 11],
             [['nome_referente', 'cognome_referente'], 'string', 'max' => 50],
