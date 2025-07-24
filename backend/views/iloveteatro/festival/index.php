@@ -159,7 +159,7 @@ $this->title = $title . " | I Love Teatro";
             <div class="row">
                 <div class="col col-sm-6 flex flex-flow-wrap paste">
                     <div>
-                        <?= $form->field($pdfMultiple, 'multipleFile[]')
+                        <?= $form->field($pdfMultiple, 'multipleFile2[]')
                                 ->fileInput(['multiple' => true, "accept" => ".pdf"])
                                 ->label("Carica gli allegati aggiuntivi", [
                                     'class' => 'file-btn btn btn-large control-label'
@@ -173,23 +173,37 @@ $this->title = $title . " | I Love Teatro";
     <?php ActiveForm::end(); ?>
     
     <?php if($type<>"create") : ?>
-    <?= Html::a("<h3>".Yii::t('app', 'Regolamento')."</h3>", $newFestival->regolamenti, ['target' => '_blank']) ?>
-    <br /><br />
-    
-    <h3><?= Yii::t('app', 'Allegati') ?></h3>
-    
-    <div class="flex flex-flow-wrap">
-        <?php if(isset($allegati)) : ?>
-            <?php foreach($allegati as $allegato) : ?>
-            <div class="btn btn-link">
-                <?= Html::a($allegato->nome, $allegato->allegato, ['target' => '_blank']) ?>
-            </div>
-            <?php endforeach; ?>
-        <?php endif; ?>
-    </div>
+        <?= Html::a("<h3>".Yii::t('app', 'Regolamento')."</h3>", $newFestival->regolamenti, ['target' => '_blank']) ?>
+        <br /><br />
+
+        <h3><?= Yii::t('app', 'Allegati') ?></h3>
+
+        <div class="flex flex-flow-wrap">
+            <?php if(isset($allegati)) : ?>
+                <?php foreach($allegati as $allegato) : ?>
+                    <?php if ($allegato->iltFestivalAllegatis[0]->tipo == backend\models\IltFestivalAllegati::TIPO0) : ?>
+                    <div class="btn btn-link">
+                        <?= Html::a($allegato->nome, $allegato->allegato, ['target' => '_blank']) ?>
+                    </div>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        </div>
+
+        <h3><?= Yii::t('app', 'Allegati aggiuntivi') ?></h3>
+
+        <div class="flex flex-flow-wrap">
+            <?php if(isset($allegati)) : ?>
+                <?php foreach($allegati as $allegato) : ?>
+                    <?php if ($allegato->iltFestivalAllegatis[0]->tipo == backend\models\IltFestivalAllegati::TIPO1) : ?>
+                    <div class="btn btn-link">
+                        <?= Html::a($allegato->nome, $allegato->allegato, ['target' => '_blank']) ?>
+                    </div>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        </div>
     <?php endif; ?>
-    
-    <h3><?= Yii::t('app', 'Allegati aggiuntivi') ?></h3>
 </div>
 
 <?php
