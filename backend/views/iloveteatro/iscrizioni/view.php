@@ -11,6 +11,7 @@ $this->title = $model->compagnia;
     
     <div class="action-bar">
         <?= Html::a('<i class="fas fa-table"></i> ', ['iscritti'], ['class' => 'btn btn-warning']) ?>
+        <?= Html::a('<i class="fa-solid fa-file-import"></i> '.Yii::t('app', 'Richiedi documenti'), ['send-doc-request', 'id' => $model->id], ['class' => 'btn btn-warning']) ?>
         <?= Html::a('<i class="fas fa-pencil"></i> '.Yii::t('app', 'Effettua una modifica'), ['update-troupe', 'id' => $model->id], ['class' => 'btn btn-info']) ?>
         <?= Html::a('<i class="fas fa-plus"></i> '.Yii::t('app', 'Iscrivi una compagnia'), ['add-troupe'], ['class' => 'btn btn-success']) ?>
         

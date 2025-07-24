@@ -19,10 +19,12 @@ use yii\helpers\Html;
     <?php $this->beginBody() ?>
     
     <div style="text-align: center;">
-        <img src="https://www.teatralmentegioia.it/iloveteatro/backend/web/images/logo_iloveteatro.png" width="400" />
+        <img src="<?= Yii::$app->params['logo_iloveteatro'] ?>" width="400" />
     </div>
     
-    <?= $content ?>
+    <div style="text-align: center; font-family: monospace;">
+        <?= $content ?>
+    </div>
     
     <?php $this->endBody() ?>
 </body>
