@@ -6,7 +6,7 @@ $this->title = Yii::t('app', 'Eventi in programma');
 ?>
 <h1><?= Html::encode($this->title) ?></h1>
 
-<div id="next">
+<div id="next" class="next-view">
     <?php if($page == 0):?>
         <div class="alert alert-info"><?= Yii::t('app', 'Al momento non ci sono eventi in programma')?></div>
     <?php endif; ?>
