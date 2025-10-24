@@ -23,12 +23,8 @@ $this->title = $model->nome;
 			<div class="content">
                             <div class="place"><i class="fas fa-map-pin"></i> <?= $model->luogo ?></div>
                             
-                            <?php
-                            $model->parametri  = json_decode($model->parametri); 
-                            $n_of_turns         = sizeof((array)$model->parametri->dates->days)+1;
-        
+                            <?php        
                             echo $this->render('sections/_turns',[
-                                'n_of_turns'    => $n_of_turns,
                                 'evento'        => $model,
                             ]);
                             ?>

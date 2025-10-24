@@ -12,11 +12,6 @@ $this->title = Yii::t('app', 'Eventi in programma');
     <?php endif; ?>
     
     <?php foreach ($attivita as $evento): ?>
-        <?php 
-        $evento->parametri  = json_decode($evento->parametri); 
-        $n_of_turns         = sizeof((array)$evento->parametri->dates->days)+1;
-        ?>
-        
         <div class="event">
 
             <h4 class="title <?= $evento->annullato == 'yes'?'line-through':'' ?>">
@@ -38,25 +33,11 @@ $this->title = Yii::t('app', 'Eventi in programma');
                 <div class="payment"><i class="fas fa-euro-sign"></i> <?= $evento->costo ?></div>
                 <?php endif; ?>
                 
-                <?php if($n_of_turns > 1): ?>
-                <br />
-                
                 <?php
                 echo $this->render('sections/_turns',[
-                    'n_of_turns'    => $n_of_turns,
                     'evento'        => $evento,
                 ]);
                 ?>
-                
-                <?php else: ?>
-                <div class="date"><i class="fas fa-calendar-alt"></i> <?= $evento->data_attivita ?></div>
-                <div class="reservation">
-                    <?php if($evento->prenotazione == "yes") : ?> 
-                    <i class="fas fa-ticket-alt"></i> <?= $evento->costo ?>
-                    <?php endif; ?>
-                    <i class="fas fa-chair"></i> <?= $evento->posti_disponibili == null ? Yii::t('app', "Nessuna limitazione di posti") : $evento->posti_disponibili ?>
-                </div>
-                <?php endif; ?>
                 
                 <br />
                 <div class="description"><i class="fa-solid fa-align-center"></i> <strong><?= Yii::t("app", "Descrizione") ?></strong>

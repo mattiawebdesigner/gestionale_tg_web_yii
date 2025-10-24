@@ -109,7 +109,7 @@ TESTO])
         }
         $prenotazioni = Prenotazioni::find()->where(["attivita_id" => $attivita_id, "email" => $email])->all();
         
-        if(!isset($prenotazioni[0])){
+        if(!isset($prenotazioni)){
             return $this->render('prenotazioni', [
                 'prenotazioni' => null,
                 'attivita' => null,
@@ -119,7 +119,7 @@ TESTO])
         $attivita = Attivita::find()->where(['id' => $prenotazioni[0]->attivita_id])->all();
         
         return $this->render('prenotazioni', [
-            'prenotazioni' => $prenotazioni[0],
+            'prenotazioni' => $prenotazioni,
             'attivita' => $attivita[0],
             'posti_occupati' => Prenotazioni::find()->where(["attivita_id" => $attivita_id])->sum("prenotazioni"),
         ]);
