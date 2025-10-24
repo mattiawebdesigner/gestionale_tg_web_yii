@@ -55,7 +55,7 @@ class AttivitaController extends Controller
      * @param string $email
      * @return string
      */
-    public function actionPrenotazioni($attivita_id, $email)
+    public function actionPrenotazioni($attivita_id, $email, $turn=0)
     {   
         $prenotazioni = new Prenotazioni();   
         if ($this->request->isPost) {
@@ -103,11 +103,11 @@ TESTO])
                     
                     return $this->redirect(['prenotazioni', 'attivita_id' => $prenotazioni->attivita_id, 'email' => $prenotazioni->email]);
                 }else{
-                    Yii::$app->session->setFlash('error', Yii::t('app', 'Si � verificato un errore nella modifica della prenotazione, riprova pi� tardi o contatta un\'amministratore'));
+                    Yii::$app->session->setFlash('error', Yii::t('app', 'Si &grave; verificato un errore nella modifica della prenotazione, riprova pi� tardi o contatta un\'amministratore'));
                 }
             }
         }
-        $prenotazioni = Prenotazioni::find()->where(["attivita_id" => $attivita_id, "email" => $email])->all();
+        $prenotazioni = Prenotazioni::find()->where(["attivita_id" => $attivita_id, "email" => $email, 'turno' => $turn])->all();
         
         if(!isset($prenotazioni)){
             return $this->render('prenotazioni', [
@@ -116,12 +116,15 @@ TESTO])
             ]);
         }
         
-        $attivita = Attivita::find()->where(['id' => $prenotazioni[0]->attivita_id])->all();
+        $attivita = Attivita::find()->where(['id' => $prenotazioni[0]->attivita_id])->one();
+        $attivita->parametri = json_decode($attivita->parametri);
         
         return $this->render('prenotazioni', [
-            'prenotazioni' => $prenotazioni,
-            'attivita' => $attivita[0],
-            'posti_occupati' => Prenotazioni::find()->where(["attivita_id" => $attivita_id])->sum("prenotazioni"),
+            'prenotazioni'      => $prenotazioni[0],
+            'attivita'          => $attivita,
+            'posti_occupati'    => Prenotazioni::find()->where(["attivita_id" => $attivita_id])->sum("prenotazioni"),
+            'turno'             => $turn,
+            
         ]);
     }
 
@@ -137,12 +140,13 @@ TESTO])
         $prenotazioni = new Prenotazioni();
         
         //Search
-        if($this->request->post("action") == "search"){           
+        if($this->request->post("action") == "search"){
             $prenotazioni->load($this->request->post());
             
             return $this->redirect(['prenotazioni',
                 'attivita_id' => $id,
-                'email' => $prenotazioni->email, 
+                'email' => $prenotazioni->email,
+                'turn'  => $turn,
             ]);
         }
         

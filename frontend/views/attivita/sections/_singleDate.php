@@ -1,0 +1,1 @@
+<div class="date"><i class="fas fa-calendar-alt"></i> <?= $attivita->parametri->dates->days[0]->date ?></div>

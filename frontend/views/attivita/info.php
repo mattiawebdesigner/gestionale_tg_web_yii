@@ -32,16 +32,16 @@ $this->title = $model->nome;
 			</div>
 				
 			<?php if( ($model->posti_disponibili-$posti_occupati) == 0 && $model->posti_disponibili!=null) : ?>
-				<div class="alert alert-warning">
-					<?= Yii::t('app', 'Non ci sono posti disponibili')?>
-				</div>
+                            <div class="alert alert-warning">
+                                <?= Yii::t('app', 'Non ci sono posti disponibili')?>
+                            </div>
 			<?php endif; ?>
 				
 			<hr style="border-style: outline;border-width: 3px;border-color: #f0f0f0;" />
 			
 			<div class="reservation">
-				<?php if($model->prenotazione == "yes"): ?>
-					<h5><?= Yii::t('app', 'Prenota') ?></h5>
+                            <?php if($model->prenotazione == "yes"): ?>
+				<h5><?= Yii::t('app', 'Prenota') ?></h5>
 					
     				<?php $form = ActiveForm::begin(); ?>
                                         <?= $form->field($prenotazioni, 'cognome')->textInput(['maxlength' => true]) ?>
@@ -66,7 +66,7 @@ $this->title = $model->nome;
                                         </div>
     				<?php ActiveForm::end(); ?>
 					
-				<?php endif;?>
+                            <?php endif;?>
 			</div>
 			
 			<div class="description">

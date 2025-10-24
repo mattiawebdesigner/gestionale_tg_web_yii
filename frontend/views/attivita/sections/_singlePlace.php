@@ -1,0 +1,1 @@
+<div class="date"><i class="fas fa-chair"></i> <?= $attivita->parametri->dates->days[0]->place ?></div>

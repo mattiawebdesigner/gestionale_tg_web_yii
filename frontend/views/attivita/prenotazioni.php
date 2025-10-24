@@ -27,28 +27,36 @@ $this->params['breadcrumbs'][] = $this->title;
 			</div>
 			
 			<div class="content">
-				<div class="place"><i class="fas fa-map-pin"></i> <?= $attivita->luogo ?></div>
-				<div class="date"><i class="fas fa-calendar-alt"></i> <?= $attivita->data_attivita ?></div>
-				<?php if($attivita->pagamento == "yes") : ?>
-				<div class="date"><i class="fas fa-euro-sign"></i> <?= $attivita->costo ?></div>
-				<?php endif; ?>
-				<div class="chair">
-					<i class="fas fa-chair"></i> <?= $attivita->posti_disponibili == null ? "Nessuna limitazione" : $attivita->posti_disponibili-$posti_occupati ?>
-				</div>
+                            <strong><?= Yii::t('app', 'Turno prenotato'); ?>: <?= $turno ?></strong>
+                            <div class="place"><i class="fas fa-map-pin"></i> <?= $attivita->luogo ?></div>
+                            <?php
+                            echo $this->render('sections/_singleDate',[
+                                'attivita'        => $attivita,
+                                'turn'            => $turno,
+                            ]);
+                            echo $this->render('sections/_singlePlace',[
+                                'attivita'        => $attivita,
+                                'turn'            => $turno,
+                            ]);
+                            echo $this->render('sections/_singlePrice',[
+                                'attivita'        => $attivita,
+                                'turn'            => $turno,
+                            ]);
+                            ?>
+
+                            <p></p>
 				
-				<p></p>
-				
-				<div class="actions">
-                    <?= Html::a('<i class="fas fa-pen"></i> '.Yii::t('app', 'Update'), '#', ['class' => 'btn-update btn btn-primary btn-sm']) ?>
-                    <?= Html::a('<i class="fas fa-trash"></i> '.Yii::t('app', 'Delete'), ['delete', 'id' => $attivita->id, 'email' => $prenotazioni->email], [
-                        'class' => 'btn btn-danger btn-sm',
-                        'data' => [
-                            'confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),
-                            'method' => 'post',
-                        ],
-                    ]) ?>
-                    
-				</div>
+                            <div class="actions">
+                                <?= Html::a('<i class="fas fa-pen"></i> '.Yii::t('app', 'Update'), ['update', 'id' => $attivita->id, 'email' => $prenotazioni->email, 'turn' => $turno], ['class' => 'btn-update btn btn-primary btn-sm']) ?>
+                                <?= Html::a('<i class="fas fa-trash"></i> '.Yii::t('app', 'Delete'), ['delete', 'id' => $attivita->id, 'email' => $prenotazioni->email], [
+                                    'class' => 'btn btn-danger btn-sm',
+                                    'data' => [
+                                        'confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),
+                                        'method' => 'post',
+                                    ],
+                                ]) ?>
+
+                            </div>
 			</div>
 			
 			<?php $form = ActiveForm::begin(['options' => ['class'=>'display-none']]); ?>
