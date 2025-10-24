@@ -1,6 +1,7 @@
 <?php
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 
 $this->title = Yii::t('app', 'Eventi in programma');
 ?>
@@ -12,8 +13,13 @@ $this->title = Yii::t('app', 'Eventi in programma');
     <?php endif; ?>
     
     <?php foreach ($attivita as $evento): ?>
+        <?php 
+        $evento->parametri  = json_decode($evento->parametri); 
+        $n_of_turns         = sizeof((array)$evento->parametri->dates->days)+1;
+        ?>
         
         <div class="event">
+
             <h4 class="title <?= $evento->annullato == 'yes'?'line-through':'' ?>">
                 <i class="fa-brands fa-elementor"></i> <?= Html::a($evento->nome, ['/attivita/info', 'id' => $evento->id]); ?>
             </h4>
@@ -28,21 +34,43 @@ $this->title = Yii::t('app', 'Eventi in programma');
                 <?php endif; ?>
                 
                 <div class="place"><i class="fas fa-map-pin"></i> <?= $evento->luogo ?></div>
-                <div class="date"><i class="fas fa-calendar-alt"></i> <?= $evento->data_attivita ?></div>
                 
                 <?php if($evento->pagamento == "yes") : ?>
                 <div class="payment"><i class="fas fa-euro-sign"></i> <?= $evento->costo ?></div>
                 <?php endif; ?>
                 
-                
+                <?php if($n_of_turns > 1): ?>
+                <div class="turns">
+                    <div><strong><?= $n_of_turns ?> <?= Yii::t('app', 'turni') ?></strong></div>
+                    <a class="date" href="<?= Url::to(['attivita/next', 'id'=>$evento->id, 'turn'=>1]) ?>">
+                        <i class="fas fa-calendar-alt"></i> <strong><?= date("d-m-Y H:i", strtotime($evento->data_attivita)) ?></strong>
+                        <i class="fas fa-euro-sign"></i> <strong><?= $evento->costo ?></strong>
+                        <i class="fas fa-chair"></i> 
+                        <strong><?= $evento->posti_disponibili == null ? Yii::t('app', "Nessuna limitazione di posti") : $evento->posti_disponibili ?></strong>
+                        <?= Yii::t('app', 'Posti disponibili') ?>
+                    </a>
+                    <?php foreach($evento->parametri->dates->days as $k => $turn): ?>
+                    <a class="date d-block" href="<?= Url::to(['attivita/next', 'id'=>$evento->id, 'turn'=>($k+2)]) ?>">
+                        <i class="fas fa-calendar-alt"></i> <strong><?= date("d-m-Y H:i", strtotime($turn->date)) ?></strong>
+                        <i class="fas fa-euro-sign"></i> <strong><?= $turn->price ?></strong>
+                        <i class="fas fa-chair"></i> 
+                        <?= !isset($turn->place) ? "<strong>".Yii::t('app', "Nessuna limitazione di posti")."</strong>" : "<strong>".$turn->place."</strong>"." ".Yii::t('app', 'Posti disponibili') ?></strong>
+                        
+                    </a>
+                    <?php endforeach; ?>
+                </div>
+                <?php else: ?>
+                <div class="date"><i class="fas fa-calendar-alt"></i> <?= $evento->data_attivita ?></div>
                 <div class="reservation">
                     <?php if($evento->prenotazione == "yes") : ?> 
                     <i class="fas fa-ticket-alt"></i> <?= $evento->costo ?>
                     <?php endif; ?>
                     <i class="fas fa-chair"></i> <?= $evento->posti_disponibili == null ? Yii::t('app', "Nessuna limitazione di posti") : $evento->posti_disponibili ?>
                 </div>
+                <?php endif; ?>
                 
-                <div class="description"><i class="fa-solid fa-align-center"></i> 
+                <br />
+                <div class="description"><i class="fa-solid fa-align-center"></i> <strong><?= Yii::t("app", "Descrizione") ?></strong>
                     <?php
                         echo substr($evento->descrizione, 0, 600)." ";
                         
@@ -53,10 +81,6 @@ $this->title = Yii::t('app', 'Eventi in programma');
                     ?>
                 </div>
             </div>
-
-            <!--<pre>
-                <?php print_r($evento) ?>
-            </pre>-->
         </div>
         
     <?php endforeach;?>
@@ -78,7 +102,19 @@ $this->title = Yii::t('app', 'Eventi in programma');
 </div>
 
 <pre>
-	<?php //print_r($attivita); ?>
+    <?php
+    /*$json = json_encode([
+        'dates' => [
+            'days' => [
+                ['date' => '2025-11-29 19:00:00', 'place' => 20],
+                ['date' => '2025-11-29 19:30:00', 'place' => 20],
+                ['date' => '2025-11-29 20:00:00', 'place' => 20],
+                ['date' => '2025-11-29 20:30:00', 'place' => 20]
+            ]
+        ]
+    ]);*/
+    ?>
+	<?php //print_r($json); ?>
 </pre>
 
 <?php

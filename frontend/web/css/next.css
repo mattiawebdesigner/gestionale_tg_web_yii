@@ -31,6 +31,10 @@
 #next .content{
     padding: 1.5rem 10px;
 }
+#next .turns a{
+    color: #000;
+    cursor: pointer;
+}
 @media screen and (max-width: 600px) {
     #next .wrapper, #next .content{
         display: block;
