@@ -217,7 +217,7 @@ TESTO])
      * @return string
      */
     public function actionNext($offset = 0, $_this = 0){
-        $nPerPagina = 5;
+        $nPerPagina = 20;
         
         $attivita = Attivita::find()->where("data_attivita >= NOW()")->limit($nPerPagina)->offset($offset)->all();
         $totaleAttivita = Attivita::find()->where("data_attivita >= NOW()")->count();
