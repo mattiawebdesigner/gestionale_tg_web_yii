@@ -62,7 +62,7 @@ class AttivitaController extends Controller
             if ($prenotazioni->load($this->request->post())) {
                 $prenotazioni->attivita_id = $attivita_id;
                 
-                $this->deleteItem($attivita_id, $email);
+                $this->deleteItem($attivita_id, $email, $turn);
                 if($prenotazioni->save()){
                     
                     $model = $this->findModel($attivita_id);
@@ -242,12 +242,14 @@ TESTO])
      * Deletes an existing Attivita model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param string $id ID
+     * @param string $email Email of reservation
+     * @param int $turn Number of turn
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionDelete($id, $email)
+    public function actionDelete($id, $email, $turn)
     {
-        $this->deleteItem($id, $email);
+        $this->deleteItem($id, $email, $turn);
         
         $model = $this->findModel($id);
         
@@ -269,7 +271,7 @@ TESTO])
 <p><strong>Email di prenotazione</strong>: {$email}</p>
 
 TESTO])
-->setFrom(["noreply@teatralmentegioia.it" => "Teatralmente Gioia"])
+->setFrom([Yii::$app->params['senderEmail'] => Yii::$app->params['senderName']])
 ->setTo([Yii::$app->params['reservationEmail'], $email])
 ->setSubject(Yii::t('app', 'Eliminazione prenotazione, ').$events.' | '.Yii::$app->name)
 ->send();
@@ -281,7 +283,14 @@ Yii::$app->session->setFlash('success', Yii::t('app', 'Prenotazione eliminata co
         
     }
 
-    private function deleteItem($id, $email){
+    /**
+     * Delete a reservation by email and number of turn
+     * 
+     * @param type $id
+     * @param type $email
+     * @param type $turn
+     */
+    private function deleteItem($id, $email, $turn){
         (Prenotazioni::find()->where(['attivita_id' => $id, 'email' => $email])->all())[0]->delete();
     }
     
