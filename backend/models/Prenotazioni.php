@@ -9,6 +9,7 @@ use Yii;
  *
  * @property int $prenotazioni
  * @property string $email
+ * @property int $turno
  * @property int $attivita_id
  */
 class Prenotazioni extends \yii\db\ActiveRecord
@@ -28,7 +29,7 @@ class Prenotazioni extends \yii\db\ActiveRecord
     {
         return [
             [['prenotazioni', 'email', 'attivita_id'], 'required'],
-            [['prenotazioni', 'attivita_id', 'id'], 'integer'],
+            [['prenotazioni', 'attivita_id', 'id', 'turno'], 'integer'],
             [['email'], 'string', 'max' => 255],
         ];
     }
@@ -43,6 +44,7 @@ class Prenotazioni extends \yii\db\ActiveRecord
             'prenotazioni' => Yii::t('app', 'Prenotazioni'),
             'email' => Yii::t('app', 'Email'),
             'attivita_id' => Yii::t('app', 'Attivita ID'),
+            'turno' => Yii::t('app', 'Turno'),
         ];
     }
 

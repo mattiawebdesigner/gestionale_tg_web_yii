@@ -131,7 +131,7 @@ TESTO])
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionInfo($id)
+    public function actionInfo($id, $turn = 0)
     {
         $model = $this->findModel($id);
         $prenotazioni = new Prenotazioni();
@@ -149,7 +149,7 @@ TESTO])
         if($prenotazioni->load($this->request->post())){
             $prenotazioni->attivita_id = $id;
             
-            $tmp = Prenotazioni::find()->where(["attivita_id" => $id, "email" => $prenotazioni->email])->count();
+            $tmp = Prenotazioni::find()->where(["attivita_id" => $id, "email" => $prenotazioni->email, 'turno' => $prenotazioni->turno])->count();
             
             if($tmp == 0){
                 if ($prenotazioni->save()) {
@@ -161,7 +161,7 @@ TESTO])
                     $image = Yii::$app->params['backendWeb'].$model->foto;
                     $base = Url::to(['/attivita/prenotazioni', 'attivita_id' => $id, 'email' => $email], true);
                     
-                    Yii::$app->mailer->compose('layouts/html', ['content' => <<<TESTO
+                    Yii::$app->mailer->compose('@common/mail/layouts/html', ['content' => <<<TESTO
 <h1>
     <b>Teatralmente Gioia</b> <br />
     <img src="https://www.teatralmentegioia.it/crm/frontend/web/images/loghi/logo.png" style="width: 150px" />
@@ -181,7 +181,7 @@ TESTO])
 
 <p>Si consiglia di conservare questa email.</p>
 TESTO])
-->setFrom(["noreply@teatralmentegioia.it" => "Teatralmente Gioia"])
+->setFrom(["iloveteatro@teatralmentegioia.it" => "Teatralmente Gioia"])
 ->setTo([Yii::$app->params['reservationEmail'], $email])
 ->setSubject(Yii::t('app', 'Prenotazione, ').$events.' | '.Yii::$app->name)
 ->send();
@@ -193,9 +193,10 @@ TESTO])
                 
                 
                 return $this->redirect(['info', 
-                    'model' => $model,
-                    'prenotazioni' => new Prenotazioni(),
-                    'id' => $id,
+                    'model'         => $model,
+                    'prenotazioni'  => new Prenotazioni(),
+                    'id'            => $id,
+                    'turn'          => $turn
                 ]);
             }
             
@@ -205,9 +206,10 @@ TESTO])
         }
         
         return $this->render('info', [
-            'model' => $model,
-            'prenotazioni' => $prenotazioni,
-            'posti_occupati' => Prenotazioni::find()->where(["attivita_id" => $id])->sum("prenotazioni"),
+            'model'             => $model,
+            'prenotazioni'      => $prenotazioni,
+            'posti_occupati'    => Prenotazioni::find()->where(["attivita_id" => $id, 'turno' => $turn])->sum("prenotazioni")??0,
+            'turn'              => $turn,
         ]);
     }
     
@@ -224,11 +226,11 @@ TESTO])
         $page = ceil($totaleAttivita/$nPerPagina);
         
         return $this->render('next', [
-            'attivita' => $attivita,
-            'page' => $page,
-            'nPerPagina' => $nPerPagina,
-            '_this' => $_this,
-            'tot' => $totaleAttivita,
+            'attivita'      => $attivita,
+            'page'          => $page,
+            'nPerPagina'    => $nPerPagina,
+            '_this'         => $_this,
+            'tot'           => $totaleAttivita,
         ]);
     }
 

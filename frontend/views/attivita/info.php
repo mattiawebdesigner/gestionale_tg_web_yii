@@ -27,7 +27,16 @@ $this->title = $model->nome;
                             <div class="date"><i class="fas fa-euro-sign"></i> <?= $model->costo ?></div>
                             <?php endif; ?>
                             <div class="chair">
-                                <i class="fas fa-chair"></i> <?= $model->posti_disponibili == null ? "Nessuna limitazione di posti" : $model->posti_disponibili-$posti_occupati." posti prenotati su ".$model->posti_disponibili." posti totali" ?>
+                                <i class="fas fa-chair"></i> 
+                                <?= $model->posti_disponibili == null 
+                                    ?
+                                        "Nessuna limitazione di posti" 
+                                    : 
+                                        $posti_occupati.
+                                        " posti prenotati su ".
+                                        $model->posti_disponibili.
+                                        " posti totali" 
+                                 ?>
                             </div>
 			</div>
 				
@@ -46,7 +55,7 @@ $this->title = $model->nome;
     				<?php $form = ActiveForm::begin(); ?>
     					<?= $form->field($prenotazioni, 'prenotazioni')->textInput(['type'=>'number', 'min' => 1, 'max' => ($model->posti_disponibili-$posti_occupati)])->label(Yii::t('app', 'Numero di partecipanti')) ?>
     					<?= $form->field($prenotazioni, 'email')->textInput(['type'=>'email', 'maxlength' => true]) ?>
-						
+					<?= $form->field($prenotazioni, 'turno')->hiddenInput(['value'=>$turn])->label(false); ?>	
                         <div class="form-group">
                             <?= Html::submitButton(Yii::t('app', 'Prenota'), ['class' => 'btn btn-success']) ?>
                         </div>
@@ -57,6 +66,7 @@ $this->title = $model->nome;
     					<input type="hidden" name="action" value="search" />
     					
     					<?= $form->field($prenotazioni, 'email')->textInput(['type'=>'email', 'maxlength' => true]) ?>
+					<?= $form->field($prenotazioni, 'turno')->hiddenInput(['value'=>$turn])->label(false); ?>
 						
                         <div class="form-group">
                             <?= Html::submitButton(Yii::t('app', 'Cerca'), ['class' => 'btn btn-success']) ?>
