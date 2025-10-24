@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use backend\models\Prenotazioni;
 
 /* @var $this yii\web\View */
 /* @var $model backend\models\Attivita */
@@ -9,6 +10,9 @@ use yii\widgets\ActiveForm;
 $this->title = $model->nome;
 //$this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
+
+$model->parametri = json_decode($model->parametri);
+$n_of_turns = sizeof((array)$model->parametri->dates->days)+1;
 ?>
 <div id="next" class="attivita-view">
 
@@ -31,11 +35,14 @@ $this->title = $model->nome;
 
             </div>
 
-            <?php if( ($model->posti_disponibili-$posti_occupati) == 0 && $model->posti_disponibili!=null) : ?>
-                <div class="alert alert-warning">
-                    <?= Yii::t('app', 'Non ci sono posti disponibili')?>
-                </div>
-            <?php endif; ?>
+            <?php        
+            echo $this->render('sections/_noMorePlace',[
+                'model'             => $model,
+                'posti_occupati'    => $posti_occupati,
+                'turn'              => $turn,
+                'n_of_turns'        => $n_of_turns,
+            ]);
+            ?>
 
             <hr style="border-style: outline;border-width: 3px;border-color: #f0f0f0;" />
 
@@ -44,14 +51,18 @@ $this->title = $model->nome;
                     <h5><?= Yii::t('app', 'Prenota') ?></h5>
 
                     <?php $form = ActiveForm::begin(); ?>
-                            <?= $form->field($prenotazioni, 'cognome')->textInput(['maxlength' => true]) ?>
-                            <?= $form->field($prenotazioni, 'nome')->textInput(['maxlength' => true]) ?>
-                            <?= $form->field($prenotazioni, 'email')->textInput(['type'=>'email', 'maxlength' => true]) ?>
-                            <?= $form->field($prenotazioni, 'prenotazioni')->textInput(['type'=>'number', 'min' => 1, 'max' => ($model->posti_disponibili-$posti_occupati)])->label(Yii::t('app', 'Numero di partecipanti')) ?>
-                            <?= $form->field($prenotazioni, 'turno')->hiddenInput(['value'=>$turn])->label(false); ?>	
-                            <div class="form-group">
-                                <?= Html::submitButton(Yii::t('app', 'Prenota'), ['class' => 'btn btn-success']) ?>
-                            </div>
+                        <?= $form->field($prenotazioni, 'cognome')->textInput(['maxlength' => true]) ?>
+                        <?= $form->field($prenotazioni, 'nome')->textInput(['maxlength' => true]) ?>
+                        <?= $form->field($prenotazioni, 'email')->textInput(['type'=>'email', 'maxlength' => true]) ?>
+                        <?= $form->field($prenotazioni, 'prenotazioni')->textInput(['type'=>'number', 'min' => 1, 
+                                    'max' => ($n_of_turns==1)?
+                                                ($model->posti_disponibili-$posti_occupati) :
+                                                ($model->parametri->dates->days[$turn-2]->place - Prenotazioni::find()->where(['attivita_id' => $model->id, 'turno' => $turn])->sum('prenotazioni'))
+                            ])->label(Yii::t('app', 'Numero di partecipanti')) ?>
+                        <?= $form->field($prenotazioni, 'turno')->hiddenInput(['value'=>$turn])->label(false); ?>	
+                        <div class="form-group">
+                            <?= Html::submitButton(Yii::t('app', 'Prenota'), ['class' => 'btn btn-success']) ?>
+                        </div>
                     <?php ActiveForm::end(); ?>
 
                     <h5><?= Yii::t('app', 'Cerca una prenotazione') ?></h5>

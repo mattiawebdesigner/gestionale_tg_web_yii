@@ -2,7 +2,6 @@
 use yii\helpers\Url;
 use backend\models\Prenotazioni;
 
-$evento->parametri  = json_decode($evento->parametri);
 $n_of_turns         = sizeof((array)$evento->parametri->dates->days)+1;
 ?>
 <div class="turns">                    
