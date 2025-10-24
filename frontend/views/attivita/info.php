@@ -53,24 +53,26 @@ $this->title = $model->nome;
 					<h5><?= Yii::t('app', 'Prenota') ?></h5>
 					
     				<?php $form = ActiveForm::begin(); ?>
-    					<?= $form->field($prenotazioni, 'prenotazioni')->textInput(['type'=>'number', 'min' => 1, 'max' => ($model->posti_disponibili-$posti_occupati)])->label(Yii::t('app', 'Numero di partecipanti')) ?>
+                                        <?= $form->field($prenotazioni, 'cognome')->textInput(['maxlength' => true]) ?>
+                                        <?= $form->field($prenotazioni, 'nome')->textInput(['maxlength' => true]) ?>
     					<?= $form->field($prenotazioni, 'email')->textInput(['type'=>'email', 'maxlength' => true]) ?>
+    					<?= $form->field($prenotazioni, 'prenotazioni')->textInput(['type'=>'number', 'min' => 1, 'max' => ($model->posti_disponibili-$posti_occupati)])->label(Yii::t('app', 'Numero di partecipanti')) ?>
 					<?= $form->field($prenotazioni, 'turno')->hiddenInput(['value'=>$turn])->label(false); ?>	
-                        <div class="form-group">
-                            <?= Html::submitButton(Yii::t('app', 'Prenota'), ['class' => 'btn btn-success']) ?>
-                        </div>
+                                        <div class="form-group">
+                                            <?= Html::submitButton(Yii::t('app', 'Prenota'), ['class' => 'btn btn-success']) ?>
+                                        </div>
     				<?php ActiveForm::end(); ?>
 					
-					<h5><?= Yii::t('app', 'Cerca una prenotazione') ?></h5>
+                                <h5><?= Yii::t('app', 'Cerca una prenotazione') ?></h5>
     				<?php $form = ActiveForm::begin(); ?>
     					<input type="hidden" name="action" value="search" />
     					
     					<?= $form->field($prenotazioni, 'email')->textInput(['type'=>'email', 'maxlength' => true]) ?>
 					<?= $form->field($prenotazioni, 'turno')->hiddenInput(['value'=>$turn])->label(false); ?>
-						
-                        <div class="form-group">
-                            <?= Html::submitButton(Yii::t('app', 'Cerca'), ['class' => 'btn btn-success']) ?>
-                        </div>
+
+                                        <div class="form-group">
+                                            <?= Html::submitButton(Yii::t('app', 'Cerca'), ['class' => 'btn btn-success']) ?>
+                                        </div>
     				<?php ActiveForm::end(); ?>
 					
 				<?php endif;?>

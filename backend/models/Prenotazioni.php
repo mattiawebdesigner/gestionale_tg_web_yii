@@ -31,6 +31,7 @@ class Prenotazioni extends \yii\db\ActiveRecord
             [['prenotazioni', 'email', 'attivita_id'], 'required'],
             [['prenotazioni', 'attivita_id', 'id', 'turno'], 'integer'],
             [['email'], 'string', 'max' => 255],
+            [['nome', 'cognome'], 'string', 'max' => 50],
         ];
     }
 
@@ -45,6 +46,8 @@ class Prenotazioni extends \yii\db\ActiveRecord
             'email' => Yii::t('app', 'Email'),
             'attivita_id' => Yii::t('app', 'Attivita ID'),
             'turno' => Yii::t('app', 'Turno'),
+            'nome' => Yii::t('app', 'Nome'),
+            'cognome' => Yii::t('app', 'Cognome'),
         ];
     }
 
