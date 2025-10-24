@@ -27,12 +27,23 @@ $n_of_turns = sizeof((array)$model->parametri->dates->days)+1;
             <div class="content">
                 <div class="place"><i class="fas fa-map-pin"></i> <?= $model->luogo ?></div>
 
-                <?php        
-                echo $this->render('sections/_turns',[
-                    'evento'        => $model,
+                <div>
+                    <strong><?= Yii::t('app', 'Turno') ?>: </strong> <?= $turn ?>
+                </div>
+
+                <?php
+                echo $this->render('sections/_singleDate', [
+                    'attivita' => $model
+                ]);
+                echo $this->render('sections/_freePlace', [
+                    'model'      => $model,
+                    'n_of_turns' => $n_of_turns,
+                    'turn'       => $turn,
+                ]);
+                echo $this->render('sections/_singlePrice', [
+                    'attivita' => $model
                 ]);
                 ?>
-
             </div>
 
             <?php        
