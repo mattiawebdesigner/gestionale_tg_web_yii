@@ -45,7 +45,6 @@ class Attivita extends \yii\db\ActiveRecord
             [['foto','pagamento'], 'string', 'max' => 255],
             [['luogo'], 'string', 'max' => 100],
             [['posti_disponibili'], 'integer'],
-            [['parametri'], 'string'],
         ];
     }
 

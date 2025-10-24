@@ -156,14 +156,16 @@ TESTO])
             $tmp = Prenotazioni::find()->where(["attivita_id" => $id, "email" => $prenotazioni->email, 'turno' => $prenotazioni->turno])->count();
             
             if($tmp == 0){
+                $model->parametri = json_decode($model->parametri);
                 if ($prenotazioni->save()) {
-                    $events = $model->nome;
-                    $date_time = $model->data_attivita;
-                    $place = $model->luogo;
+                    $events         = $model->nome;
+                    $date_time      = date("d-m-Y H:i", strtotime($model->parametri->dates->days[$turn-2]->date));
+                    $price          = $model->parametri->dates->days[$turn-2]->price; 
+                    $place          = $model->luogo;
                     $reserved_seats = $prenotazioni->prenotazioni;
-                    $email = $prenotazioni->email;
-                    $image = Yii::$app->params['backendWeb'].$model->foto;
-                    $base = Url::to(['/attivita/prenotazioni', 'attivita_id' => $id, 'email' => $email], true);
+                    $email          = $prenotazioni->email;
+                    $image          = Yii::$app->params['backendWeb'].$model->foto;
+                    $base           = Url::to(['/attivita/prenotazioni', 'attivita_id' => $id, 'email' => $email], true);
                     
                     Yii::$app->mailer->compose('@common/mail/layouts/html', ['content' => <<<TESTO
 <h1>
@@ -177,6 +179,7 @@ TESTO])
 <img src="{$image}" style="width: 150px" />
 
 <p><strong>Email di prenotazione</strong>: {$email}</p>
+<p><strong>Costo</strong>: {$price}</p>
 <p><strong>Data e orario di inizio</strong>: {$date_time}</p>
 <p><strong>Luogo dell'evento</strong>: {$place}</p>
 <p><strong>Posti prenotati</strong>: {$reserved_seats}</p>
