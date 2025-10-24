@@ -41,7 +41,7 @@ $this->title = Yii::t('app', 'Eventi in programma');
                 
                 <?php if($n_of_turns > 1): ?>
                 <div class="turns">
-                    <div><strong><?= $n_of_turns ?> <?= Yii::t('app', 'turni') ?></strong></div>
+                    <div><strong><?= $n_of_turns ?> <?= Yii::t('app', 'turni (clicca per prenotare)') ?></strong></div>
                     <a class="date" href="<?= Url::to(['attivita/next', 'id'=>$evento->id, 'turn'=>1]) ?>">
                         <i class="fas fa-calendar-alt"></i> <strong><?= date("d-m-Y H:i", strtotime($evento->data_attivita)) ?></strong>
                         <i class="fas fa-euro-sign"></i> <strong><?= $evento->costo ?></strong>
