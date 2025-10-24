@@ -59,34 +59,6 @@ $this->title = Yii::t('app', 'Eventi in programma');
             </pre>-->
         </div>
         
-        <!--<div class="row">
-            <div class="col">
-                <div class="wrapper">
-                    <div class="img" style="background-image: url(<?= "../../backend/web/".$evento->foto ?: "" ?>)"></div>
-                </div>
-
-                <div class="content">
-                    <h4 class="title <?= $evento->annullato == 'yes'?'line-through':'' ?>">
-                        <i class="fas fa-signature"></i> <?= Html::a($evento->nome, ['/attivita/info', 'id' => $evento->id]); ?>
-                    </h4>
-                    
-                    <?php if($evento->annullato == "yes") : ?>
-                    <div class="canceled"><i class="fas fa-ban"></i> <?= Yii::t('app', "Annullato") ?></div>
-                    <?php endif; ?>
-                    
-                    <div class="place"><i class="fas fa-map-pin"></i> <?= $evento->luogo ?></div>
-                    <div class="date"><i class="fas fa-calendar-alt"></i> <?= $evento->data_attivita ?></div>
-                    
-                    <?php if($evento->pagamento == "yes") : ?>
-                    <div class="date"><i class="fas fa-euro-sign"></i> <?= $evento->costo ?></div>
-                    <?php endif; ?>
-                    
-                </div>
-            </div>
-
-            <div class="canyon"></div>
-        </div>
-        -->
     <?php endforeach;?>
     	
     	<?php if($page > 1) :?>
