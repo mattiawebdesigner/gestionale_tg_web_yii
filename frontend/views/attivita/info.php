@@ -22,22 +22,17 @@ $this->title = $model->nome;
 			
 			<div class="content">
                             <div class="place"><i class="fas fa-map-pin"></i> <?= $model->luogo ?></div>
-                            <div class="date"><i class="fas fa-calendar-alt"></i> <?= $model->data_attivita ?></div>
-                            <?php if($model->pagamento == "yes") : ?>
-                            <div class="date"><i class="fas fa-euro-sign"></i> <?= $model->costo ?></div>
-                            <?php endif; ?>
-                            <div class="chair">
-                                <i class="fas fa-chair"></i> 
-                                <?= $model->posti_disponibili == null 
-                                    ?
-                                        "Nessuna limitazione di posti" 
-                                    : 
-                                        $posti_occupati.
-                                        " posti prenotati su ".
-                                        $model->posti_disponibili.
-                                        " posti totali" 
-                                 ?>
-                            </div>
+                            
+                            <?php
+                            $model->parametri  = json_decode($model->parametri); 
+                            $n_of_turns         = sizeof((array)$model->parametri->dates->days)+1;
+        
+                            echo $this->render('sections/_turns',[
+                                'n_of_turns'    => $n_of_turns,
+                                'evento'        => $model,
+                            ]);
+                            ?>
+                            
 			</div>
 				
 			<?php if( ($model->posti_disponibili-$posti_occupati) == 0 && $model->posti_disponibili!=null) : ?>
