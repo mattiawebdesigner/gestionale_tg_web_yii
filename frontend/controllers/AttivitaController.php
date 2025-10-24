@@ -160,7 +160,7 @@ TESTO])
                 if ($prenotazioni->save()) {
                     $events         = $model->nome;
                     $date_time      = date("d-m-Y H:i", strtotime($model->parametri->dates->days[$turn-2]->date));
-                    $price          = $model->parametri->dates->days[$turn-2]->price; 
+                    $price          = $model->parametri->dates->days[$turn-2]->price;
                     $place          = $model->luogo;
                     $reserved_seats = $prenotazioni->prenotazioni;
                     $email          = $prenotazioni->email;
