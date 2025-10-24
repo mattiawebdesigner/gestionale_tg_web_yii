@@ -31,11 +31,6 @@
 #next .content{
     padding: 1.5rem 10px;
 }
-
-@media screen and (max-width: 1920px) {
-}
-@media screen and (max-width: 1519.2px) {
-}
 @media screen and (max-width: 600px) {
     #next .wrapper, #next .content{
         display: block;
