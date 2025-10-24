@@ -17,6 +17,7 @@
 #next .wrapper,
 #next .wrapper .img{
     aspect-ratio: 16/9;
+    max-height: 400px;
     background-size: cover;
     margin: 0 auto;
     background-repeat: no-repeat;
