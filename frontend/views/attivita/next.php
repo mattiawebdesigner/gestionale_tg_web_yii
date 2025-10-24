@@ -12,6 +12,9 @@ $this->title = Yii::t('app', 'Eventi in programma');
     <?php endif; ?>
     
     <?php foreach ($attivita as $evento): ?>
+        <?php
+        $evento->parametri = json_decode($evento->parametri);
+        ?>
         <div class="event">
 
             <h4 class="title <?= $evento->annullato == 'yes'?'line-through':'' ?>">
