@@ -103,13 +103,13 @@ TESTO])
                     
                     return $this->redirect(['prenotazioni', 'attivita_id' => $prenotazioni->attivita_id, 'email' => $prenotazioni->email]);
                 }else{
-                    Yii::$app->session->setFlash('error', Yii::t('app', 'Si &grave; verificato un errore nella modifica della prenotazione, riprova pi� tardi o contatta un\'amministratore'));
+                    Yii::$app->session->setFlash('error', Yii::t('app', 'Si &grave; verificato un errore nella modifica della prenotazione, riprova pi&ugrave; tardi o contatta un\'amministratore'));
                 }
             }
         }
         $prenotazioni = Prenotazioni::find()->where(["attivita_id" => $attivita_id, "email" => $email, 'turno' => $turn])->all();
         
-        if(!isset($prenotazioni)){
+        if(!isset($prenotazioni) || sizeof($prenotazioni) === 0){
             return $this->render('prenotazioni', [
                 'prenotazioni' => null,
                 'attivita' => null,
