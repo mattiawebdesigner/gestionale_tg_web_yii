@@ -1,1 +1,1 @@
-<div class="date"><i class="fas fa-calendar-alt"></i> <?= $attivita->parametri->dates->days[0]->date ?></div>
+<div class="date"><i class="fas fa-calendar-alt"></i> <?= date("d-m-Y H:i", strtotime($attivita->parametri->dates->days[0]->date)) ?></div>
