@@ -61,14 +61,23 @@ $n_of_turns = sizeof((array)$model->parametri->dates->days)+1;
                 <?php if($model->prenotazione == "yes"): ?>
                     <h5><?= Yii::t('app', 'Prenota') ?></h5>
 
-                    <?php $form = ActiveForm::begin(); ?>
+                    <?php
+                        $form = ActiveForm::begin(); 
+                        
+                        //Corregge il valore del turno per il suo corretto utilizzo
+                        //Se si tratta del primo turno la differenza $turn-2 darebbe -1 e non è valido,
+                        //quindi correggo riportando il suo valore a 1.
+                        //Se si tratta dei turni dal 2 in poi (registrati nel campo JSON parametri
+                        //sul database) allora effettuo il calcolo della diferrenza $turn-2
+                        $turnCorrect = (($turn-2)===-1)?1:$turn-2;
+                    ?>
                         <?= $form->field($prenotazioni, 'cognome')->textInput(['maxlength' => true]) ?>
                         <?= $form->field($prenotazioni, 'nome')->textInput(['maxlength' => true]) ?>
                         <?= $form->field($prenotazioni, 'email')->textInput(['type'=>'email', 'maxlength' => true]) ?>
                         <?= $form->field($prenotazioni, 'prenotazioni')->textInput(['type'=>'number', 'min' => 1, 
                                     'max' => ($n_of_turns==1)?
                                                 ($model->posti_disponibili-$posti_occupati) :
-                                                ($model->parametri->dates->days[$turn-2]->place - Prenotazioni::find()->where(['attivita_id' => $model->id, 'turno' => $turn])->sum('prenotazioni'))
+                                                ($model->parametri->dates->days[$turnCorrect]->place - Prenotazioni::find()->where(['attivita_id' => $model->id, 'turno' => $turn])->sum('prenotazioni'))
                             ])->label(Yii::t('app', 'Numero di partecipanti')) ?>
                         <?= $form->field($prenotazioni, 'turno')->hiddenInput(['value'=>$turn])->label(false); ?>	
                         <div class="form-group">
