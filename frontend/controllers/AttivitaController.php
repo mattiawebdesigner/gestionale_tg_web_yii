@@ -94,7 +94,7 @@ class AttivitaController extends Controller
 
 <p>Si consiglia di conservare questa email.</p>
 TESTO])
-->setFrom(["noreply@teatralmentegioia.it" => "Teatralmente Gioia"])
+->setFrom([Yii::$app->params['senderEmail']=> Yii::$app->params['senderName']])
 ->setTo([Yii::$app->params['reservationEmail'], $email])
 ->setSubject(Yii::t('app', 'Modifica prenotazione, ').$events.' | '.Yii::$app->name)
 ->send();
