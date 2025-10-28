@@ -9,7 +9,7 @@ use backend\models\Prenotazioni;
 
 $this->title = $prenotazioni->email ?? Yii::t('app', 'Nessuna prenotazione');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Attivita'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
+$this->params['breadcrumbs'][] = Yii::t('app', 'Prenotazione');
 \yii\web\YiiAsset::register($this);
 
 if(isset($attivita->parametri)){
