@@ -12,15 +12,17 @@ $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Attivita'), 'url' =>
 $this->params['breadcrumbs'][] = Yii::t('app', 'Prenotazione');
 \yii\web\YiiAsset::register($this);
 
-if(isset($attivita->parametri)){
-$n_of_turns = sizeof((array)$attivita->parametri->dates->days)+1;
-}
 ?>
 <div id="next" class="attivita-view">
     <h1><?= Html::encode($this->title) ?></h1>
     
-    <?php if(!isset($attivita)) : ?>
+    <?php if(!isset($prenotazioni)) : ?>
         <p class="alert alert-info"><?= Yii::t('app', "Non ci sono prenotazioni con questa email")?>
+        
+        <p>
+            <?= Yii::t('app' , 'Torna alla pagina di prenotazione cliccando ') ?>
+            <?= Html::a('qui', ['attivita/info','id'=>$attivita->id, 'turn'=>$turno]) ?>
+        </p>
     <?php else : ?>
         <div class="row">
             <div class="col">

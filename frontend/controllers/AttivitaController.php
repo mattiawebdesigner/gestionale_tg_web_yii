@@ -111,19 +111,22 @@ TESTO])
         
         if(!isset($prenotazioni) || sizeof($prenotazioni) === 0){
             return $this->render('prenotazioni', [
-                'prenotazioni' => null,
-                'attivita' => null,
+                'prenotazioni'  => null,
+                'attivita'      => Attivita::find()->where(['id' => $attivita_id])->one(),
+                'turno'         => $turn,
             ]);
         }
         
-        $attivita = Attivita::find()->where(['id' => $prenotazioni[0]->attivita_id])->one();
-        $attivita->parametri = json_decode($attivita->parametri);
+        $attivita               = Attivita::find()->where(['id' => $prenotazioni[0]->attivita_id])->one();
+        $attivita->parametri    = json_decode($attivita->parametri);
+        $n_of_turns             = sizeof((array)$attivita->parametri->dates->days)+1;
         
         return $this->render('prenotazioni', [
             'prenotazioni'      => $prenotazioni[0],
             'attivita'          => $attivita,
             'posti_occupati'    => Prenotazioni::find()->where(["attivita_id" => $attivita_id])->sum("prenotazioni"),
             'turno'             => $turn,
+            'n_of_turns'        => $n_of_turns,
             
         ]);
     }
