@@ -74,22 +74,6 @@ $this->title = Yii::t('app', 'Eventi in programma');
        <?php endif; ?>
 </div>
 
-<pre>
-    <?php
-    /*$json = json_encode([
-        'dates' => [
-            'days' => [
-                ['date' => '2025-11-29 19:00:00', 'place' => 20],
-                ['date' => '2025-11-29 19:30:00', 'place' => 20],
-                ['date' => '2025-11-29 20:00:00', 'place' => 20],
-                ['date' => '2025-11-29 20:30:00', 'place' => 20]
-            ]
-        ]
-    ]);*/
-    ?>
-	<?php //print_r($json); ?>
-</pre>
-
 <?php
 $this->registerCssFile("@web/css/next.css");
 $this->registerCssFile("@web/css/pagination.css");

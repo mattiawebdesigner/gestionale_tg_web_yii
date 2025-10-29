@@ -26,19 +26,17 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="place"><i class="fas fa-map-pin"></i> <?= $model->luogo ?></div>
 
                 <div>
-                    <strong><?= Yii::t('app', 'Turno') ?>: </strong> <?= $turn + 1 ?>
+                    <strong><?= Yii::t('app', 'Turno') ?>: </strong> <?= $turn ?>
                 </div>
 
                 <?php
                 echo $this->render('sections/_singleDate', [
                     'attivita'      => $model,
-                    'n_of_turns'    => $n_of_turns,
+                    'turnCorrect'   => $turnCorrect,
                 ]);
                 echo $this->render('sections/_freePlace', [
                     'model'            => $model,
                     'posti_occupati'   => $posti_occupati,
-                    'n_of_turns'       => $n_of_turns,
-                    'turn'             => $turn,
                     'turnCorrect'      => $turnCorrect,
                 ]);
                 echo $this->render('sections/_singlePrice', [
@@ -51,8 +49,6 @@ $this->params['breadcrumbs'][] = $this->title;
             echo $this->render('sections/_noMorePlace',[
                 'model'             => $model,
                 'posti_occupati'    => $posti_occupati,
-                'turn'              => $turn,
-                'n_of_turns'        => $n_of_turns,
                 'turnCorrect'       => $turnCorrect,
             ]);
             ?>
@@ -70,7 +66,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         <?= $form->field($prenotazioni, 'prenotazioni')->textInput(['type'=>'number', 'min' => 1, 
                                     'max' => ($n_of_turns==1)?
                                                 ($model->posti_disponibili-$posti_occupati) :
-                                                ($model->parametri->dates->days[$turnCorrect]->place - Prenotazioni::find()->where(['attivita_id' => $model->id, 'turno' => $turn])->sum('prenotazioni'))
+                                                ($model->parametri->dates->days[$turnCorrect]->place - $posti_occupati)
                             ])->label(Yii::t('app', 'Numero di partecipanti')) ?>
                         <?= $form->field($prenotazioni, 'turno')->hiddenInput(['value'=>$turn])->label(false); ?>	
                         <div class="form-group">

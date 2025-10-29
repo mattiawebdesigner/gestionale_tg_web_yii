@@ -150,17 +150,10 @@ TESTO])
         $model = $this->findModel($id);
         $prenotazioni = new Prenotazioni();
         //Corregge il valore del turno per il suo corretto utilizzo
-        //Se si tratta del primo turno la differenza $turn-2 darebbe -1 e non è valido,
-        //quindi correggo riportando il suo valore a 1.
-        //Se si tratta dei turni dal 2 in poi (registrati nel campo JSON parametri
-        //sul database) allora effettuo il calcolo della diferrenza $turn-2
-        //$turnCorrect = (($turn-2)===-1)?1:$turn-2;
-                        //$turnCorrect = (($turn-2)===-1)?1:$turn-2;
-        $turnCorrect = (($turn-2)<0)?1:$turn-2;
+        //per ottenere la posizione del turno nel JSON.
+        $turnCorrect = $turn-1;
         
         $model->parametri = json_decode($model->parametri);
-        
-        $n_of_turns = (($turn==0)?0:sizeof((array)$model->parametri->dates->days))+1;
         
         //Search
         if($this->request->post("action") == "search"){
@@ -239,9 +232,7 @@ TESTO])
             'model'             => $model,
             'prenotazioni'      => $prenotazioni,
             'posti_occupati'    => Prenotazioni::find()->where(["attivita_id" => $id, 'turno' => $turn])->sum("prenotazioni")??0,
-            'turn'              => $turn,
             'turnCorrect'       => $turnCorrect,
-            'n_of_turns'        => $n_of_turns,
         ]);
     }
     
@@ -253,9 +244,10 @@ TESTO])
     public function actionNext($offset = 0, $_this = 0){
         $nPerPagina = 20;
         
-        $attivita = Attivita::find()->where("data_attivita >= NOW()")->limit($nPerPagina)->offset($offset)->all();
+        $attivita       = Attivita::find()->where("data_attivita >= NOW()")->limit($nPerPagina)->offset($offset)->all();
         $totaleAttivita = Attivita::find()->where("data_attivita >= NOW()")->count();
-        $page = ceil($totaleAttivita/$nPerPagina);
+        $page           = ceil($totaleAttivita/$nPerPagina);
+        
         
         return $this->render('next', [
             'attivita'      => $attivita,
