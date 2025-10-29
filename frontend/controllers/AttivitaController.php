@@ -158,6 +158,10 @@ TESTO])
                         //$turnCorrect = (($turn-2)===-1)?1:$turn-2;
         $turnCorrect = (($turn-2)<0)?1:$turn-2;
         
+        $model->parametri = json_decode($model->parametri);
+        
+        $n_of_turns = (($turn==0)?0:sizeof((array)$model->parametri->dates->days))+1;
+        
         //Search
         if($this->request->post("action") == "search"){
             $prenotazioni->load($this->request->post());
@@ -237,7 +241,7 @@ TESTO])
             'posti_occupati'    => Prenotazioni::find()->where(["attivita_id" => $id, 'turno' => $turn])->sum("prenotazioni")??0,
             'turn'              => $turn,
             'turnCorrect'       => $turnCorrect,
-            'n_of_turns'        => (($turn==0)?0:sizeof((array)$model->parametri->dates->days))+1,
+            'n_of_turns'        => $n_of_turns,
         ]);
     }
     

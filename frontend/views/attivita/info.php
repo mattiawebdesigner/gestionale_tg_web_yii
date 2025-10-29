@@ -10,8 +10,6 @@ use backend\models\Prenotazioni;
 $this->title = $model->nome;
 //$this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
-
-$model->parametri = json_decode($model->parametri);
 ?>
 <div id="next" class="attivita-view">
 
