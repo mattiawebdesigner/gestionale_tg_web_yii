@@ -8,7 +8,8 @@ use backend\models\Prenotazioni;
 /* @var $model backend\models\Attivita */
 
 $this->title = $model->nome;
-//$this->params['breadcrumbs'][] = $this->title;
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Attivita\''), 'url' => ['attivita/next']];
+$this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>
 <div id="next" class="attivita-view">
