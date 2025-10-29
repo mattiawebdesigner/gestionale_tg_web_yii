@@ -36,7 +36,7 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Prenotazione');
                     <?php
                     echo $this->render('sections/_singleDate',[
                         'attivita'        => $attivita,
-                        'turn'            => $turno,
+                        'n_of_turns'    => $n_of_turns,
                     ]);
                     echo $this->render('sections/_singlePlace',[
                         'attivita'        => $attivita,
@@ -44,7 +44,7 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Prenotazione');
                     ]);
                     echo $this->render('sections/_singlePrice',[
                         'attivita'        => $attivita,
-                        'turn'            => $turno,
+                        'n_of_turns'    => $n_of_turns,
                     ]);
                     ?>
 
