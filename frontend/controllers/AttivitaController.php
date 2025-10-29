@@ -57,7 +57,14 @@ class AttivitaController extends Controller
      */
     public function actionPrenotazioni($attivita_id, $email, $turn=0)
     {   
-        $prenotazioni = new Prenotazioni();   
+        $prenotazioni = new Prenotazioni();
+        //Corregge il valore del turno per il suo corretto utilizzo
+        //Se si tratta del primo turno la differenza $turn-2 darebbe -1 e non è valido,
+        //quindi correggo riportando il suo valore a 1.
+        //Se si tratta dei turni dal 2 in poi (registrati nel campo JSON parametri
+        //sul database) allora effettuo il calcolo della diferrenza $turn-2
+        $turnCorrect = (($turn-2)<0)?1:$turn-2;
+        
         if ($this->request->isPost) {
             if ($prenotazioni->load($this->request->post())) {
                 $prenotazioni->attivita_id = $attivita_id;
@@ -126,6 +133,7 @@ TESTO])
             'attivita'          => $attivita,
             'posti_occupati'    => Prenotazioni::find()->where(["attivita_id" => $attivita_id])->sum("prenotazioni"),
             'turno'             => $turn,
+            'turnCorrect'       => $turnCorrect,
             'n_of_turns'        => $n_of_turns,
             
         ]);
@@ -141,6 +149,14 @@ TESTO])
     {
         $model = $this->findModel($id);
         $prenotazioni = new Prenotazioni();
+        //Corregge il valore del turno per il suo corretto utilizzo
+        //Se si tratta del primo turno la differenza $turn-2 darebbe -1 e non è valido,
+        //quindi correggo riportando il suo valore a 1.
+        //Se si tratta dei turni dal 2 in poi (registrati nel campo JSON parametri
+        //sul database) allora effettuo il calcolo della diferrenza $turn-2
+        //$turnCorrect = (($turn-2)===-1)?1:$turn-2;
+                        //$turnCorrect = (($turn-2)===-1)?1:$turn-2;
+        $turnCorrect = (($turn-2)<0)?1:$turn-2;
         
         //Search
         if($this->request->post("action") == "search"){
@@ -162,8 +178,8 @@ TESTO])
                 $model->parametri = json_decode($model->parametri);
                 if ($prenotazioni->save()) {
                     $events         = $model->nome;
-                    $date_time      = date("d-m-Y H:i", strtotime($model->parametri->dates->days[$turn-2]->date));
-                    $price          = $model->parametri->dates->days[$turn-2]->price;
+                    $date_time      = date("d-m-Y H:i", strtotime($model->parametri->dates->days[$turnCorrect]->date));
+                    $price          = $model->parametri->dates->days[$turnCorrect]->price;
                     $place          = $model->luogo;
                     $reserved_seats = $prenotazioni->prenotazioni;
                     $email          = $prenotazioni->email;
@@ -220,6 +236,8 @@ TESTO])
             'prenotazioni'      => $prenotazioni,
             'posti_occupati'    => Prenotazioni::find()->where(["attivita_id" => $id, 'turno' => $turn])->sum("prenotazioni")??0,
             'turn'              => $turn,
+            'turnCorrect'       => $turnCorrect,
+            'n_of_turns'        => (($turn==0)?0:sizeof((array)$model->parametri->dates->days))+1,
         ]);
     }
     

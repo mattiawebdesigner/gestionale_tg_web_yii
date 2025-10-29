@@ -31,7 +31,7 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Prenotazione');
                 </div>
 
                 <div class="content">
-                    <strong><?= Yii::t('app', 'Turno prenotato'); ?>: <?= $turno ?></strong>
+                    <strong><?= Yii::t('app', 'Turno prenotato'); ?>: <?= $turno + 1 ?></strong>
                     <div class="place"><i class="fas fa-map-pin"></i> <?= $attivita->luogo ?></div>
                     <?php
                     echo $this->render('sections/_singleDate',[
@@ -63,14 +63,7 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Prenotazione');
                     </div>
                 </div>
 
-                <?php $form = ActiveForm::begin(['options' => ['class'=>'display-none']]);
-
-                //Corregge il valore del turno per il suo corretto utilizzo
-                //Se si tratta del primo turno la differenza $turn-2 darebbe -1 e non è valido,
-                //quindi correggo riportando il suo valore a 1.
-                //Se si tratta dei turni dal 2 in poi (registrati nel campo JSON parametri
-                //sul database) allora effettuo il calcolo della diferrenza $turn-2
-                $turnCorrect = (($turno-2)===-1)?1:$turno-2; ?>
+                <?php $form = ActiveForm::begin(['options' => ['class'=>'display-none']]);?>
                     <?= $form->field($prenotazioni, 'prenotazioni')
                                 ->textInput(['type'=>'number', 
                                     'min' => 1,

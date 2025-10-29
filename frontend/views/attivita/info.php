@@ -12,7 +12,6 @@ $this->title = $model->nome;
 \yii\web\YiiAsset::register($this);
 
 $model->parametri = json_decode($model->parametri);
-$n_of_turns = sizeof((array)$model->parametri->dates->days)+1;
 ?>
 <div id="next" class="attivita-view">
 
@@ -28,20 +27,23 @@ $n_of_turns = sizeof((array)$model->parametri->dates->days)+1;
                 <div class="place"><i class="fas fa-map-pin"></i> <?= $model->luogo ?></div>
 
                 <div>
-                    <strong><?= Yii::t('app', 'Turno') ?>: </strong> <?= $turn ?>
+                    <strong><?= Yii::t('app', 'Turno') ?>: </strong> <?= $turn + 1 ?>
                 </div>
 
                 <?php
                 echo $this->render('sections/_singleDate', [
-                    'attivita' => $model
+                    'attivita'      => $model,
+                    'n_of_turns'    => $n_of_turns,
                 ]);
                 echo $this->render('sections/_freePlace', [
-                    'model'      => $model,
-                    'n_of_turns' => $n_of_turns,
-                    'turn'       => $turn,
+                    'model'            => $model,
+                    'posti_occupati'   => $posti_occupati,
+                    'n_of_turns'       => $n_of_turns,
+                    'turn'             => $turn,
+                    'turnCorrect'      => $turnCorrect,
                 ]);
                 echo $this->render('sections/_singlePrice', [
-                    'attivita' => $model
+                    'attivita'      => $model,
                 ]);
                 ?>
             </div>
@@ -52,6 +54,7 @@ $n_of_turns = sizeof((array)$model->parametri->dates->days)+1;
                 'posti_occupati'    => $posti_occupati,
                 'turn'              => $turn,
                 'n_of_turns'        => $n_of_turns,
+                'turnCorrect'       => $turnCorrect,
             ]);
             ?>
 
@@ -61,16 +64,7 @@ $n_of_turns = sizeof((array)$model->parametri->dates->days)+1;
                 <?php if($model->prenotazione == "yes"): ?>
                     <h5><?= Yii::t('app', 'Prenota') ?></h5>
 
-                    <?php
-                        $form = ActiveForm::begin(); 
-                        
-                        //Corregge il valore del turno per il suo corretto utilizzo
-                        //Se si tratta del primo turno la differenza $turn-2 darebbe -1 e non è valido,
-                        //quindi correggo riportando il suo valore a 1.
-                        //Se si tratta dei turni dal 2 in poi (registrati nel campo JSON parametri
-                        //sul database) allora effettuo il calcolo della diferrenza $turn-2
-                        $turnCorrect = (($turn-2)===-1)?1:$turn-2;
-                    ?>
+                    <?php $form = ActiveForm::begin(); ?>
                         <?= $form->field($prenotazioni, 'cognome')->textInput(['maxlength' => true]) ?>
                         <?= $form->field($prenotazioni, 'nome')->textInput(['maxlength' => true]) ?>
                         <?= $form->field($prenotazioni, 'email')->textInput(['type'=>'email', 'maxlength' => true]) ?>
