@@ -38,9 +38,10 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Prenotazione');
                         'attivita'      => $attivita,
                         'turnCorrect'   => $turnCorrect,
                     ]);
-                    echo $this->render('sections/_singlePlace',[
-                        'attivita'      => $attivita,
+                    echo $this->render('sections/_freePlace',[
+                        'model'         => $attivita,
                         'turnCorrect'   => $turnCorrect,
+                        'posti_occupati'=> $posti_occupati,
                     ]);
                     echo $this->render('sections/_singlePrice',[
                         'attivita'      => $attivita,
