@@ -121,12 +121,12 @@ TESTO])
                 'prenotazioni'  => null,
                 'attivita'      => Attivita::find()->where(['id' => $attivita_id])->one(),
                 'turno'         => $turn,
+                'turnCorrect'       => $turnCorrect,
             ]);
         }
         
         $attivita               = Attivita::find()->where(['id' => $prenotazioni[0]->attivita_id])->one();
         $attivita->parametri    = json_decode($attivita->parametri);
-        $n_of_turns             = sizeof((array)$attivita->parametri->dates->days)+1;
         
         return $this->render('prenotazioni', [
             'prenotazioni'      => $prenotazioni[0],

@@ -21,7 +21,7 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Prenotazione');
         
         <p>
             <?= Yii::t('app' , 'Torna alla pagina di prenotazione cliccando ') ?>
-            <?= Html::a('qui', ['attivita/info','id'=>$attivita->id, 'turn'=>$turno]) ?>
+            <?= Html::a('qui', ['attivita/info','id'=>$attivita->id, 'turn'=>$turnCorrect]) ?>
         </p>
     <?php else : ?>
         <div class="row">
