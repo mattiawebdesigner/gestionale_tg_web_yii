@@ -67,9 +67,7 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Prenotazione');
                     <?= $form->field($prenotazioni, 'prenotazioni')
                                 ->textInput(['type'=>'number', 
                                     'min' => 1,
-                                    'max' => ($n_of_turns==1)?
-                                                ($attivita->posti_disponibili-$posti_occupati) :
-                                                ($attivita->parametri->dates->days[$turnCorrect]->place - Prenotazioni::find()->where(['attivita_id' => $attivita->id, 'turno' => $turno])->sum('prenotazioni'))
+                                    'max' => ($attivita->parametri->dates->days[$turnCorrect]->place - Prenotazioni::find()->where(['attivita_id' => $attivita->id, 'turno' => $turno])->andWhere(["<>", "email", $prenotazioni->email])->sum('prenotazioni'))
                                     ])
                                 ->label(Yii::t('app', 'Numero di partecipanti')) ?>
                     <?= $form->field($prenotazioni, 'email')->hiddenInput(['maxlength' => true])->label(false) ?>
