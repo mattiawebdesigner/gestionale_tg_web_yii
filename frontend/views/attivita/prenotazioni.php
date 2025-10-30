@@ -8,8 +8,10 @@ use backend\models\Prenotazioni;
 /* @var $prenotazioni backend\models\Prenotazioni */
 
 $this->title = $prenotazioni->email ?? Yii::t('app', 'Nessuna prenotazione');
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Attivita'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = Yii::t('app', 'Prenotazione');
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Prossimamente...'), 'url' => ['next']];
+$this->params['breadcrumbs'][] = Yii::t('app', 'Prenotazione: {p}', [
+    'p' => $attivita->nome
+]);
 \yii\web\YiiAsset::register($this);
 
 ?>
@@ -99,27 +101,3 @@ $this->registerJs("
         });
     });
 ");
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
