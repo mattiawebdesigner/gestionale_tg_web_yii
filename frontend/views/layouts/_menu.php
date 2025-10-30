@@ -18,7 +18,7 @@ $menuItems = [
     ['label' => 'Contattaci', 'url' => ['/site/contact']],
     ['label' => 'Attivita', 'url' => ['/attivita/index'], 'items' => [
         ['label' => Yii::t('app', 'Attivita\' in programma'), 'url' => ['/attivita/next']],
-        ['label' => Yii::t('app', 'Tutte le attivita'), 'url' => ['/attivita/index']],
+        //['label' => Yii::t('app', 'Tutte le attivita'), 'url' => ['/attivita/index']],
     ]],
     ['label' => Yii::t('app', 'Album fotorafici'), 'url' => ['/gallery/index']],
     ['label' => Yii::t('app', 'Albo d\'Oro'), 'url' => ['/nominativo/index']],

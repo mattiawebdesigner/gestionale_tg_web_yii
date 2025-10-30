@@ -38,7 +38,7 @@ class AttivitaController extends Controller
      * Lists all Attivita models.
      * @return mixed
      */
-    public function actionIndex()
+    /*public function actionIndex()
     {
         $searchModel = new AttivitaSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
@@ -47,7 +47,7 @@ class AttivitaController extends Controller
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
-    }
+    }*/
     
     /**
      * 
