@@ -64,9 +64,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         <?= $form->field($prenotazioni, 'nome')->textInput(['maxlength' => true]) ?>
                         <?= $form->field($prenotazioni, 'email')->textInput(['type'=>'email', 'maxlength' => true]) ?>
                         <?= $form->field($prenotazioni, 'prenotazioni')->textInput(['type'=>'number', 'min' => 1, 
-                                    'max' => ($n_of_turns==1)?
-                                                ($model->posti_disponibili-$posti_occupati) :
-                                                ($model->parametri->dates->days[$turnCorrect]->place - $posti_occupati)
+                                    'max' => ($model->parametri->dates->days[$turnCorrect]->place - $posti_occupati)
                             ])->label(Yii::t('app', 'Numero di partecipanti')) ?>
                         <?= $form->field($prenotazioni, 'turno')->hiddenInput(['value'=>$turn])->label(false); ?>	
                         <div class="form-group">

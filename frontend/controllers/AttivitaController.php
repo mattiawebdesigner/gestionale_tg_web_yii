@@ -233,6 +233,7 @@ TESTO])
             'prenotazioni'      => $prenotazioni,
             'posti_occupati'    => Prenotazioni::find()->where(["attivita_id" => $id, 'turno' => $turn])->sum("prenotazioni")??0,
             'turnCorrect'       => $turnCorrect,
+            'turn'              => $turn
         ]);
     }
     
