@@ -51,7 +51,7 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Prenotazione');
                     <p></p>
 
                     <div class="actions">
-                        <?= Html::a('<i class="fas fa-pen"></i> '.Yii::t('app', 'Update'), ['update', 'id' => $attivita->id, 'email' => $prenotazioni->email, 'turn' => $turno], ['class' => 'btn-update btn btn-primary btn-sm']) ?>
+                        <?= Html::a('<i class="fas fa-pen"></i> '.Yii::t('app', 'Update'), '#', ['class' => 'btn-update btn btn-primary btn-sm']) ?>
                         <?= Html::a('<i class="fas fa-trash"></i> '.Yii::t('app', 'Delete'), ['delete', 'id' => $attivita->id, 'email' => $prenotazioni->email, 'turn' => $turno], [
                             'class' => 'btn btn-danger btn-sm',
                             'data' => [
