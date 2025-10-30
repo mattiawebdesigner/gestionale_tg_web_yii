@@ -35,16 +35,16 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Prenotazione');
                     <div class="place"><i class="fas fa-map-pin"></i> <?= $attivita->luogo ?></div>
                     <?php
                     echo $this->render('sections/_singleDate',[
-                        'attivita'        => $attivita,
-                        'n_of_turns'    => $n_of_turns,
+                        'attivita'      => $attivita,
+                        'turnCorrect'   => $turnCorrect,
                     ]);
                     echo $this->render('sections/_singlePlace',[
-                        'attivita'        => $attivita,
-                        'turn'            => $turno,
+                        'attivita'      => $attivita,
+                        'turnCorrect'   => $turnCorrect,
                     ]);
                     echo $this->render('sections/_singlePrice',[
-                        'attivita'        => $attivita,
-                        'n_of_turns'    => $n_of_turns,
+                        'attivita'      => $attivita,
+                        'turnCorrect'   => $turnCorrect,
                     ]);
                     ?>
 
