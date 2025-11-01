@@ -1,4 +1,14 @@
-
+/**
+* Next event's page.
+* 
+* @author MSD Technologies
+* @version 2.0
+*/
+#next.next-view{
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+}
 #next .title{
     text-align: center;
     font-size: 2rem;
@@ -6,70 +16,24 @@
 }
 #next .wrapper,
 #next .wrapper .img{
-    height: 500px;
-    background-size: contain;
+    aspect-ratio: 16/9;
+    max-height: 400px;
+    background-size: cover;
     margin: 0 auto;
-}
-#next .wrapper .img{
-    width: 1000px;
-    background-size: 1000px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: #f0f0f0;
 }
 #next .canceled > i{color: darkred;}
 #next .place > i, #next .date > i, #next .description > i{color: #dca600;}
 #next .payment > i{color: darkgreen;}
 #next .reservation > i{color: darkgreen;}
 #next .content{
-    padding: 1.5rem 10px}
-/*#next{
-	border: 0px solid;
-	display: table;
-	width: 100%;
+    padding: 1.5rem 10px;
 }
-#next .canyon{height: 10px;}
-#next > .row{
-	display: table-row;
-	width: 100%;
-}
-#next > .row > .col{
-	display: table-cell;
-	width: 100%;
-}
-#next .content{
-	padding-left: 10px;
-	width: 85.87%;
-	position: relative;
-	top: -123px;
-        display: table-cell;
-}
-#next .content .title{
-	border-bottom: 1px solid;
-}
-#next .wrapper, #next .content{
-	display: table-cell;
-}
-#next .wrapper{
-	-moz-border: 0px outset #adb5bd;
-	-webkit-border: 0px outset #adb5bd;
-	-o-border: 0px outset #adb5bd;
-	border: 0px outset #adb5bd;
-	
-	padding: 5px;
-	width: 150px;
-	height: 150px;
-	box-shadow: 0px 0px 5px #adb5bd;
-}
-#next .wrapper .img{
-	box-shadow: 0px 0px 5px #adb5bd;
-	border: 1px outset #adb5bd;
-	background-size: cover;
-	background-position: center; 
-	width: 100%;
-	height: 100%;
-}*/
-
-@media screen and (max-width: 1920px) {
-}
-@media screen and (max-width: 1519.2px) {
+#next .turns a{
+    color: #000;
+    cursor: pointer;
 }
 @media screen and (max-width: 600px) {
     #next .wrapper, #next .content{

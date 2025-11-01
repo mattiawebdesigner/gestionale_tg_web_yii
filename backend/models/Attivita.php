@@ -66,6 +66,7 @@ class Attivita extends \yii\db\ActiveRecord
             'prenotazione' => Yii::t('app', 'Prenotazione disponibile?'),
             'posti_disponibili' => Yii::t('app', 'Posti disponibili'),
             'annullato' => Yii::t('app', 'Annullato'),
+            'parametri' => Yii::t('app', 'Parametri'),
         ];
     }
 

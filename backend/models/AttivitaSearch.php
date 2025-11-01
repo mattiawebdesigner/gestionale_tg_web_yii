@@ -48,7 +48,7 @@ class AttivitaSearch extends Attivita
         $dataProvider = new ActiveDataProvider([
             'query'         => $query,
             'pagination'    => $pagination,
-            'sort'=> ['defaultOrder' => ['nome' => SORT_ASC]],
+            'sort'=> ['defaultOrder' => ['data_attivita' => SORT_DESC]],
         ]);
 
         $this->load($params);
