@@ -1,4 +1,7 @@
 <?php
+/**
+ * Visualizza la sezione di caricamento delle immagini e quelle già caricate nel sistema.
+ */
 use yii\widgets\ActiveForm;
 
 ?>
