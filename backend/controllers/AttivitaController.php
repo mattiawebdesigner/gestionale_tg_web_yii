@@ -1,5 +1,4 @@
 <?php
-
 namespace backend\controllers;
 
 use Yii;
@@ -89,9 +88,26 @@ class AttivitaController extends Controller
     {
         $model = new Attivita();
         $media = Media::find()->all();
-        
         if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
+            $model->load($this->request->post());
+            
+            //Compile field "parametri"
+            $data_attivita = $model->data_attivita;
+            $parametri = [];
+            foreach ($data_attivita as $data){
+                $parametri['dates']['days'][] = [
+                    'date'  => date("Y-m-d H:i", strtotime($data)),
+                    'price' => $model->costo,
+                    'place' => $model->posti_disponibili
+                ];
+            }
+            $model->parametri = json_encode($parametri);
+                        
+            //Solo per compatibilità rispetto ai vecchi dati inseriti e agli obblighi
+            //derivanti dal campo della tabella
+            $model->data_attivita = date("Y-m-d H:i", strtotime($model->data_attivita[0]));
+            
+            if ($model->save()) {
                 return $this->redirect(['view', 'id' => $model->id]);
             }
         } else {
