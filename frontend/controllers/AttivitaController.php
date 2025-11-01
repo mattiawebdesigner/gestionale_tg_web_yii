@@ -4,7 +4,6 @@ namespace frontend\controllers;
 
 use Yii;
 use backend\models\Attivita;
-use backend\models\AttivitaSearch;
 use backend\models\Prenotazioni;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
