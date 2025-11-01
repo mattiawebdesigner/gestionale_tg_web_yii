@@ -45,15 +45,9 @@ use dosamigos\tinymce\TinyMce;
     ]);?>
 
     <?= $form->field($model, 'luogo')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'data_attivita')
-                ->textInput([
-                    'type' => 'datetime-local', 
-                    'value' => str_replace(" ", "T", $model->data_attivita)
-                ]) ?>
     
     <div data-generate>
-        <div data-add><i class="fa fa-plus"></i></div>
+        <div data-add><i class="fa fa-plus"></i> <?= Yii::t('app', 'Aggiungi data e orario per l\'evento') ?></div>
         
         <div data-append></div>
     </div>
