@@ -48,29 +48,29 @@ use dosamigos\tinymce\TinyMce;
 
     <?= $form->field($model, 'data_attivita')->textInput(['type' => 'datetime-local', 'value' => str_replace(" ", "T", $model->data_attivita)]) ?>
 	
-	<?= Yii::t('app', 'Evento a pagamento?') ?>
-	
-	<?= $form->field($model, 'pagamento')->radioList(['no' => Yii::t('app','No'), 'yes' => Yii::t('app','Si')], [
-            'data-showItem' => 'true',
-            'data-showItemCheck' => 'yes',
-            'data-showItemCheckNo' => 'no',
-            'data-showItemClassView' => 'costo',
-            'data-type' => 'list'
-        ])->label(false) ?>
+    <?= Yii::t('app', 'Evento a pagamento?') ?>
+
+    <?= $form->field($model, 'pagamento')->radioList(['no' => Yii::t('app','No'), 'yes' => Yii::t('app','Si')], [
+        'data-showItem' => 'true',
+        'data-showItemCheck' => 'yes',
+        'data-showItemCheckNo' => 'no',
+        'data-showItemClassView' => 'costo',
+        'data-type' => 'list'
+    ])->label(false) ?>
 	
     <?= $form->field($model, 'costo', ['options' => [
         'class' => 'form-group field-attivita-costo required costo ',
-        'data-hide' => (empty($model->costo))?'true':'false',
+        'data-hide' => (empty($model->pagamento==="yes"))?'true':'false',
     ]])->textInput()->label(Yii::t('app', 'Quota') . ' (&euro;)') ?>
 	
-	<?= $form->field($model, 'prenotazione')->radioList(
-                ['no' => Yii::t('app','No'), 'yes' => Yii::t('app','Si')], [
-            'data-showItem' => 'true',
-            'data-showItemCheck' => 'yes',
-            'data-showItemCheckNo' => 'no',
-            'data-showItemClassView' => 'posti',
-            'data-type' => 'list'
-        ]) ->label(Yii::t('app', 'Prenotazione disponibile?')) ?>
+    <?= $form->field($model, 'prenotazione')->radioList(
+            ['no' => Yii::t('app','No'), 'yes' => Yii::t('app','Si')], [
+        'data-showItem' => 'true',
+        'data-showItemCheck' => 'yes',
+        'data-showItemCheckNo' => 'no',
+        'data-showItemClassView' => 'posti',
+        'data-type' => 'list'
+    ]) ->label(Yii::t('app', 'Prenotazione disponibile?')) ?>
 
     <?= $form->field($model, 'posti_disponibili', ['options' => [
         'class' => 'form-group field-attivita-posti_disponibili posti ',

@@ -19,7 +19,7 @@
         }, options );
 		
         var _this 	= $(this);
-        var _showItems  = $('[data-showitem]');
+        var _showItems  = $('[data-showitem]', _this);
         
         var clear = settings.clear;
         
