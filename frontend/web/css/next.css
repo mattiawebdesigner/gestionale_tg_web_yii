@@ -9,6 +9,10 @@
     justify-content: center;
     gap: 2rem;
 }
+#next.next-view .event{
+    flex-grow: 1;
+    flex-basis: 0;
+}
 #next .title{
     text-align: center;
     font-size: 2rem;
