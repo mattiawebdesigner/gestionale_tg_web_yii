@@ -66,7 +66,9 @@ class AttivitaController extends Controller
         
         if ($this->request->isPost) {
             if ($prenotazioni->load($this->request->post())) {
+                
                 $prenotazioni->attivita_id = $attivita_id;
+                $prenotazioni->turno       = $turn;
                 
                 $this->deleteItem($attivita_id, $email, $turn);
                 if($prenotazioni->save()){
@@ -80,7 +82,7 @@ class AttivitaController extends Controller
                     $email = $prenotazioni->email;
                     $image = Yii::$app->params['backendWeb'].$model->foto;
                     $base = Url::to(['/attivita/prenotazioni', 'attivita_id' => $attivita_id, 'email' => $email], true);
-                
+                    
                     Yii::$app->mailer->compose(['html' =>'layouts/html'], ['content' => <<<TESTO
 <h1>
     <b>Teatralmente Gioia</b> <br />
@@ -102,12 +104,12 @@ class AttivitaController extends Controller
 TESTO])
 ->setFrom([Yii::$app->params['senderEmail']=> Yii::$app->params['senderName']])
 ->setTo([Yii::$app->params['reservationEmail'], $email])
-->setSubject(Yii::t('app', 'Modifica prenotazione, ').$events.' | '.Yii::$app->name)
-->send();
+->setSubject(Yii::t('app', 'Modifica prenotazione, ').$events.' | '.Yii::$app->name);
+//->send();
                     
                     Yii::$app->session->setFlash('success', Yii::t('app', 'Prenotazione modificata con successo, riceverai un email di conferma'));
                     
-                    return $this->redirect(['prenotazioni', 'attivita_id' => $prenotazioni->attivita_id, 'email' => $prenotazioni->email]);
+                    return $this->redirect(['prenotazioni', 'attivita_id' => $prenotazioni->attivita_id, 'email' => $prenotazioni->email,'turn'=>$turn]);
                 }else{
                     Yii::$app->session->setFlash('error', Yii::t('app', 'Si &grave; verificato un errore nella modifica della prenotazione, riprova pi&ugrave; tardi o contatta un\'amministratore'));
                 }
@@ -314,7 +316,7 @@ Yii::$app->session->setFlash('success', Yii::t('app', 'Prenotazione eliminata co
      * @param type $turn
      */
     private function deleteItem($id, $email, $turn){
-        (Prenotazioni::find()->where(['attivita_id' => $id, 'email' => $email])->all())[0]->delete();
+        (Prenotazioni::find()->where(['attivita_id' => $id, 'email' => $email, 'turno' => $turn])->all())[0]->delete();
     }
     
     /**

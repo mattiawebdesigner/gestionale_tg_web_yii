@@ -70,12 +70,12 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Prenotazione: {p}', [
                     ]);
                     ?>
                 </div>
-
+                
                 <?php $form = ActiveForm::begin(['options' => ['class'=>'display-none']]);?>
                     <?= $form->field($prenotazioni, 'prenotazioni')
                                 ->textInput(['type'=>'number', 
                                     'min' => 1,
-                                    'max' => ($attivita->parametri->dates->days[$turno-1]->place - Prenotazioni::find()->where(['attivita_id' => $attivita->id, 'turno' => $turno])->andWhere(["<>", "email", $prenotazioni->email])->sum('prenotazioni'))
+                                    'max' => ($attivita->parametri->dates->days[$turno-1]->place - $posti_occupati) + ($prenotazioni->prenotazioni??0)
                                     ])
                                 ->label(Yii::t('app', 'Numero di partecipanti')) ?>
                     <?= $form->field($prenotazioni, 'email')->hiddenInput(['maxlength' => true])->label(false) ?>
