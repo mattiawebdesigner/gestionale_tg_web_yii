@@ -4,11 +4,7 @@ use backend\models\Prenotazioni;
 
 $n_of_turns = sizeof((array)$evento->parametri->dates->days);
 ?>
-<pre>
-    <?php
-    print_r((Prenotazioni::find()->where(["attivita_id" => $evento->id, 'turno' => 4])->sum("prenotazioni")));
-    ?>
-</pre>
+
 <div class="turns">                    
     <div><strong><?= $n_of_turns ?> <?= Yii::t('app', 'turni (clicca per prenotare)') ?></strong></div>
     <?php foreach($evento->parametri->dates->days as $k => $turn): ?>
