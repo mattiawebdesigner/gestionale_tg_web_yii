@@ -206,7 +206,11 @@ class AttivitaController extends Controller
      */
     public function actionReservation($id){
         $model = $this->findModel($id);
-        $reservations = \backend\models\Prenotazioni::find()->where(['attivita_id' => $id])->asArray()->all();
+        $reservations = \backend\models\Prenotazioni::find()
+                            ->where(['attivita_id' => $id])
+                            ->orderBy(['cognome' => SORT_ASC, 'nome' => SORT_ASC])
+                            ->asArray()
+                            ->all();
         
         $group_reservations = [];
         foreach($reservations as $k => $book){
