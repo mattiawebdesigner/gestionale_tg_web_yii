@@ -55,7 +55,7 @@ class AttivitaController extends Controller
      * @return string
      */
     public function actionPrenotazioni($attivita_id, $email, $turn=0)
-    {   
+    {
         $prenotazioni = new Prenotazioni();
         //Corregge il valore del turno per il suo corretto utilizzo
         //Se si tratta del primo turno la differenza $turn-2 darebbe -1 e non è valido,
@@ -113,6 +113,7 @@ TESTO])
                 }
             }
         }
+        
         $prenotazioni = Prenotazioni::find()->where(["attivita_id" => $attivita_id, "email" => $email, 'turno' => $turn])->all();
         
         if(!isset($prenotazioni) || sizeof($prenotazioni) === 0){
@@ -130,7 +131,7 @@ TESTO])
         return $this->render('prenotazioni', [
             'prenotazioni'      => $prenotazioni[0],
             'attivita'          => $attivita,
-            'posti_occupati'    => Prenotazioni::find()->where(["attivita_id" => $attivita_id])->sum("prenotazioni"),
+            'posti_occupati'    => Prenotazioni::find()->where(["attivita_id" => $attivita_id])->andWhere(["turno"=>$turn])->sum("prenotazioni"),
             'turno'             => $turn,
             'turnCorrect'       => $turnCorrect,
             
