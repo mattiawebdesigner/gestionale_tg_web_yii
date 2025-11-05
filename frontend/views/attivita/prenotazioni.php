@@ -33,21 +33,21 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Prenotazione: {p}', [
                 </div>
 
                 <div class="content">
-                    <strong><?= Yii::t('app', 'Turno prenotato'); ?>: <?= $turno + 1 ?></strong>
+                    <strong><?= Yii::t('app', 'Turno prenotato'); ?>: <?= $turno ?></strong>
                     <div class="place"><i class="fas fa-map-pin"></i> <?= $attivita->luogo ?></div>
                     <?php
                     echo $this->render('sections/_singleDate',[
                         'attivita'      => $attivita,
-                        'turnCorrect'   => $turnCorrect,
+                        'turnCorrect'   => $turno-1,
                     ]);
                     echo $this->render('sections/_freePlace',[
                         'model'         => $attivita,
-                        'turnCorrect'   => $turnCorrect,
+                        'turnCorrect'   => $turno-1,
                         'posti_occupati'=> $posti_occupati,
                     ]);
                     echo $this->render('sections/_singlePrice',[
                         'attivita'      => $attivita,
-                        'turnCorrect'   => $turnCorrect,
+                        'turnCorrect'   => $turno-1,
                     ]);
                     ?>
 
@@ -62,15 +62,20 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Prenotazione: {p}', [
                                 'method' => 'post',
                             ],
                         ]) ?>
-
                     </div>
+                    <?php
+                    echo $this->render('sections/_singlePrice',[
+                        'attivita'      => $attivita,
+                        'turnCorrect'   => $turno,
+                    ]);
+                    ?>
                 </div>
 
                 <?php $form = ActiveForm::begin(['options' => ['class'=>'display-none']]);?>
                     <?= $form->field($prenotazioni, 'prenotazioni')
                                 ->textInput(['type'=>'number', 
                                     'min' => 1,
-                                    'max' => ($attivita->parametri->dates->days[$turnCorrect]->place - Prenotazioni::find()->where(['attivita_id' => $attivita->id, 'turno' => $turno])->andWhere(["<>", "email", $prenotazioni->email])->sum('prenotazioni'))
+                                    'max' => ($attivita->parametri->dates->days[$turno-1]->place - Prenotazioni::find()->where(['attivita_id' => $attivita->id, 'turno' => $turno])->andWhere(["<>", "email", $prenotazioni->email])->sum('prenotazioni'))
                                     ])
                                 ->label(Yii::t('app', 'Numero di partecipanti')) ?>
                     <?= $form->field($prenotazioni, 'email')->hiddenInput(['maxlength' => true])->label(false) ?>
