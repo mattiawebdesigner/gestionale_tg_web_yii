@@ -150,7 +150,7 @@ TESTO])
         $prenotazioni = new Prenotazioni();
         //Corregge il valore del turno per il suo corretto utilizzo
         //per ottenere la posizione del turno nel JSON.
-        $turnCorrect = $turn==0?0:$turn-1;
+        $turnCorrect = $turn-1;
         
         $model->parametri = json_decode($model->parametri);
         
@@ -171,6 +171,9 @@ TESTO])
             $tmp = Prenotazioni::find()->where(["attivita_id" => $id, "email" => $prenotazioni->email, 'turno' => $prenotazioni->turno])->count();
             
             if($tmp == 0){
+                //Converto in una stringa se viene passato un oggetto stdClass
+                $model->parametri = is_object($model->parametri) ? json_encode($model->parametri) : $model->parametri;
+                
                 $model->parametri = json_decode($model->parametri);
                 if ($prenotazioni->save()) {
                     $events         = $model->nome;
