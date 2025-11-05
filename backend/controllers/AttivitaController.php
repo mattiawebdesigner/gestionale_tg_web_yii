@@ -206,18 +206,43 @@ class AttivitaController extends Controller
      */
     public function actionReservation($id){
         $model = $this->findModel($id);
-        $reservations = \backend\models\Prenotazioni::find()->where(['attivita_id' => $id]);
-        $dataProvider = new ActiveDataProvider([
+        $reservations = \backend\models\Prenotazioni::find()->where(['attivita_id' => $id])->asArray()->all();
+        
+        $group_reservations = [];
+        foreach($reservations as $k => $book){
+            $turn = json_decode($model->parametri)->dates->days[$book['turno']-1];
+            $group_reservations[$book['turno']][$turn->date."|".$turn->price.'|'.$turn->place][] = [
+                'id'            => $book['id'],
+                'prenotazioni'  => $book['prenotazioni'],
+                'email'         => $book['email'],
+                'attivita_id'   => $book['attivita_id'],
+                'turno'         => $book['turno'],
+                'nome'          => $book['nome'],
+                'cognome'       => $book['cognome'],
+                'data'          => $turn->date, 
+                'price'         => $turn->price, 
+                'place'         => $turn->place, 
+            ];
+        }
+        ksort($group_reservations);
+        
+        
+        /*$dataProvider = new ActiveDataProvider([
             'query' => $reservations,
             'pagination' => [
                 'pageSize' => 20,
             ],
-        ]);
+        ]);*/
+        
+        /*echo "<pre>";
+        print_r($group_reservations); 
+        echo "</pre>";
+        return;*/
         
         return $this->render('reservation', [
             'model' => $model,
-            'reservations' => $reservations,
-            'dataProvider' => $dataProvider,
+            'reservations' => $group_reservations,
+            //'dataProvider' => $dataProvider,
             'placesLeft' => $this->getPlacesLeft($id),
         ]);
     }
