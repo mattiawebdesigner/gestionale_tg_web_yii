@@ -2,7 +2,6 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use backend\models\Prenotazioni;
 
 /* @var $this yii\web\View */
 /* @var $model backend\models\Attivita */

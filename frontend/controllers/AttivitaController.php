@@ -145,11 +145,12 @@ TESTO])
      */
     public function actionInfo($id, $turn = 0)
     {
+        
         $model = $this->findModel($id);
         $prenotazioni = new Prenotazioni();
         //Corregge il valore del turno per il suo corretto utilizzo
         //per ottenere la posizione del turno nel JSON.
-        $turnCorrect = $turn-1;
+        $turnCorrect = $turn==0?0:$turn-1;
         
         $model->parametri = json_decode($model->parametri);
         
@@ -212,8 +213,7 @@ TESTO])
                     Yii::$app->session->setFlash('error', Yii::t('app', 'Si &egrave; verificato un problema nel salvare la prenotazione'));
                 }
                 
-                
-                return $this->redirect(['info', 
+                return $this->redirect(['info',
                     'model'         => $model,
                     'prenotazioni'  => new Prenotazioni(),
                     'id'            => $id,
