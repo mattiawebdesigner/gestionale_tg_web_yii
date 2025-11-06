@@ -32,21 +32,6 @@ class AttivitaController extends Controller
             ]
         );
     }
-
-    /**
-     * Lists all Attivita models.
-     * @return mixed
-     */
-    /*public function actionIndex()
-    {
-        $searchModel = new AttivitaSearch();
-        $dataProvider = $searchModel->search($this->request->queryParams);
-
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
-    }*/
     
     /**
      * 
@@ -186,7 +171,7 @@ TESTO])
                     $reserved_seats = $prenotazioni->prenotazioni;
                     $email          = $prenotazioni->email;
                     $image          = Yii::$app->params['backendWeb'].$model->foto;
-                    $base           = Url::to(['/attivita/prenotazioni', 'attivita_id' => $id, 'email' => $email], true);
+                    $base           = Url::to(['/attivita/prenotazioni', 'attivita_id' => $id, 'email' => $email, 'turn'=>$turn], true);
                     
                     Yii::$app->mailer->compose('@common/mail/layouts/html', ['content' => <<<TESTO
 <h1>
