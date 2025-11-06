@@ -17,25 +17,25 @@ $attivita->parametri = json_decode($attivita->parametri);
     <?= Yii::t('app', 'Posti totali') ?>: <strong><?= $attivita->parametri->dates->days[$turn-1]->place ?></strong>
 </div>
 
-<table style="border: 0px solid;">
+<table style="border: 0px solid;width: 100%;">
     <thead>
         <tr>
-            <th style="text-align: center;">
+            <th style="text-align: center;" colspan="3">
                 <h3><?= Yii::t('app', 'Turno {t}', ['t' => $turn]) ?></h3>
             </th>
         </tr>
     </thead>
 
     <?php foreach($prenotazioni as $p): ?>
-    <tr>
-        <td style="background-color: #f0f0f0;">
-            <table>
-                <tr>
-                    <td style="text-align: left;"><strong><?= $p->cognome ?> <?= $p->nome ?></strong></td>
-                    <td style="text-align: left;"><?= $p->email ?></strong></td>
-                    <td style="text-align: left;"><?= $p->nome ?></strong></td>
-                </tr>
-            </table>
+    <tr style="background-color: #f0f0f0;">
+        <td>
+            <strong><?= $p->cognome ?> <?= $p->nome ?></strong>
+        </td>
+        <td>
+            <?= $p->email ?>
+        </td>
+        <td>
+            <?= Yii::t('app', 'Posti prenotati') ?>: <strong style="color: darkgreen;"><?= $p->prenotazioni ?></strong>
         </td>
     </tr>
     <?php endforeach; ?>
