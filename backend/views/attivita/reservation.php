@@ -35,15 +35,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 <?php endif; ?>
 
                 <div class="place"><i class="fas fa-map-pin"></i> <?= $model->luogo ?></div>
-                <!--<div class="date"><i class="fas fa-calendar-alt"></i> <?= $model->data_attivita ?></div>-->
 
                 <?php if($model->pagamento == "yes") : ?>
                 <div class="date"><i class="fas fa-euro-sign"></i> <?= $model->costo ?></div>
                 <?php endif; ?>
-                
-                <!--<div class="chair">
-                    <i class="fas fa-chair"></i> <?= $model->posti_disponibili == null ? "Nessuna limitazione" : $placesLeft ?>
-                </div>-->
                 
                 <?php foreach($reservations as $turn => $values): ?>
                     <table class="table table-striped">
@@ -51,7 +46,12 @@ $this->params['breadcrumbs'][] = $this->title;
                             <tr>
                                 <th>
                                     <div class="flex flex-row justify-content-between">
-                                        <h3 class="title"><?= Yii::t('app', 'Turno {t}', ['t' => $turn]) ?></h3>
+                                        <div class="flex flex-column">
+                                            <h3 class="title"><?= Yii::t('app', 'Turno {t}', ['t' => $turn]) ?></h3>
+                                            <div class="download-pdf">
+                                                <?= Html::a('<i class="fa-solid fa-file-pdf"></i>', ['pdf', 'attivita_id' => $attivita_id, 'turn' => $turn]) ?>
+                                            </div>
+                                        </div>
                                         <div class="flex flex-column">
                                             <div class="chair">
                                                 <i class="fas fa-calendar-alt"></i> 
