@@ -55,7 +55,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
             <div class="reservation">
                 <?php if($model->prenotazione == "yes"): ?>
-                    <?php if(($model->parametri->dates->days[$turnCorrect]->place - $posti_occupati) > 0) : ?>
+                    <?php if(($model->parametri->dates->days[$turnCorrect<0?0:$turnCorrect]->place - $posti_occupati) > 0) : ?>
                         <h5><?= Yii::t('app', 'Prenota') ?></h5>
 
                         <?php $form = ActiveForm::begin(); ?>
@@ -63,7 +63,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             <?= $form->field($prenotazioni, 'nome')->textInput(['maxlength' => true]) ?>
                             <?= $form->field($prenotazioni, 'email')->textInput(['type'=>'email', 'maxlength' => true]) ?>
                             <?= $form->field($prenotazioni, 'prenotazioni')->textInput(['type'=>'number', 'min' => 1, 
-                                        'max' => ($model->parametri->dates->days[$turnCorrect]->place - $posti_occupati)
+                                        'max' => ($model->parametri->dates->days[$turnCorrect<0?0:$turnCorrect]->place - $posti_occupati)
                                 ])->label(Yii::t('app', 'Numero di partecipanti')) ?>
                             <?= $form->field($prenotazioni, 'turno')->hiddenInput(['value'=>$turn])->label(false); ?>	
                             <div class="form-group">
