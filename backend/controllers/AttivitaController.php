@@ -120,9 +120,39 @@ class AttivitaController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $model->parametri = json_decode($model->parametri);
         
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+        /*if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
+        }*/
+        if ($this->request->isPost) {
+            $model->load($this->request->post());
+            
+            //Compile field "parametri"
+            $data_attivita = $model->data_attivita;
+            $parametri = [];
+            foreach ($data_attivita as $data){
+                $parametri['dates']['days'][] = [
+                    'date'  => date("Y-m-d H:i", strtotime($data)),
+                    'price' => $model->costo,
+                    'place' => $model->posti_disponibili
+                ];
+            }
+            $model->parametri = json_encode($parametri);
+                        
+            //Solo per compatibilità rispetto ai vecchi dati inseriti e agli obblighi
+            //derivanti dal campo della tabella
+            $model->data_attivita = date("Y-m-d H:i", strtotime($model->data_attivita[0]));
+            $model->parametri = json_decode($model->parametri);
+            sort($model->parametri->dates->days);
+            $model->parametri = json_encode($model->parametri);
+            
+            if ($model->save()) {
+                Yii::$app->session->setFlash('success', Yii::t('app', 'I dati sono stati correttamente aggiornati!'));
+                return $this->redirect(['update', 'id' => $model->id]);
+            }
+        } else {
+            $model->loadDefaultValues();
         }
         
         $media = Media::find()->all();
