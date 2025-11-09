@@ -1,21 +1,17 @@
 <?php
     /**
-     * Resrvation of the selected event
+     * Reservation of the selected event
      */
 ?>
 <?php
-/* @var $this yii\web\View */
 /* @var $searchModel backend\models\AttivitaSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
-
-use yii\grid\GridView;
 use yii\helpers\Html;
 
 $this->title = Yii::t('app', 'Prenotazioni {name}',[
     'name' => $model->nome,
 ]);
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Attività'), 'url' => ['/attivita/index']];
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Elenco eventi'), 'url' => ['/attivita/reservations']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <h1><?= $this->title ?></h1>
