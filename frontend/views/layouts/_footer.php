@@ -3,6 +3,10 @@
   <section class="d-flex justify-content-center  p-4 border-bottom">
       La sezione che state visionando del sito di <?= Yii::$app->name ?> &egrave; in versione&nbsp; <strong>BETA</strong>
   </section>
+  <!-- Powered by -->
+  <section class="d-flex justify-content-center  p-4 border-bottom">
+      Powered by <a href="https://bit.ly/msd_technologies" target="_blank">MSD Technologies</a>
+  </section>
   <section class="d-flex justify-content-center justify-content-lg-between p-4 border-bottom">
     <!-- Left -->
     <div class="me-5 d-none d-lg-block">
