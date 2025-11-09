@@ -20,9 +20,9 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Aggiornamento');
         'model' => $model,
     ]) ?>
     
-	<?= $this->render('_iFrame', [
-	    'upload' => $upload,
-	    'media'  => $media
-	]); ?>
+    <?= $this->render('_iFrame', [
+        'upload' => $upload,
+        'media'  => $media
+    ]); ?>
 
 </div>
