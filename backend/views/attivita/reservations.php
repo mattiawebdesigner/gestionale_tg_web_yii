@@ -35,7 +35,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 return Html::img($model->foto, ['style' => 'width: 150px;']);
             }
         ],
-        'descrizione:ntext',
+        //'descrizione:ntext',
         'luogo',
         'data_ultima_modifica',
         

@@ -12,7 +12,7 @@ use yii\filters\AccessControl;
 use backend\models\Media;
 use backend\models\MediaUploadForm;
 use yii\web\UploadedFile;
-use yii\data\ActiveDataProvider;
+use kartik\mpdf\Pdf;
 
 /**
  * AttivitaController implements the CRUD actions for Attivita model.
@@ -63,19 +63,6 @@ class AttivitaController extends Controller
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-        ]);
-    }
-    
-    /**
-     * Displays a single Attivita model.
-     * @param string $id ID
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
         ]);
     }
     
@@ -133,9 +120,39 @@ class AttivitaController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $model->parametri = json_decode($model->parametri);
         
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+        /*if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
+        }*/
+        if ($this->request->isPost) {
+            $model->load($this->request->post());
+            
+            //Compile field "parametri"
+            $data_attivita = $model->data_attivita;
+            $parametri = [];
+            foreach ($data_attivita as $data){
+                $parametri['dates']['days'][] = [
+                    'date'  => date("Y-m-d H:i", strtotime($data)),
+                    'price' => $model->costo,
+                    'place' => $model->posti_disponibili
+                ];
+            }
+            $model->parametri = json_encode($parametri);
+                        
+            //Solo per compatibilità rispetto ai vecchi dati inseriti e agli obblighi
+            //derivanti dal campo della tabella
+            $model->data_attivita = date("Y-m-d H:i", strtotime($model->data_attivita[0]));
+            $model->parametri = json_decode($model->parametri);
+            sort($model->parametri->dates->days);
+            $model->parametri = json_encode($model->parametri);
+            
+            if ($model->save()) {
+                Yii::$app->session->setFlash('success', Yii::t('app', 'I dati sono stati correttamente aggiornati!'));
+                return $this->redirect(['update', 'id' => $model->id]);
+            }
+        } else {
+            $model->loadDefaultValues();
         }
         
         $media = Media::find()->all();
@@ -206,19 +223,49 @@ class AttivitaController extends Controller
      */
     public function actionReservation($id){
         $model = $this->findModel($id);
-        $reservations = \backend\models\Prenotazioni::find()->where(['attivita_id' => $id]);
-        $dataProvider = new ActiveDataProvider([
+        $reservations = \backend\models\Prenotazioni::find()
+                            ->where(['attivita_id' => $id])
+                            ->orderBy(['cognome' => SORT_ASC, 'nome' => SORT_ASC])
+                            ->asArray()
+                            ->all();
+        
+        $group_reservations = [];
+        foreach($reservations as $k => $book){
+            $turn = json_decode($model->parametri)->dates->days[$book['turno']-1];
+            $group_reservations[$book['turno']][$turn->date."|".$turn->price.'|'.$turn->place][] = [
+                'id'            => $book['id'],
+                'prenotazioni'  => $book['prenotazioni'],
+                'email'         => $book['email'],
+                'attivita_id'   => $book['attivita_id'],
+                'turno'         => $book['turno'],
+                'nome'          => $book['nome'],
+                'cognome'       => $book['cognome'],
+                'data'          => $turn->date, 
+                'price'         => $turn->price, 
+                'place'         => $turn->place, 
+            ];
+        }
+        ksort($group_reservations);
+        
+        
+        /*$dataProvider = new ActiveDataProvider([
             'query' => $reservations,
             'pagination' => [
                 'pageSize' => 20,
             ],
-        ]);
+        ]);*/
+        
+        /*echo "<pre>";
+        print_r($group_reservations); 
+        echo "</pre>";
+        return;*/
         
         return $this->render('reservation', [
-            'model' => $model,
-            'reservations' => $reservations,
-            'dataProvider' => $dataProvider,
-            'placesLeft' => $this->getPlacesLeft($id),
+            'model'         => $model,
+            'reservations'  => $group_reservations,
+            'attivita_id'   => $id,
+            //'dataProvider' => $dataProvider,
+            //'placesLeft' => $this->getPlacesLeft($id),
         ]);
     }
     
@@ -265,7 +312,7 @@ TESTO])
         
         return $this->render('reservationUpdate', [
             'model'      => $model,
-            'placesLeft' => $this->getPlacesLeft($attivita_id),
+            //'placesLeft' => $this->getPlacesLeft($attivita_id),
         ]);
         
     }
@@ -324,6 +371,78 @@ TESTO])
     }
     
     /**
+     * generates the PDF for a specific shift
+     * 
+     * @param type $attivita_id Reservation ID
+     * @param type $turn Turn 
+     */
+    public function actionPdf($attivita_id, $turn){
+        $attivita       = $this->findModel($attivita_id);
+        $prenotazioni   = $this->findPrenotazioneByAttivitaIDAndTurn($attivita_id, $turn);
+        
+        $heading = $this->renderPartial('pdf/_pdf-heading');
+        $content = $this->renderPartial('pdf/_pdf', [
+            'attivita'      => $attivita,
+            'prenotazioni'  => $prenotazioni,
+            'turn'          => $turn
+        ]);
+        $footer = $this->renderPartial('pdf/_pdf-footer');
+        
+        $cssInline = <<<CSS
+            table{
+                width: 100%;
+            }
+            th{
+                color: #F77736;
+            }
+            td, th{
+                padding: 10px;
+            }
+            img{
+                width: 50px;
+            }
+CSS;
+        
+        $pdf = new Pdf([
+            'filename' => str_replace(" ", "_", $attivita->nome)."_".$turn."_".date("YmdHis").".pdf",
+            'marginLeft' => 10,
+            'marginRight' => 10,
+            'marginTop' => 50,
+            'marginHeader' => 0,
+            'marginBottom' => 50,
+            // set to use core fonts only
+            'mode' => Pdf::MODE_CORE, 
+            // A4 paper format
+            'format' => Pdf::FORMAT_A4, 
+            // portrait orientation
+            'orientation' => Pdf::ORIENT_PORTRAIT, 
+            // stream to browser inline
+            'destination' => Pdf::DEST_DOWNLOAD,
+            // your html content input
+            //'content' => $content,  
+            'content' => $content,
+            // format content from your own css file if needed or use the
+            // enhanced bootstrap css built by Krajee for mPDF formatting 
+            'cssFile' => '@vendor/kartik-v/yii2-mpdf/src/assets/kv-mpdf-bootstrap.min.css',
+            // any css to be embedded if required
+            'cssInline' => $cssInline, 
+             // set mPDF properties on the fly
+            'options' => [
+                'title' => Yii::$app->name,
+            ],
+             // call mPDF methods on the fly
+            'methods' => [
+                //'SetHeader' => [Yii::$app->name.' - '.Yii::t('app', 'Verbale')], 
+                'SetHTMLHeader' => $heading,
+                //'SetFooter' => ['Data di generazione: '.date('d-m-Y H:i:s').' • Pagina: {PAGENO}'],
+                'SetHTMLFooter' => $footer,
+            ]
+        ]);
+        
+        return $pdf->render();
+    }
+    
+    /**
      * Finds the Attivita model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param string $id ID
@@ -357,10 +476,17 @@ TESTO])
     
     /**
      * 
-     * @return integer
+     * @param type $id
+     * @param type $turn
+     * @return type
+     * @throws NotFoundHttpException
      */
-    private function getPlacesLeft($id){
-        $model = $this->findModel($id);
-        return $model->posti_disponibili-Prenotazioni::find()->where(['attivita_id' => $id])->sum('prenotazioni');
+    protected function findPrenotazioneByAttivitaIDAndTurn($id, $turn){
+        if( ($model = Prenotazioni::find()->where(['attivita_id' => $id, "turno" => $turn])->orderBy(['cognome' => SORT_ASC, 'nome' => SORT_ASC])->all()) ){
+            return $model;
+        }
+        
+        throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
     }
+    
 }

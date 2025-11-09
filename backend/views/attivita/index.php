@@ -36,13 +36,22 @@ $this->params['breadcrumbs'][] = $this->title;
                     return Html::img($model->foto, ['style' => 'width: 150px;']);
                 }
             ],
-            'descrizione:ntext',
+            //'descrizione:ntext',
             'luogo',
             'data_ultima_modifica',
             //'data_inserimento',
             //'data_attivita',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            //['class' => 'yii\grid\ActionColumn'],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'template' => "{reservation} {update} {delete}",
+                'buttons' =>[
+                    'reservation' => function($url, $model, $key){
+                        return Html::a('<i class="fas fa-bookmark"></i>', $url, ['title' => Yii::t('app', 'Tutte le prenotazioni')]);
+                    }
+                ]
+            ]
         ],
     ]); ?>
 

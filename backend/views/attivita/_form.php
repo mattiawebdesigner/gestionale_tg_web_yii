@@ -1,5 +1,4 @@
 <?php
-
 use yii\helpers\Html;
 use yii\web\View;
 use yii\widgets\ActiveForm;
@@ -10,25 +9,24 @@ use dosamigos\tinymce\TinyMce;
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div id="showItem" class="attivita-form">
-
+<div id="showItem" class="attivita-form">    
     <?php $form = ActiveForm::begin(); ?>
 
     <?= $form->field($model, 'nome')->textInput(['maxlength' => true]) ?>
 
     <div>
-            <div class="img-box">
-        <?= $form->field($model, 'foto')->textInput(['maxlength' => true, 'class' => 'append-url form-control', 'readonly' => 'readonly']) ?>
-        <div class="clear-img"><i class="fas fa-times-circle"></i></div>
-    </div>
+        <div class="img-box">
+            <?= $form->field($model, 'foto')->textInput(['maxlength' => true, 'class' => 'append-url form-control', 'readonly' => 'readonly']) ?>
+            <div class="clear-img"><i class="fas fa-times-circle"></i></div>
+        </div>
 
-    <div class="img img-show-media">
-            <?= Html::img($model->foto, [
-                'style' => 'width: 250px;'
-            ])?>
-    </div>
+        <div class="img img-show-media">
+                <?= Html::img($model->foto, [
+                    'style' => 'width: 250px;'
+                ])?>
+        </div>
 
-    <div class="btn btn-info open-iframe"><?= Yii::t('app', 'Galleria immagini') ?></div>
+        <div class="btn btn-info open-iframe"><?= Yii::t('app', 'Galleria immagini') ?></div>
     </div>
 
     <?= $form->field($model, 'descrizione')->widget(TinyMce::className(), [
@@ -50,6 +48,20 @@ use dosamigos\tinymce\TinyMce;
         <div data-add><i class="fa fa-plus"></i> <?= Yii::t('app', 'Aggiungi data e orario per l\'evento') ?></div>
         
         <div data-append></div>
+    </div>
+    
+    <br />
+    <div class="form-group field-attivita-data_attivita">
+        <?php foreach($model->parametri->dates->days as $k => $day): ?>
+        <label class="control-label" for="attivita-data_attivita-<?= $k ?>" data-delete-id="<?= $k ?>">
+            Data Attivita
+            <i 
+                class="fa fa-trash-alt color-tg-1 cursor-pointer" 
+                title="<?= Yii::t('app', 'Elimina la data') ?>"
+                data-delete="<?= $k ?>"></i>
+        </label>
+        <input type="datetime-local" id="attivita-data_attivita-<?= $k ?>" class="form-control" name="Attivita[data_attivita][]" data-delete-id="<?= $k ?>" value="<?= $day->date; ?>">
+        <?php endforeach; ?>
     </div>
 	
     <?= Yii::t('app', 'Evento a pagamento?') ?>
@@ -106,6 +118,7 @@ $this->registerCss('
 $this->registerJsFile("@web/js/media.js", ['depends' => [yii\web\JqueryAsset::className()]]);
 $this->registerJsFile("@web/js/showItem.js", ['depends' => [yii\web\JqueryAsset::className()]]);
 $this->registerJsFile("@web/js/utility/generateElement.js", ['depends' => [yii\web\JqueryAsset::className()]]);
+$this->registerJsFile("@web/js/utility/deleteItem.js", ['depends' => [yii\web\JqueryAsset::className()]]);
 $this->registerJs("jQuery('#iframe').media({
     open        : '.open-iframe',
     attachment  : 'input.append-url' 
@@ -121,5 +134,6 @@ jQuery('[data-generate]').generateElement({
                     '<div class=\"help-block\"></div>'+
                 '</div>'
 });
+jQuery('[data-delete]').deleteItem();
 ", View::POS_END);
 ?>
