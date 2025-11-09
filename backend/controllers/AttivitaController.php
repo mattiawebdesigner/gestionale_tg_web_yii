@@ -67,19 +67,6 @@ class AttivitaController extends Controller
     }
     
     /**
-     * Displays a single Attivita model.
-     * @param string $id ID
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
-    }
-    
-    /**
      * Creates a new Attivita model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
