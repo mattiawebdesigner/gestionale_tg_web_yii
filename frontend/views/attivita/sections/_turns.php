@@ -10,7 +10,7 @@ $n_of_turns = sizeof((array)$evento->parametri->dates->days);
     <?php foreach($evento->parametri->dates->days as $k => $turn): ?>
     <a class="date d-block" href="<?= Url::to(['attivita/info', 'id'=>$evento->id, 'turn'=>($k+1)]) ?>">
         <i class="fas fa-calendar-alt"></i> <strong><?= date("d-m-Y H:i", strtotime($turn->date)) ?></strong>
-        <i class="fas fa-euro-sign"></i> <strong><?= $turn->price ?></strong>
+        <i class="fas fa-euro-sign"></i> <strong><?= $turn->price>0?$turn->price:Yii::t('app', 'Ingresso gratuito') ?></strong>
         <i class="fas fa-chair"></i> 
         <?= !isset($turn->place) 
             ? 
