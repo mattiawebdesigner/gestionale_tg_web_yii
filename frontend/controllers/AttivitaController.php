@@ -142,6 +142,13 @@ TESTO])
         
         $model->parametri = json_decode($model->parametri);
         
+        if($turn===0){
+            $turnCorrect = 1;
+            return $this->render('info', [
+                'model' => $model,
+            ]);
+        }
+        
         //Search
         if($this->request->post("action") == "search"){
             $prenotazioni->load($this->request->post());
@@ -217,7 +224,7 @@ TESTO])
             ]));
         }
         
-        return $this->render('info', [
+        return $this->render('turn', [
             'model'             => $model,
             'prenotazioni'      => $prenotazioni,
             'posti_occupati'    => Prenotazioni::find()->where(["attivita_id" => $id, 'turno' => $turn])->sum("prenotazioni")??0,
