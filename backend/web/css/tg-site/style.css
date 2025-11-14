@@ -1,0 +1,13 @@
+/* 
+    Stile per la sezione di gesitone del sito
+
+    Created on : 13 nov 2025, 16:57:31
+    Author     : Mattia
+*/
+[class*="tgsite-"] h1{
+    text-align: center;
+    border-bottom: 1px inset var(--color-link-tg2);
+    padding-bottom: 3px;
+    margin-bottom: 27px;
+}
+[data-item-menu-error]{color: darkred;font-weight: 700;}
