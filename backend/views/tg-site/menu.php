@@ -35,7 +35,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 </option>
                                 <?php endforeach; ?>
                             </select>
-                        <?php elseif(!is_null($info) && $info['type_field'] === "post_type"): ?>
+                            <input type="text" value="" />
                         <?php endif; ?>
                     </div>
                     <?php endforeach; ?>
