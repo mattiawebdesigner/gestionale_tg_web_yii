@@ -16,6 +16,22 @@ use Yii;
 class Postmeta extends \yii\db\ActiveRecord
 {
     /**
+     * menu_key => [
+     *  menu_value => [
+     *      type_field => url|select (from database)|other
+     *  ]
+     * ]
+     * 
+     * @var array
+     */
+    public static $menu_info = [
+        '_menu_item_type' => [
+            'custom' => 'url',
+            'post_type' => 'dropdown|posts'//tipo select recuperando i dati dalla tabella posts
+        ],
+    ];
+    
+    /**
      * {@inheritdoc}
      */
     public static function tableName()

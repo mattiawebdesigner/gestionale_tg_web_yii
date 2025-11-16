@@ -21,22 +21,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div data-item-menu-info>
                     <?php foreach($menu_type as $type => $info): ?>
                     <div class="flex">
-                        <?php if(!is_null($info) && $info['type_field'] === "dropdown"): ?>
-                            <select class="form-control" data-show-id="<?= $type ?>" name="<?= $type ?>">
-                                <?php foreach($info['values'] as $k => $v): ?>
-                                    <option value="<?= $k ?>"><?= $v ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                            
-                            <select id="<?= $type ?>" name="post">
-                                <?php foreach($posts as $post): ?>
-                                <option value="<?= $post->id ?>">
-                                    <?= $post->post_title ?>
-                                </option>
-                                <?php endforeach; ?>
-                            </select>
-                            <input type="text" value="" />
-                        <?php endif; ?>
+                        
                     </div>
                     <?php endforeach; ?>
                 </div>
@@ -58,29 +43,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
                         <?php foreach($menu_item['key_value']['meta_key'] as $key => $meta_key): ?>
                         <div class="<?= $meta_key ?>">
-                            <?php if(!is_null($menu_type[$meta_key])): ?>
-                                <?php if($menu_type[$meta_key]['type_field'] === "dropdown"): ?>
-                                    <div class="flex">
-                                        <select class="form-control" name="<?= $meta_key ?>">
-                                            <?php foreach($menu_type[$meta_key]['values'] as $k => $text): ?>
-                                                <option <?= ($menu_item['key_value']['meta_value'][$key]==$k)?"selected='selected'":'' ?> value="<?= $k ?>"><?= $text ?></option>
-                                            <?php endforeach; ?>
-                                        </select>
-
-                                        <?php if($menu_item['key_value']['meta_value'][$key] == "custom"): ?>
-                                        <input type="text" value="<?= $menu_item['key_value']['meta_value'][array_search("_menu_item_url", $menu_item['key_value']['meta_key'])]?>" />
-                                        <?php elseif($menu_item['key_value']['meta_value'][$key] == "post_type"): ?>
-                                        <select name="post">
-                                            <?php foreach($posts as $post): ?>
-                                            <option value="<?= $post->id ?>">
-                                                <?= $post->post_title ?>
-                                            </option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                        <?php endif; ?>
-                                    </div>
-                                <?php endif; ?>
-                            <?php endif; ?>
+                            
                         </div>
                         <?php endforeach; ?>
                     </div>
