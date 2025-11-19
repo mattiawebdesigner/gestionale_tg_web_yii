@@ -21,22 +21,21 @@ $this->params['breadcrumbs'][] = $this->title;
                     <div data-item-menu-error></div>
                 </div>
                 
-                <div data-item-menu-info>
-                    <select class="form-control" name="">
+                <div class="flex gap-1" data-item-menu-info>
+                    <select class="form-control" data-change name="">
                         <?php foreach($menu_type['_menu_item_type'] as $type => $value): ?>
-                        <option value="<?= $type ?>"><?= $value['text'] ?></option>
+                            <option value="<?= $type ?>" data-change-target-id="<?= $type ?>"><?= $value['text'] ?></option>
                         <?php endforeach; ?>
                     </select>
                     
                     <?php foreach($menu_type['_menu_item_type'] as $type => $value): ?>
                         <?php if(explode("|", $value['type'])[0]==="url"): ?>
-                        <input type="url" pattern="https://.*" required />
+                            <input type="url" class="form-control" pattern="https://.*" required data-change-id="<?= $type ?>" />
                         <?php elseif(explode("|", $value['type'])[0]==="dropdown"): ?>
-                        <select class="form-control" name="">
-                            <?php foreach($posts as $post): ?>
-                            <option value="<?= $post['id'] ?>"><?= $post['post_title'] ?></option>
-                            <?php endforeach; ?>
-                        </select>
+                            <select class="form-control" data-change-id="<?= $type ?>" name=""><?php foreach($posts as $post): ?>
+                                <option value="<?= $post['id'] ?>"><?= $post['post_title'] ?></option>
+                                <?php endforeach; ?>
+                            </select>
                         <?php endif; ?>
                     <?php endforeach; ?>
                 </div>

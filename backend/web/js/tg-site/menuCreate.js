@@ -26,8 +26,33 @@
             var _itemMenuName   = $("[data-item-menu-name]",    _el);
             var _itemMenuError  = $("[data-item-menu-error]",   _el);
             var _itemMenuPaste  = $("[data-menu-item-paste]",   _el);
+            /**
+             * Seleziona la <b>select</b> i cui elementi servono a 
+             * scegliere quale elemento associato visualizzare.
+             */
+            var _optionsTarget  = $("[data-change]", _el);
             var menuInfo        = settings['menu-type'];
             
+            //Nascondo tutti gli elementi per il tipo di voce di menu
+            hideTargetHideMenuItem();
+            
+            /**
+             * Visualizzo gli elementi in base al tipo di voce
+             * del menu selezionata.
+            */
+            _optionsTarget.change((el)=>{
+                hideTargetHideMenuItem();
+                
+                var target_id = $(el.target).children('option:selected').data("change-target-id");
+                
+                var target_element = $("[data-change-id='"+target_id+"']");
+                
+                target_element.show();
+            });
+            
+            /**
+             * Aggiunge la voce di menu al menu
+             */
             $(_itemMenuAdd).click(()=>{
                 let itemName = _itemMenuName.val();
                 
@@ -97,15 +122,16 @@
             elToAdd.appendChild(infoDiv);
             
             container.append(elToAdd);
-            
-            
-            
-            /*for(let val of json){
-                console.log((val));
-                for(let key of val){
-                    console.log(key);
-                }
-            }*/
+        }
+        
+        /**
+         * Nasconde l'elemento target per la definizione
+         * della voce di menu
+         * 
+         * @returns void
+         */
+        function hideTargetHideMenuItem(){
+            $("[data-change-id]").hide();
         }
     };
  
