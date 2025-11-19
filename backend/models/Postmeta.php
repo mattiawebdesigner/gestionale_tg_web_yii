@@ -26,8 +26,14 @@ class Postmeta extends \yii\db\ActiveRecord
      */
     public static $menu_info = [
         '_menu_item_type' => [
-            'custom' => 'url',
-            'post_type' => 'dropdown|posts'//tipo select recuperando i dati dalla tabella posts
+            'custom' => [
+                'text' => 'URL personalizzato',
+                'type' => 'url'
+            ],
+            'post_type' => [
+                'text' => 'Articolo specifico',
+                'type' => 'dropdown|posts'//tipo select recuperando i dati dalla tabella posts
+            ]
         ],
     ];
     

@@ -25,7 +25,7 @@
     padding: 20px;
     z-index: 9999;
     background: #fff;
-    display: none;
+    /*display: none;*/
 }
 .drag-and-drop .info .close{
     box-shadow: 0 0 2px 1px;

@@ -12,17 +12,32 @@ $this->params['breadcrumbs'][] = $this->title;
             <h3>Nuova voce di menu</h3>
             
             <div class="flex flex-column gap-1">
-                <div class="btn btn-success" data-item-menu-add><i class="fa-solid fa-plus"></i> <?= Yii::t('app', 'Aggiungi nuova voce di menu') ?></div>
+                <div class="btn btn-success" data-item-menu-add>
+                    <i class="fa-solid fa-plus"></i> 
+                    <?= Yii::t('app', 'Aggiungi nuova voce di menu') ?>
+                </div>
                 <div>
                     <input data-item-menu-name class="form-control" placeholder="<?= Yii::t('app', 'Voce di menu') ?>" type="text" />
                     <div data-item-menu-error></div>
                 </div>
                 
                 <div data-item-menu-info>
-                    <?php foreach($menu_type as $type => $info): ?>
-                    <div class="flex">
-                        
-                    </div>
+                    <select class="form-control" name="">
+                        <?php foreach($menu_type['_menu_item_type'] as $type => $value): ?>
+                        <option value="<?= $type ?>"><?= $value['text'] ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                    
+                    <?php foreach($menu_type['_menu_item_type'] as $type => $value): ?>
+                        <?php if(explode("|", $value['type'])[0]==="url"): ?>
+                        <input type="url" pattern="https://.*" required />
+                        <?php elseif(explode("|", $value['type'])[0]==="dropdown"): ?>
+                        <select class="form-control" name="">
+                            <?php foreach($posts as $post): ?>
+                            <option value="<?= $post['id'] ?>"><?= $post['post_title'] ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                        <?php endif; ?>
                     <?php endforeach; ?>
                 </div>
             </div>
@@ -55,7 +70,7 @@ $this->params['breadcrumbs'][] = $this->title;
     
     <pre>
         <?php print_r($menu_type) ?> 
-        <?php print_r($menu) ?> 
+        <?php print_r($posts) ?> 
     </pre>
 </div>
 
@@ -66,7 +81,9 @@ $this->registerJsFile('@web/js/showItem.js', ['depends' => [yii\web\JqueryAsset:
 $this->registerJsFile('@web/js/tg-site/menuCreate.js', ['depends' => [yii\web\JqueryAsset::className()]]);
 $this->registerJs("
     
-    $('#menu-create').menuCreate();
+    $('#menu-create').menuCreate({
+        'menu-type': {}
+    });
     
     //Apro/Chiudo il box info per un menu item
     /*jQuery(document).ready(()=>{
