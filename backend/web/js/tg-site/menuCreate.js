@@ -33,8 +33,11 @@
             var _optionsTarget  = $("[data-change]", _el);
             var menuInfo        = settings['menu-type'];
             
-            //Nascondo tutti gli elementi per il tipo di voce di menu
-            hideTargetHideMenuItem();
+            //Nascondo tutti gli elementi per il tipo di voce di menu            
+            hideTargetHideMenuItem(_el);
+            //visualizzo solamente l'item selezionato di default
+            showFirstTargetMenuItem(_el);
+            
             
             /**
              * Visualizzo gli elementi in base al tipo di voce
@@ -76,18 +79,6 @@
          * @returns {undefined}
          */
         function addItem(name, container, json){
-            /*let elToAdd = '<div class="draggable-item" draggable="true">' +
-                            name + 
-                            '<div class="info1">' + 
-                                '<div class="close">' +
-                                    '<i class="fa-solid fa-x"></i>' +
-                                '</div>' +
-                                
-                                info[0] + 
-                                
-                            '</div>' +
-                          '</div>';*/
-            
             let elToAdd = document.createElement("div");
             elToAdd.classList.add('draggable-item');
             elToAdd.setAttribute('draggable', 'true'); // Imposta l'attributo draggable
@@ -128,10 +119,24 @@
          * Nasconde l'elemento target per la definizione
          * della voce di menu
          * 
+         * @param _container Contenitore padre
          * @returns void
          */
-        function hideTargetHideMenuItem(){
-            $("[data-change-id]").hide();
+        function hideTargetHideMenuItem(_container){
+            $("[data-change-id]", _container).hide();
+        }
+        
+        /**
+         * Visualizza il primo elemento selezionato
+         * di default per la voce di menu
+         * 
+         * @param _container Contenitore padre
+         * @returns void
+         */
+        function showFirstTargetMenuItem(_container){
+            var targetId = $("[data-change] option:checked", _container).data("change-target-id");
+            
+            $("[data-change-id='"+targetId+"']").show();
         }
     };
  
