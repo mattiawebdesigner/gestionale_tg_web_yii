@@ -67,7 +67,7 @@
                 }else{
                     _itemMenuError.text("");
                     
-                    addItem(itemName, _itemMenuPaste, _dataChange, menuInfo);
+                    addItem(_itemMenuName, _itemMenuPaste, _dataChange, menuInfo);
                 }
             });
         });
@@ -75,15 +75,13 @@
         /**
          * Aggiungo la nuova voce di menu all'elenco
          * 
-         * @param {type} name   Nome da visualizzare per la voce di menu
+         * @param {type} _itemMenuName   Contenitore del nome da visualizzare per la voce di menu
          * @param {type} container  Container
          * @param {type} _dataChange   Nome da visualizzare per la voce di menu
          * @param {type} json Dato JSON contenente le informazioni per la scelta della voce del menu
          * @returns {undefined}
          */
-        function addItem(name, container, _dataChange, json){
-            //Rilevo il tipo di item per il menu
-            let selectOption    = $(" option:checked", _dataChange).val();
+        function addItem(_itemMenuName, container, _dataChange, json){
             let targetId        = $(" option:checked", _dataChange).data("change-target-id");
             let _targetEl       = $("[data-change-id='"+targetId+"']");
             let dataInputVal    = JSON.stringify({target: targetId, value: _targetEl.val()});
@@ -102,7 +100,7 @@
             elToAdd.classList.add('draggable-item');
             elToAdd.setAttribute('draggable', 'true'); // Imposta l'attributo draggable
             elToAdd.setAttribute('data-input', dataInputVal);
-            elToAdd.textContent = name;
+            elToAdd.textContent = _itemMenuName.val();
             
             let elInfoLink = document.createElement("div");
             elInfoLink.setAttribute("style", "font-size: small;");
@@ -138,6 +136,9 @@
             elToAdd.append(elInfoLink);
             
             container.append(elToAdd);
+            
+            _itemMenuName.val("");
+            _targetEl.val("");
         }
         
         /**

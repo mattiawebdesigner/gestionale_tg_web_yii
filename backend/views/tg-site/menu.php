@@ -46,7 +46,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <h3><?= $menu[0]['name']??""?></h3>
             
             <div id="draggableList" class="draggable-list" data-menu-item-paste>
-                <?php foreach($menu as $menu_item): ?>
+                <?php foreach($menu as $k => $menu_item): ?>
                 <div class="draggable-item" draggable="true">
                     <?= $menu_item['post_title'] ?>
 
@@ -55,11 +55,24 @@ $this->params['breadcrumbs'][] = $this->title;
                             <i class="fa-solid fa-x"></i>
                         </div>
 
-                        <?php foreach($menu_item['key_value']['meta_key'] as $key => $meta_key): ?>
+                        <!--<?php foreach($menu_item['key_value']['meta_key'] as $key => $meta_key): ?>
                         <div class="<?= $meta_key ?>">
                             
-                        </div>
+                        </div>-->
                         <?php endforeach; ?>
+                    </div>
+                    
+                    <div style="font-size: small;">
+                        <?php
+                        switch($menu_item['key_value']['meta_value'][0]){
+                            case "custom":
+                                echo "Link personalizzato";
+                                break;
+                            case "post_type":
+                                echo "Articolo specifico";
+                                break;
+                        }
+                        ?>
                     </div>
                 </div>
                 <?php endforeach; ?>
@@ -68,7 +81,7 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
     
     <pre>
-        <?php print_r($menu_type) ?> 
+        <?php print_r($menu) ?> 
         <?php print_r($posts) ?> 
     </pre>
 </div>
