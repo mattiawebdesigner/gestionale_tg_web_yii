@@ -26,6 +26,8 @@
             var _itemMenuName   = $("[data-item-menu-name]",    _el);
             var _itemMenuError  = $("[data-item-menu-error]",   _el);
             var _itemMenuPaste  = $("[data-menu-item-paste]",   _el);
+            var _dataChange     = $("[data-change]",            _el);
+            
             /**
              * Seleziona la <b>select</b> i cui elementi servono a 
              * scegliere quale elemento associato visualizzare.
@@ -36,7 +38,7 @@
             //Nascondo tutti gli elementi per il tipo di voce di menu            
             hideTargetHideMenuItem(_el);
             //visualizzo solamente l'item selezionato di default
-            showFirstTargetMenuItem(_el);
+            showFirstTargetMenuItem(_dataChange);
             
             
             /**
@@ -65,7 +67,7 @@
                 }else{
                     _itemMenuError.text("");
                     
-                    addItem(itemName, _itemMenuPaste, menuInfo);
+                    addItem(itemName, _itemMenuPaste, _dataChange, menuInfo);
                 }
             });
         });
@@ -75,14 +77,36 @@
          * 
          * @param {type} name   Nome da visualizzare per la voce di menu
          * @param {type} container  Container
+         * @param {type} _dataChange   Nome da visualizzare per la voce di menu
          * @param {type} json Dato JSON contenente le informazioni per la scelta della voce del menu
          * @returns {undefined}
          */
-        function addItem(name, container, json){
+        function addItem(name, container, _dataChange, json){
+            //Rilevo il tipo di item per il menu
+            let selectOption    = $(" option:checked", _dataChange).val();
+            let targetId        = $(" option:checked", _dataChange).data("change-target-id");
+            let _targetEl       = $("[data-change-id='"+targetId+"']");
+            let dataInputVal    = JSON.stringify({target: targetId, value: _targetEl.val()});
+            let infoDivText     = "";
+            
+            switch (targetId){
+                case "custom":
+                    infoDivText = "Link personalizzato";
+                    break;
+                case "post_type":
+                    infoDivText = "Articolo specifico";
+                    break;
+            }
+            
             let elToAdd = document.createElement("div");
             elToAdd.classList.add('draggable-item');
             elToAdd.setAttribute('draggable', 'true'); // Imposta l'attributo draggable
+            elToAdd.setAttribute('data-input', dataInputVal);
             elToAdd.textContent = name;
+            
+            let elInfoLink = document.createElement("div");
+            elInfoLink.setAttribute("style", "font-size: small;");
+            elInfoLink.textContent = infoDivText;
             
             let infoDiv = document.createElement("div");
             infoDiv.classList.add("info");
@@ -111,6 +135,7 @@
             });
             
             elToAdd.appendChild(infoDiv);
+            elToAdd.append(elInfoLink);
             
             container.append(elToAdd);
         }
@@ -130,11 +155,11 @@
          * Visualizza il primo elemento selezionato
          * di default per la voce di menu
          * 
-         * @param _container Contenitore padre
+         * @param _dataChange
          * @returns void
          */
-        function showFirstTargetMenuItem(_container){
-            var targetId = $("[data-change] option:checked", _container).data("change-target-id");
+        function showFirstTargetMenuItem(_dataChange){
+            var targetId = $(" option:checked", _dataChange).data("change-target-id");
             
             $("[data-change-id='"+targetId+"']").show();
         }

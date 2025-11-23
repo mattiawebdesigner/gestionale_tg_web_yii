@@ -74,6 +74,8 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 
 <?php
+$menu_type = json_encode($menu_type);
+
 $this->registerCssFile("@web/css/tg-site/style.css");
 $this->registerCssFile("@web/css/drag-and-drop.css");
 $this->registerJsFile('@web/js/showItem.js', ['depends' => [yii\web\JqueryAsset::className()]]);
@@ -81,7 +83,7 @@ $this->registerJsFile('@web/js/tg-site/menuCreate.js', ['depends' => [yii\web\Jq
 $this->registerJs("
     
     $('#menu-create').menuCreate({
-        'menu-type': {}
+        'menu-type': $menu_type
     });
     
     //Apro/Chiudo il box info per un menu item
