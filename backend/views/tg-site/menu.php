@@ -46,20 +46,25 @@ $this->params['breadcrumbs'][] = $this->title;
             <h3><?= $menu[0]['name']??""?></h3>
             
             <div id="draggableList" class="draggable-list" data-menu-item-paste>
+                <div class="action">
+                    <div class="btn btn-success" data-menu-save>
+                        <i class="fa-solid fa-floppy-disk"></i> Salva
+                    </div>
+                </div>
                 <?php foreach($menu as $k => $menu_item): ?>
-                <div class="draggable-item" draggable="true">
+                <div class="draggable-item" draggable="true"
+                     data-input="<?= htmlspecialchars(
+                        json_encode([
+                            'target' => $menu_item['key_value']['meta_value'][4], 
+                            'value'  => $menu_item['post_title']
+                        ])
+                    ) ?>">
                     <?= $menu_item['post_title'] ?>
 
                     <div class="info">
                         <div class="close">
                             <i class="fa-solid fa-x"></i>
                         </div>
-
-                        <!--<?php foreach($menu_item['key_value']['meta_key'] as $key => $meta_key): ?>
-                        <div class="<?= $meta_key ?>">
-                            
-                        </div>-->
-                        <?php endforeach; ?>
                     </div>
                     
                     <div style="font-size: small;">
@@ -87,7 +92,9 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 
 <?php
-$menu_type = json_encode($menu_type);
+$menu_type  = json_encode($menu_type);
+$ajaxUrl    = Yii::$app->getUrlManager()->createUrl('tg-site/menu-save-ajax');
+$csrfToken  = Yii::$app->request->csrfToken;
 
 $this->registerCssFile("@web/css/tg-site/style.css");
 $this->registerCssFile("@web/css/drag-and-drop.css");
@@ -96,7 +103,9 @@ $this->registerJsFile('@web/js/tg-site/menuCreate.js', ['depends' => [yii\web\Jq
 $this->registerJs("
     
     $('#menu-create').menuCreate({
-        'menu-type': $menu_type
+        'menu-type' : $menu_type,
+        'ajax-url'  : '$ajaxUrl',
+        'csrfToken' : '$csrfToken'
     });
     
     //Apro/Chiudo il box info per un menu item

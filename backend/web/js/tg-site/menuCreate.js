@@ -27,6 +27,9 @@
             var _itemMenuError  = $("[data-item-menu-error]",   _el);
             var _itemMenuPaste  = $("[data-menu-item-paste]",   _el);
             var _dataChange     = $("[data-change]",            _el);
+            var _dataMenuSave   = $("[data-menu-save]", _el);
+            var csrfToken       = settings.csrfToken;
+            var ajaxUrl         = settings['ajax-url'];
             
             /**
              * Seleziona la <b>select</b> i cui elementi servono a 
@@ -69,6 +72,49 @@
                     
                     addItem(_itemMenuName, _itemMenuPaste, _dataChange, menuInfo);
                 }
+            });
+            
+            /**
+             * Salvo le voci di menu
+            */
+            _dataMenuSave.click(()=>{
+                var data = {
+                    "name": "John",
+                    "age": 30,
+                    "city": "New York",
+                    '_csrf': csrfToken
+                };
+                data = [];
+                
+                var _dataInput = $("[data-input]", _this);
+                for(let val of _dataInput){
+                    data.push($(val).data("input"));
+                }
+                //data = JSON.stringify(data);
+                
+                console.log(_this);
+                console.log(data);  
+                
+                $.ajax({
+                    url             : ajaxUrl,
+                    'type'          : 'POST',
+                    'dataType'      : "json",
+                    headers         : {
+                        'X-CSRF-Token': csrfToken // Invia il token nell'header
+                    },
+                    "data"          : data,
+                    
+                    success: function (test) {
+                        console.log(test);
+                    },
+                    error: function (exception) {
+                        console.log(exception);
+                        console.log(exception.responseJSON['stack-trace']);
+                    }
+                });
+                /*$.post(ajaxUrl, data, (d)=>{
+                    console.log(d);
+                });*/
             });
         });
         
