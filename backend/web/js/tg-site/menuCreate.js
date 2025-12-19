@@ -29,6 +29,7 @@
             var _dataChange     = $("[data-change]",            _el);
             var _dataSuccess    = $("[data-success]",           _el);
             var _dataError      = $("[data-error]",             _el);
+            var _draggableList  = $("#draggableList",           _el);
             var _dataMenuSave   = $("[data-menu-save]", _el);
             var csrfToken       = settings.csrfToken;
             var ajaxUrl         = settings['ajax-url'];
@@ -129,6 +130,47 @@
                 // Risale fino all'antenato più vicino con classe .draggable-item e lo rimuove
                 $(this).closest(".draggable-item").remove();
             });
+            
+            /**
+             * Drag and drop menu item
+             */
+            // 1. Gestione Drag Start (con delega per elementi dinamici)
+            $(document).on('dragstart', '.draggable-item', function(e) {
+                $(this).addClass('dragging');
+                // Accesso a dataTransfer tramite originalEvent
+                if (e.originalEvent.dataTransfer) {
+                    e.originalEvent.dataTransfer.setData('text/plain', '');
+                }
+            });
+
+            // 2. Gestione Drag End
+            $(document).on('dragend', '.draggable-item', function() {
+                $(this).removeClass('dragging');
+            });
+            _draggableList.on('dragover', function(e) {
+                e.preventDefault(); // Necessario per permettere il drop
+
+                const draggingItem = $('.dragging')[0]; // Elemento che stiamo trascinando
+                if (!draggingItem) return;
+
+                // Trova tutti i fratelli tranne quello che si sta trascinando
+                const siblings = _draggableList.find('.draggable-item:not(.dragging)').toArray();
+
+                // Trova l'elemento dopo il quale inserire quello trascinato
+                const nextSibling = siblings.find(sibling => {
+                    const box = sibling.getBoundingClientRect();
+                    // Calcola se il mouse è sopra la metà dell'elemento
+                    return e.clientY < box.top + box.height / 2;
+                });
+
+                // Inserimento dell'elemento nel DOM (metodo nativo insertBefore o jQuery)
+                if (nextSibling) {
+                    $(draggingItem).insertBefore(nextSibling);
+                } else {
+                    _draggableList.append(draggingItem);
+                }
+            });
+            //End Drag and drop
         });
         
         /**

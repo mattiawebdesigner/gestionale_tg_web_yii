@@ -101,32 +101,10 @@ $this->registerCssFile("@web/css/drag-and-drop.css");
 $this->registerJsFile('@web/js/showItem.js', ['depends' => [yii\web\JqueryAsset::className()]]);
 $this->registerJsFile('@web/js/tg-site/menuCreate.js', ['depends' => [yii\web\JqueryAsset::className()]]);
 $this->registerJs("
-    
+    //Gestione delle voci di menu
     $('#menu-create').menuCreate({
         'menu-type' : $menu_type,
         'ajax-url'  : '$ajaxUrl',
         'csrfToken' : '$csrfToken'
-    });    
-    
-    //Drag and drop with javascript
-    /*const list = document.getElementById('draggableList');
-
-    document.querySelectorAll('.draggable-item').forEach(item => {
-        item.addEventListener('dragstart', e => {
-            item.classList.add('dragging');
-            e.dataTransfer.setData('text/plain', '');
-        });
-        item.addEventListener('dragend', () => item.classList.remove('dragging'));
     });
-
-    list.addEventListener('dragover', e => {
-        e.preventDefault();
-        const draggingItem = document.querySelector('.dragging');
-        const siblings = [...list.querySelectorAll('.draggable-item:not(.dragging)')];
-        const nextSibling = siblings.find(sibling => {
-            return e.clientY < sibling.getBoundingClientRect().top + sibling.offsetHeight / 2;
-        });
-        list.insertBefore(draggingItem, nextSibling);
-    });*/
-
 ");
