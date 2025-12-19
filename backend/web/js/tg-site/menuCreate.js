@@ -29,8 +29,6 @@
             var _dataChange     = $("[data-change]",            _el);
             var _dataSuccess    = $("[data-success]",           _el);
             var _dataError      = $("[data-error]",             _el);
-            var _draggabbleItem = $("[draggable-item]",         _el);
-            var _dataDeleteItem = $("[data-delete-item]",       _el);
             var _dataMenuSave   = $("[data-menu-save]", _el);
             var csrfToken       = settings.csrfToken;
             var ajaxUrl         = settings['ajax-url'];
