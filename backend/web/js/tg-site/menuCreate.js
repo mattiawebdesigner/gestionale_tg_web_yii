@@ -27,6 +27,8 @@
             var _itemMenuError  = $("[data-item-menu-error]",   _el);
             var _itemMenuPaste  = $("[data-menu-item-paste]",   _el);
             var _dataChange     = $("[data-change]",            _el);
+            var _dataSuccess    = $("[data-success]",           _el);
+            var _dataError      = $("[data-error]",             _el);
             var _dataMenuSave   = $("[data-menu-save]", _el);
             var csrfToken       = settings.csrfToken;
             var ajaxUrl         = settings['ajax-url'];
@@ -87,13 +89,10 @@
                 data = [];
                 
                 var _dataInput = $("[data-input]", _this);
+                var cont = 0;
                 for(let val of _dataInput){
                     data.push($(val).data("input"));
                 }
-                //data = JSON.stringify(data);
-                
-                console.log(_this);
-                console.log(data);  
                 
                 $.ajax({
                     url             : ajaxUrl,
@@ -102,19 +101,22 @@
                     headers         : {
                         'X-CSRF-Token': csrfToken // Invia il token nell'header
                     },
-                    "data"          : data,
+                    'data'  : {data : data},
                     
-                    success: function (test) {
-                        console.log(test);
+                    success: function (response) {
+                        if(response.success){
+                            _dataSuccess.fadeIn(1000);
+                            _dataSuccess.text(response.message);
+                            setTimeout(()=>{
+                                _dataSuccess.fadeOut(1000);
+                            }, 5000);
+                        }
                     },
                     error: function (exception) {
-                        console.log(exception);
-                        console.log(exception.responseJSON['stack-trace']);
+                        _dataError.fadeIn(1000);
+                        _dataError.text("Errore nel salvataggio del menu!");
                     }
-                });
-                /*$.post(ajaxUrl, data, (d)=>{
-                    console.log(d);
-                });*/
+                });                                                                                                                                                                 
             });
         });
         
@@ -130,7 +132,18 @@
         function addItem(_itemMenuName, container, _dataChange, json){
             let targetId        = $(" option:checked", _dataChange).data("change-target-id");
             let _targetEl       = $("[data-change-id='"+targetId+"']");
-            let dataInputVal    = JSON.stringify({target: targetId, value: _targetEl.val()});
+            //Compongo il JSON per permettere il salvataggio del menu
+            //con tutte le informazioni necessarie
+            let dataInputVal    = JSON.stringify({
+                post_title: _itemMenuName.val(),
+                item_object : _dataChange.val(),
+                item_object_id : (targetId==="post_type")?$(_targetEl).val():"",
+                menu_item_parent : 0,
+                menu_item_url : (targetId==="custom")?$(_targetEl).val():"",
+                menu_item_target : "",
+                menu_item_type: targetId
+                
+            });
             let infoDivText     = "";
             
             switch (targetId){

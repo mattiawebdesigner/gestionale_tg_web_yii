@@ -37,10 +37,10 @@ class Posts extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['post_author', 'post_date_gmt', 'post_content', 'post_title', 'post_modified_gmt', 'post_type'], 'required'],
+            [['post_author', 'post_date_gmt', 'post_title', 'post_modified_gmt', 'post_type'], 'required'],
             [['post_author', 'comment_status', 'ordering', 'featured'], 'integer'],
             [['post_content', 'post_title'], 'string'],
-            [['post_modified', 'post_modified_gmt', 'post_date', 'post_date_gmt'], 'date', 'format' => 'php:Y-m:d H:i:s'],
+            [['post_modified', 'post_modified_gmt', 'post_date', 'post_date_gmt'], 'date', 'format' => 'php:Y-m-d H:i:s'],
             [['post_type'], 'string', 'max' => 255],
             [['post_mime_type'], 'string', 'max' => 100],
         ];
