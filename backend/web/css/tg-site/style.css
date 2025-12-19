@@ -10,4 +10,21 @@
     padding-bottom: 3px;
     margin-bottom: 27px;
 }
-[data-item-menu-error]{color: darkred;font-weight: 700;}
+[class*="tgsite-"] [data-item-menu-error]{color: darkred;font-weight: 700;}
+[class*="tgsite-"] .draggable-item [data-delete-item]{
+    position: absolute;
+    top: -13px;
+    right: -13px;
+    -moz-border-radius: 100%;
+    -webkit-border-radius: 100%;
+    border-radius: 100%;
+    -moz-box-shadow: 0 0 2px #000;
+    -webkit-box-shadow: 0 0 2px #000;
+    box-shadow: 0 0 2px #000;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    background-color: #fff;
+    color: darkred;
+    text-align: center;
+}

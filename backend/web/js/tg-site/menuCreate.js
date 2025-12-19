@@ -29,6 +29,7 @@
             var _dataChange     = $("[data-change]",            _el);
             var _dataSuccess    = $("[data-success]",           _el);
             var _dataError      = $("[data-error]",             _el);
+            var _dataDeleteItem = $("[data-delete-item]",       _el);
             var _dataMenuSave   = $("[data-menu-save]", _el);
             var csrfToken       = settings.csrfToken;
             var ajaxUrl         = settings['ajax-url'];
@@ -117,6 +118,13 @@
                         _dataError.text("Errore nel salvataggio del menu!");
                     }
                 });                                                                                                                                                                 
+            });
+            
+            /**
+             * Cancella una voce di menu
+             */
+            _dataDeleteItem.click((el)=>{
+                $(el.target).parent().parent().remove();
             });
         });
         

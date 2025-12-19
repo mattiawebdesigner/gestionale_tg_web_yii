@@ -67,6 +67,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 'menu_item_url' => $menu_item['key_value']['meta_value'][array_search("_menu_item_url", $menu_item['key_value']['meta_key'])],
                             ])
                         ) ?>">
+                        <div data-delete-item><i class="fa-solid fa-trash"></i></div>
                         <?= $menu_item['post_title'] ?>
 
                         <div class="info">
