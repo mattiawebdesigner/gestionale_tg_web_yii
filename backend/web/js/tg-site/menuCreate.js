@@ -29,6 +29,7 @@
             var _dataChange     = $("[data-change]",            _el);
             var _dataSuccess    = $("[data-success]",           _el);
             var _dataError      = $("[data-error]",             _el);
+            var _draggabbleItem = $("[draggable-item]",         _el);
             var _dataDeleteItem = $("[data-delete-item]",       _el);
             var _dataMenuSave   = $("[data-menu-save]", _el);
             var csrfToken       = settings.csrfToken;
@@ -123,8 +124,12 @@
             /**
              * Cancella una voce di menu
              */
-            _dataDeleteItem.click((el)=>{
-                $(el.target).parent().parent().remove();
+            $(document).on("click", "[data-delete-item]", function(e) {
+                // Evita che l'evento risalga (utile se ci sono altri eventi sul drag&drop)
+                e.stopPropagation();
+
+                // Risale fino all'antenato più vicino con classe .draggable-item e lo rimuove
+                $(this).closest(".draggable-item").remove();
             });
         });
         
@@ -163,11 +168,19 @@
                     break;
             }
             
+            //<div data-delete-item><i class="fa-solid fa-trash"></i></div>
+            let trashContainer = document.createElement("div");
+            trashContainer.setAttribute("data-delete-item", "");
+            let trashImg = document.createElement("i");
+            trashImg.setAttribute('class', 'fa-solid fa-trash');
+            trashContainer.append(trashImg);            
+            
             let elToAdd = document.createElement("div");
             elToAdd.classList.add('draggable-item');
             elToAdd.setAttribute('draggable', 'true'); // Imposta l'attributo draggable
             elToAdd.setAttribute('data-input', dataInputVal);
             elToAdd.textContent = _itemMenuName.val();
+            elToAdd.append(trashContainer);
             
             let elInfoLink = document.createElement("div");
             elInfoLink.setAttribute("style", "font-size: small;");
