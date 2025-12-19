@@ -55,8 +55,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="draggable-item" draggable="true"
                      data-input="<?= htmlspecialchars(
                         json_encode([
-                            'target' => $menu_item['key_value']['meta_value'][4], 
-                            'value'  => $menu_item['post_title']
+                            'target'            => $menu_item['key_value']['meta_value'][array_search("_menu_item_target", $menu_item['key_value']['meta_key'])],
+                            'post_title'        => $menu_item['post_title'],
+                            'item_object'       => $menu_item['post_title'],
+                            'item_object_id'    => $menu_item['post_title'],
                         ])
                     ) ?>">
                     <?= $menu_item['post_title'] ?>
@@ -69,7 +71,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     
                     <div style="font-size: small;">
                         <?php
-                        switch($menu_item['key_value']['meta_value'][0]){
+                        switch($menu_item['key_value']['meta_key'][0]){
                             case "custom":
                                 echo "Link personalizzato";
                                 break;
@@ -80,6 +82,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         ?>
                     </div>
                 </div>
+                
                 <?php endforeach; ?>
             </div>
         </div>
