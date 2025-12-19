@@ -1,7 +1,9 @@
 <?php
-use yii\helpers\Html;
-
+/**
+ * Manage menu "Menu principale" and all own menu item
+ */
 $this->title = Yii::t('app', 'Menu - Gestione del sito');
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Gestione sito'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="tgsite-menu">
