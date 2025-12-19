@@ -70,20 +70,14 @@ $this->params['breadcrumbs'][] = $this->title;
                         <div data-delete-item><i class="fa-solid fa-trash"></i></div>
                         <?= $menu_item['post_title'] ?>
 
-                        <div class="info">
-                            <div class="close">
-                                <i class="fa-solid fa-x"></i>
-                            </div>
-                        </div>
-
                         <div style="font-size: small;">
                             <?php
                             switch($menu_item['key_value']['meta_key'][0]){
                                 case "custom":
-                                    echo "Link personalizzato";
+                                    echoYii::t('app', "Link personalizzato");
                                     break;
                                 case "post_type":
-                                    echo "Articolo specifico";
+                                    echo Yii::t('app', "Articolo specifico");
                                     break;
                             }
                             ?>
@@ -112,20 +106,7 @@ $this->registerJs("
         'menu-type' : $menu_type,
         'ajax-url'  : '$ajaxUrl',
         'csrfToken' : '$csrfToken'
-    });
-    
-    //Apro/Chiudo il box info per un menu item
-    /*jQuery(document).ready(()=>{
-        jQuery('.draggable-item').click((e)=>{
-            //jQuery('.info').hide();
-            jQuery('.info', e.target).show();
-        });
-        
-        jQuery('.close').click((e)=>{
-            jQuery(e.target).parents('.info').hide();
-        });
-    });*/
-    
+    });    
     
     //Drag and drop with javascript
     /*const list = document.getElementById('draggableList');
