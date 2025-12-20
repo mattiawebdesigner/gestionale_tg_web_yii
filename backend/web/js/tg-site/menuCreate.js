@@ -182,9 +182,13 @@
          * @param {type} json Dato JSON contenente le informazioni per la scelta della voce del menu
          * @returns {undefined}
          */
-        function addItem(_itemMenuName, container, _dataChange, json){
+        function addItem(_itemMenuName, container, _dataChange, json){            
             let targetId        = $(" option:checked", _dataChange).data("change-target-id");
             let _targetEl       = $("[data-change-id='"+targetId+"']");
+            
+            console.log(json._menu_item_type);
+            console.log(json._menu_item_type[targetId]);
+            
             //Compongo il JSON per permettere il salvataggio del menu
             //con tutte le informazioni necessarie
             let dataInputVal    = JSON.stringify({
@@ -192,7 +196,7 @@
                 item_object : _dataChange.val(),
                 item_object_id : (targetId==="post_type")?$(_targetEl).val():"",
                 menu_item_parent : 0,
-                menu_item_url : (targetId==="custom")?$(_targetEl).val():"",
+                menu_item_url : (targetId==="custom")?$(_targetEl).val():(json._menu_item_type[targetId].url),
                 menu_item_target : "",
                 menu_item_type: targetId
                 
@@ -201,6 +205,9 @@
             
             switch (targetId){
                 case "custom":
+                case "who_we_are":
+                case "next_time":
+                case "conctact_us":
                     infoDivText = "Link personalizzato";
                     break;
                 case "post_type":

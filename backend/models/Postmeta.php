@@ -33,7 +33,22 @@ class Postmeta extends \yii\db\ActiveRecord
             'post_type' => [
                 'text' => 'Articolo specifico',
                 'type' => 'dropdown|posts'//tipo select recuperando i dati dalla tabella posts
-            ]
+            ],
+            'who_we_are' => [
+                'text'  => 'Chi siamo',
+                'type'  => false,//non preleve i dati da nessuna tabella ne da altro, utilizza un URL specifico
+                'url'   => 'https://www.teatralmentegioia.it/tg/public/site/who-we-are#features'
+            ],
+            'next_time' => [
+                'text'  => 'Prossimamente',
+                'type'  => false,//non preleve i dati da nessuna tabella ne da altro, utilizza un URL specifico
+                'url'   => 'https://www.teatralmentegioia.it/tg/public/site/prossimamente#soon'
+            ],
+            'conctact_us' => [
+                'text'  => 'Contattaci',
+                'type'  => false,//non preleve i dati da nessuna tabella ne da altro, utilizza un URL specifico
+                'url'   => 'https://www.teatralmentegioia.it/tg/public/index#contactus'
+            ],
         ],
     ];
     
