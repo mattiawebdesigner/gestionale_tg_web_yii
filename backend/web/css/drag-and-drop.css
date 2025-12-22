@@ -1,0 +1,41 @@
+/* 
+    Created on : 14 nov 2025, 00:44:00
+    Author     : Mattia
+*/
+.drag-and-drop { text-align: center; max-width: 600px; margin: 20px auto;}
+.drag-and-drop .draggable-list { width: 300px; margin: 20px auto; }
+.drag-and-drop .draggable-item {
+    padding: 15px;
+    margin: 8px 0;
+    background: #f8f9fa;
+    border: 2px solid #dee2e6;
+    border-radius: 5px;
+    cursor: move;
+    position: relative;
+}
+.drag-and-drop .draggable-item.dragging { opacity: 0.5; }
+.drag-and-drop .info{
+    box-shadow: 0 0 2px 1px var(--color-link-tg1);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    min-height: 100%;
+    margin: 10px;
+    padding: 20px;
+    z-index: 9999;
+    background: #fff;
+    display: none;
+}
+.drag-and-drop .info .close{
+    box-shadow: 0 0 2px 1px;
+    padding: 10px;
+    border-radius: 100%;
+    position: absolute;
+    top: -20px;
+    right: -20px;
+    background: #fff;
+    opacity: 1;
+    font-size: 1.1em;
+    cursor: pointer;
+}

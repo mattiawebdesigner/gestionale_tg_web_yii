@@ -17,10 +17,7 @@
             
             _el.click((e)=>{
                 _target.remove();
-            });
-            
-            console.log(_target);
-            
+            });            
         });
     };
  
