@@ -186,9 +186,6 @@
             let targetId        = $(" option:checked", _dataChange).data("change-target-id");
             let _targetEl       = $("[data-change-id='"+targetId+"']");
             
-            console.log(json._menu_item_type);
-            console.log(json._menu_item_type[targetId]);
-            
             //Compongo il JSON per permettere il salvataggio del menu
             //con tutte le informazioni necessarie
             let dataInputVal    = JSON.stringify({

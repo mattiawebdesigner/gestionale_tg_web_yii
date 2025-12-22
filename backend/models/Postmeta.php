@@ -32,7 +32,8 @@ class Postmeta extends \yii\db\ActiveRecord
             ],
             'post_type' => [
                 'text' => 'Articolo specifico',
-                'type' => 'dropdown|posts'//tipo select recuperando i dati dalla tabella posts
+                'type' => 'dropdown|posts',//tipo select recuperando i dati dalla tabella posts
+                'url'  => '',//Non viene compilato l'URL perché serve solo l'ID del post
             ],
             'who_we_are' => [
                 'text'  => 'Chi siamo',
