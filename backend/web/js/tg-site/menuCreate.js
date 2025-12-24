@@ -73,7 +73,7 @@
              * Salvo le voci di menu
             */
             _dataMenuSave.click(()=>{
-                data = [];
+                var data = [];
                 
                 var _dataInput = $("[data-input]", _this);
                 for(let val of _dataInput){
