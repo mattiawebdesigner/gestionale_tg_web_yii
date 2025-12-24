@@ -73,16 +73,9 @@
              * Salvo le voci di menu
             */
             _dataMenuSave.click(()=>{
-                var data = {
-                    "name": "John",
-                    "age": 30,
-                    "city": "New York",
-                    '_csrf': csrfToken
-                };
                 data = [];
                 
                 var _dataInput = $("[data-input]", _this);
-                var cont = 0;
                 for(let val of _dataInput){
                     data.push($(val).data("input"));
                 }
