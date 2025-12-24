@@ -1,13 +1,5 @@
 /**
- * Gestisce la creazione di un nuovo menu
- * 
- * Struttura:
- * <div id="menu-create" class="flex flex-row gap-1 flex-wrap">
- *      <div class="btn btn-success" data-menu-add>+</div>
- *      <div class="menu">
- *      </div>
- * </div>
- * 
+ * Gestisce la creazione di un nuovo menu * 
  * 
  * @param {type} $
  * @returns results
