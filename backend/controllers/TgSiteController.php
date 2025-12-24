@@ -10,10 +10,11 @@ use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\db\Query;
 use yii\web\Response;
-use yii\web\JsonResponseFormatter;
 use backend\models\Posts;
 use backend\models\Postmeta;
 use backend\models\TermRelationships;
+use backend\models\TermTaxonomy;
+use backend\models\Terms;
 
 /**
  * Site controller
@@ -72,6 +73,11 @@ class TgSiteController extends Controller
         return $this->render("index");
     }
     
+    /**
+     * Display and manage menu
+     * 
+     * @return array
+     */
     public function actionMenu(){
         $menu   = $this->findMenu();
         $posts  = $this->findPosts();
@@ -83,8 +89,16 @@ class TgSiteController extends Controller
         ]);
     }
     
+    /**
+     * Display and manage categories
+     * 
+     * @return array
+     */
     public function actionCategorie(){
+        $categories = $this->findCategories();
+        
         return $this->render("categorie",[
+            'categories'    => $categories,
         ]);
     }
     
@@ -195,6 +209,42 @@ class TgSiteController extends Controller
     }
     
     /**
+     * Get Ajax request to save categories
+     * @return json
+     * 
+     * INSERT INTO tg_terms (name, slug) VALUES ('Test', 'test');
+     * 
+     * INSERT INTO tg_term_taxonomy (term_id, taxonomy, description, parent, count) VALUES (LAST_INSERT_ID(), 'category', 'Descrizione della categoria Test', 0, 0);
+     * 
+     */
+    public function actionCategoriesSaveAjax(){
+        // Imposta il formato della risposta su JSON
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        
+        if (Yii::$app->request->isPost && Yii::$app->request->isAjax) {
+            // Ottieni i dati POST
+            //$data = Yii::$app->request->post(); 
+            $data = Yii::$app->request->post('data');
+            
+            if(!empty($data)){
+                $del = $this->deleteCategories();
+                
+                return [
+                    'success' => true,
+                    'message' => Yii::t('app', 'Categoria salvata con successo!'),
+                    'x' => $del,
+                ];
+            }
+        }
+        
+        // Gestisci casi in cui la richiesta non è valida
+        return [
+            'success' => false,
+            'message' => Yii::t('app', 'Richiesta non valida!'),
+        ];
+    }
+    
+    /**
      * Return a menu
      * 
      * Select usata
@@ -273,10 +323,23 @@ class TgSiteController extends Controller
     }
     
     /**
-     * Query eseguita: SELECT t.name, tt.taxonomy FROM tg_terms t JOIN tg_term_taxonomy tt ON t.id = tt.id;
+     * Retrieves all categories
+     * 
+     * Query eseguita: SELECT t.id, t.name, tt.taxonomy FROM tg_terms t JOIN tg_term_taxonomy tt ON t.term_id = tt.id WHERE tt.taxonomy = 'category';
      */
     private function findCategories(){
+        $categories = (new Query())
+            ->select([
+                'id'        => 't.id',
+                'name'      => 't.name',
+                'taxonomy'  => 'tt.taxonomy'
+            ])
+            ->from(['t' => 'tg_terms'])
+            ->join("JOIN", "tg_term_taxonomy tt", "t.id = tt.term_id")
+            ->where(['tt.taxonomy' => 'category'])
+            ->all();
         
+        return $categories;
     }
 
 
@@ -299,5 +362,44 @@ class TgSiteController extends Controller
         }
         
         return false;
+    }
+    
+    private function deleteCategories(){
+        //DELETE FROM tg_posts WHERE post_type = "nav_menu_item";
+        //DELETE FROM tg_term_relationships WHERE object_id BETWEEN X and Y;
+        
+        $subQuery = (new Query())
+                    ->select('id')
+                    ->from('tg_term_taxonomy')
+                    ->where(['taxonomy' => 'category'])
+                    ->andWhere(['<>', 'term_id', 1]);
+        
+        // 2. Eseguiamo la cancellazione nel modello TermRelationships
+        TermRelationships::deleteAll(['in', 'term_taxonomy_id', $subQuery]);
+        TermTaxonomy::deleteAll([
+            'and',
+            ['taxonomy' => 'category'],
+            ['<>', 'term_id', 1]
+        ]);
+        
+        // 1. Costruiamo la sottoquery interna (SELECT t.term_id ...)
+        /*$subQuery = (new Query())
+            ->select('t.id')
+            ->from('tg_terms t')
+            ->leftJoin('tg_term_taxonomy tt', 't.id = tt.term_id')
+            ->where(['id', 'tt.term_id', null])
+            ->andWhere(['<>', 't.id', 1]);*/
+        $subQuery = (new Query())
+                    ->select('t.id')
+                    ->from(['t' => 'tg_terms'])
+                    ->leftJoin("tg_term_taxonomy tt", "t.id = tt.term_id")
+                    ->where(['id', 'tt.term_id', null])
+                    ->andWhere(['<>', 'term_id', 1]);
+        
+        // 2. Eseguiamo la cancellazione definitiva
+        // Yii2 gestirà automaticamente la necessità di isolare la sottoquery se necessario
+        Terms::deleteAll(['in', 'id', $subQuery]);
+        
+        return true;
     }
 }
