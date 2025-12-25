@@ -1,1 +1,424 @@
-<?php/** * Sistema per la gestione del sito web */namespace backend\controllers;use Yii;use yii\filters\VerbFilter;use yii\filters\AccessControl;use yii\web\Controller;use yii\db\Query;use yii\web\Response;use yii\web\JsonResponseFormatter;use backend\models\Posts;use backend\models\Postmeta;use backend\models\TermRelationships;/** * Site controller */class TgSiteController extends Controller{    /**     * {@inheritdoc}     */    public function behaviors()    {        return [            'access' => [                'class' => AccessControl::className(),                'rules' => [                    [                        'actions' => ['login', 'error'],                        'allow' => true,                    ],                    [                        'actions' => [],//All page                        'allow' => true,                        //'roles' => ['Super User','segreteria'],                    ],                ],            ],            'verbs' => [                'class' => VerbFilter::className(),                'actions' => [                    'logout' => ['post'],                ],            ],        ];    }        /**     * {@inheritdoc}     */    public function actions()    {        return [            'error' => [                'class' => 'yii\web\ErrorAction',            ],        ];    }    /**     * Displays homepage.     *     * @return string     */    public function actionIndex()    {        return $this->render("index");    }        public function actionMenu(){        $menu   = $this->findMenu();        $posts  = $this->findPosts();                return $this->render("menu",[            'menu'      => $menu,            'posts'     => $posts,            'menu_type' => Postmeta::$menu_info,        ]);    }        /**     * Get Ajax request to save menu     * @return json     */    public function actionMenuSaveAjax()    {        // Imposta il formato della risposta su JSON        Yii::$app->response->format = Response::FORMAT_JSON;        // Verifica se la richiesta è di tipo POST e se è una richiesta Ajax        if (Yii::$app->request->isPost && Yii::$app->request->isAjax) {            // Ottieni i dati POST            //$data = Yii::$app->request->post();             $data = Yii::$app->request->post('data');                        if(!empty($data)){                //Delete menu item and add new item                                $this->deleteMenu();                                foreach ($data as $k => $value){                    $d = new \DateTime();                    $d->setTimezone(new \DateTimeZone('GMT'));                                        //Creo il contenuto del menu                    $posts = new Posts();                    $posts->post_author     = Yii::$app->user->id;                    $posts->post_date       = $posts->post_modified     = date("Y-m-d H:i:s");                    $posts->post_date_gmt   = $posts->post_modified_gmt = $d->format('Y-m-d H:i:s');                    $posts->post_content    = "";                    $posts->post_title      = $value['post_title'];                    $posts->comment_status  = 0;                    $posts->post_type       = "nav_menu_item";                    $posts->post_mime_type  = "";                    $posts->ordering        = $k+1;                    $posts->featured        = 0;                    $posts->save();                                        $postId = $posts->id;                                        //Associo le informazioni al menu                    $postMeta = new Postmeta();                                        $postMeta->post_id      = $postId;                    $postMeta->meta_key     = "_menu_item_type";                    $postMeta->meta_value   = $value['menu_item_type'];                    $postMeta->save();                                        $postMeta = new Postmeta();                    $postMeta->post_id      = $postId;                    $postMeta->meta_key     = "_menu_item_url";                    $postMeta->meta_value   = $value['menu_item_url'];                    $postMeta->save();                                        $postMeta = new Postmeta();                    $postMeta->post_id      = $postId;                    $postMeta->meta_key     = "_menu_item_object_id";                    $postMeta->meta_value   = $value['item_object_id'];                    $postMeta->save();                                        $postMeta = new Postmeta();                    $postMeta->post_id      = $postId;                    $postMeta->meta_key     = "_menu_item_object";                    $postMeta->meta_value   = $value['item_object'];                    $postMeta->save();                                        $postMeta = new Postmeta();                    $postMeta->post_id      = $postId;                    $postMeta->meta_key     = "_menu_item_target";                    $postMeta->meta_value   = $value['menu_item_target'];                    $postMeta->save();                                        $postMeta = new Postmeta();                    $postMeta->post_id      = $postId;                    $postMeta->meta_key     = "_menu_item_menu_item_parent";                    $postMeta->meta_value   = $value['menu_item_parent'];                                        $postMeta->save();                                        //Associo la tassonomia del menu al menu Principale                    $termRelationship = new TermRelationships();                    $termRelationship->object_id        = $postId;                    $termRelationship->term_taxonomy_id = 3;//= Menu Principale                                        $termRelationship->save();                }                                return [                    'success' => true,                    'message' => Yii::t('app', 'Menu salvato correttamente!'),                ];            }                        // Restituisci una risposta JSON            return [                'success' => false,                'message' => Yii::t('app', 'Errore nel salvataggio del menu!'),                'data' => $data,            ];        } else {            // Gestisci casi in cui la richiesta non è valida            return [                'success' => false,                'message' => Yii::t('app', 'Richiesta non valida!'),            ];        }    }        /**     * Return a menu     *      * Select usata     * SELECT             p.ID,             p.post_title AS item_title,             p.ordering,            pm_url.meta_value AS item_url,            t.name,            (SELECT CONCAT(GROUP_CONCAT(meta_key SEPARATOR '||'), '-', GROUP_CONCAT(meta_value SEPARATOR '||')) FROM tg_postmeta as pm_url_s WHERE pm_url_s.post_id = pm_url.post_id)        FROM             tg_posts AS p        JOIN             tg_term_relationships AS tr ON p.ID = tr.object_id        JOIN             tg_term_taxonomy AS tt ON tr.term_taxonomy_id = tt.term_id        JOIN             tg_terms AS t ON tt.term_id = t.id        LEFT JOIN             tg_postmeta AS pm_url ON p.ID = pm_url.post_id AND pm_url.meta_key = '_menu_item_url'        WHERE             p.post_type = 'nav_menu_item'            AND tt.taxonomy = 'nav_menu'            AND t.name = 'Menu Principale'        ORDER BY             p.ordering ASC     *      * @return \yii\db\ActiveRecord     */    private function findMenu(){        $query = (new Query())            ->select([                'id' => 'p.ID',                'p.post_title',                 'p.ordering',                'pm_url.meta_value',                't.name',                'key_value' => "(SELECT CONCAT(GROUP_CONCAT(meta_key SEPARATOR '||'), '-', GROUP_CONCAT(meta_value SEPARATOR '||')) FROM tg_postmeta as pm_url_s WHERE pm_url_s.post_id = pm_url.post_id)"            ])            ->from(['p' => 'tg_posts'])            ->join("JOIN", "tg_term_relationships tr", "p.ID = tr.object_id")            ->join("JOIN", "tg_term_taxonomy tt", "tr.term_taxonomy_id = tt.term_id")            ->join("JOIN", "tg_terms t", "tt.term_id = t.id")            ->join("JOIN", "tg_postmeta pm_url", "p.ID = pm_url.post_id AND pm_url.meta_key = '_menu_item_url'")            ->where([                'p.post_type' => 'nav_menu_item',                'tt.taxonomy' => 'nav_menu',                't.name'      => 'Menu Principale'            ])            ->orderBy(['p.ordering' => SORT_ASC])            ->all();                foreach ($query as $k => $q){            $q['key_value'] = [                'meta_key'   => explode("||", substr($q['key_value'], 0, strpos($q['key_value'], "-"))),                'meta_value' => explode("||", substr($q['key_value'], strpos($q['key_value'], "-")+1)),            ];                        $query[$k] = $q;        }                return $query;    }        /**     * Delete all item's menu     *      * @return bool     */    public function deleteMenu(){        //DELETE FROM tg_posts WHERE post_type = "nav_menu_item";        //DELETE FROM tg_term_relationships WHERE object_id BETWEEN X and Y;                //Ottengo gli ID        $ids = Posts::find()->where(['post_type' => 'nav_menu_item'])->select('id')->column();                if(!empty($ids)){            if(Posts::deleteAll(['id' => $ids]) && TermRelationships::deleteAll(['object_id' => $ids])>0){                return true;            }        }                return false;    }        /**     * Find all post     * @return type     * @throws NotFoundHttpException     */    private function findPosts(){        if (($model = Posts::find()->where(['post_type' => 'post'])->all()) !== null) {            return $model;        }                throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));    }}
+<?php
+/**
+ * Sistema per la gestione del sito web
+ */
+namespace backend\controllers;
+
+use Yii;
+use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
+use yii\web\Controller;
+use yii\db\Query;
+use yii\web\Response;
+use backend\models\Posts;
+use backend\models\Postmeta;
+use backend\models\TermRelationships;
+use backend\models\TermTaxonomy;
+use backend\models\Terms;
+
+/**
+ * Site controller
+ */
+class TgSiteController extends Controller
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'actions' => ['login', 'error'],
+
+                        'allow' => true,
+                    ],
+                    [
+                        'actions' => [],//All page
+                        'allow' => true,
+                        //'roles' => ['Super User','segreteria'],
+                    ],
+                ],
+            ],
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'logout' => ['post'],
+                ],
+            ],
+        ];
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function actions()
+    {
+        return [
+            'error' => [
+                'class' => 'yii\web\ErrorAction',
+            ],
+        ];
+    }
+
+    /**
+     * Displays homepage.
+     *
+     * @return string
+     */
+    public function actionIndex()
+    {
+        return $this->render("index");
+    }
+    
+    /**
+     * Display and manage menu
+     * 
+     * @return array
+     */
+    public function actionMenu(){
+        $menu   = $this->findMenu();
+        $posts  = $this->findPosts();
+        
+        return $this->render("menu",[
+            'menu'      => $menu,
+            'posts'     => $posts,
+            'menu_type' => Postmeta::$menu_info,
+        ]);
+    }
+    
+    /**
+     * Display and manage categories
+     * 
+     * @return array
+     */
+    public function actionCategorie(){
+        $categories = $this->findCategories();
+        
+        return $this->render("categorie",[
+            'categories'    => $categories,
+        ]);
+    }
+    
+    /**
+     * Get Ajax request to save menu
+     * @return json
+     */
+    public function actionMenuSaveAjax()
+    {
+        // Imposta il formato della risposta su JSON
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        // Verifica se la richiesta è di tipo POST e se è una richiesta Ajax
+        if (Yii::$app->request->isPost && Yii::$app->request->isAjax) {
+            // Ottieni i dati POST
+            //$data = Yii::$app->request->post(); 
+            $data = Yii::$app->request->post('data');
+            
+            if(!empty($data)){
+                //Delete menu item and add new item                
+                $this->deleteMenu();
+                
+                foreach ($data as $k => $value){
+                    $d = new \DateTime();
+                    $d->setTimezone(new \DateTimeZone('GMT'));
+                    
+                    //Creo il contenuto del menu
+                    $posts = new Posts();
+                    $posts->post_author     = Yii::$app->user->id;
+                    $posts->post_date       = $posts->post_modified     = date("Y-m-d H:i:s");
+                    $posts->post_date_gmt   = $posts->post_modified_gmt = $d->format('Y-m-d H:i:s');
+                    $posts->post_content    = "";
+                    $posts->post_title      = $value['post_title'];
+                    $posts->comment_status  = 0;
+                    $posts->post_type       = "nav_menu_item";
+                    $posts->post_mime_type  = "";
+                    $posts->ordering        = $k+1;
+                    $posts->featured        = 0;
+                    $posts->save();
+                    
+                    $postId = $posts->id;
+                    
+                    //Associo le informazioni al menu
+                    $postMeta = new Postmeta();
+                    $postMeta->post_id      = $postId;
+                    $postMeta->meta_key     = "_menu_item_type";
+                    $postMeta->meta_value   = $value['menu_item_type'];
+                    $postMeta->save();
+                    
+                    $postMeta = new Postmeta();
+                    $postMeta->post_id      = $postId;
+                    $postMeta->meta_key     = "_menu_item_url";
+                    $postMeta->meta_value   = $value['menu_item_url'];
+                    $postMeta->save();
+                    
+                    $postMeta = new Postmeta();
+                    $postMeta->post_id      = $postId;
+                    $postMeta->meta_key     = "_menu_item_object_id";
+                    $postMeta->meta_value   = $value['item_object_id'];
+                    $postMeta->save();
+                    
+                    $postMeta = new Postmeta();
+                    $postMeta->post_id      = $postId;
+                    $postMeta->meta_key     = "_menu_item_object";
+                    $postMeta->meta_value   = $value['item_object'];
+                    $postMeta->save();
+                    
+                    $postMeta = new Postmeta();
+                    $postMeta->post_id      = $postId;
+                    $postMeta->meta_key     = "_menu_item_target";
+                    $postMeta->meta_value   = $value['menu_item_target'];
+                    $postMeta->save();
+                    
+                    $postMeta = new Postmeta();
+                    $postMeta->post_id      = $postId;
+                    $postMeta->meta_key     = "_menu_item_menu_item_parent";
+                    $postMeta->meta_value   = $value['menu_item_parent'];                    
+                    $postMeta->save();
+                    
+                    //Associo la tassonomia del menu al menu Principale
+                    $termRelationship = new TermRelationships();
+                    $termRelationship->object_id        = $postId;
+                    $termRelationship->term_taxonomy_id = 3;//= Menu Principale
+                    
+                    $termRelationship->save();
+                }
+                
+                return [
+                    'success' => true,
+                    'message' => Yii::t('app', 'Menu salvato correttamente!'),
+                ];
+            }
+            
+            // Restituisci una risposta JSON
+            return [
+                'success' => false,
+                'message' => Yii::t('app', 'Errore nel salvataggio del menu!'),
+                'data' => $data,
+            ];
+        } else {
+            // Gestisci casi in cui la richiesta non è valida
+            return [
+                'success' => false,
+                'message' => Yii::t('app', 'Richiesta non valida!'),
+            ];
+        }
+    }
+    
+    /**
+     * Get Ajax request to save categories
+     * @return json
+     * 
+     * INSERT INTO tg_terms (name, slug) VALUES ('Test', 'test');
+     * 
+     * INSERT INTO tg_term_taxonomy (term_id, taxonomy, description, parent, count) VALUES (LAST_INSERT_ID(), 'category', 'Descrizione della categoria Test', 0, 0);
+     * 
+     */
+    public function actionCategoriesSaveAjax(){
+        // Imposta il formato della risposta su JSON
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        
+        if (Yii::$app->request->isPost && Yii::$app->request->isAjax) {
+            // Ottieni i dati POST
+            //$data = Yii::$app->request->post(); 
+            $data = Yii::$app->request->post('data');
+            
+            if(!empty($data)){
+                //Delete all categories except the default category
+                $this->deleteCategories();
+                
+                //Add categories
+                foreach ($data as $k => $value){
+                    if($value['id'] == 1){continue;}
+                    
+                    $term = new Terms();
+                    $term->id = $value['id'];
+                    $term->name = $value['name'];
+                    $term->slug = str_replace(" ", "-", strtolower($value['name']));
+                    $term->save();
+                    
+                    $taxonomy = new TermTaxonomy();
+                    $taxonomy->term_id      = $term->id;
+                    $taxonomy->description  = $value['description'];
+                    $taxonomy->parent       = 0;
+                    $taxonomy->taxonomy     = $value['taxonomy'];
+                    $taxonomy->count        = 0;
+                    $taxonomy->save();
+                }
+                
+                return [
+                    'success' => true,
+                    'message' => Yii::t('app', 'Categoria salvata con successo!'),
+                    'data'    => $data,
+                ];
+            }
+            
+            return [
+                'success' => false,
+                'message' => Yii::t('app', 'Si è verificato un errore nel salvataggio delle categorie!'),
+                'data'    => $data,
+            ];
+        }
+        
+        // Gestisci casi in cui la richiesta non è valida
+        return [
+            'success' => false,
+            'message' => Yii::t('app', 'Richiesta non valida!'),
+        ];
+    }
+    
+    /**
+     * Return a menu
+     * 
+     * Select usata
+     * SELECT 
+            p.ID, 
+            p.post_title AS item_title, 
+            p.ordering,
+            pm_url.meta_value AS item_url,
+            t.name,
+            (SELECT CONCAT(GROUP_CONCAT(meta_key SEPARATOR '||'), '-', GROUP_CONCAT(meta_value SEPARATOR '||')) FROM tg_postmeta as pm_url_s WHERE pm_url_s.post_id = pm_url.post_id)
+        FROM 
+            tg_posts AS p
+        JOIN 
+            tg_term_relationships AS tr ON p.ID = tr.object_id
+        JOIN 
+            tg_term_taxonomy AS tt ON tr.term_taxonomy_id = tt.term_id
+        JOIN 
+            tg_terms AS t ON tt.term_id = t.id
+        LEFT JOIN 
+            tg_postmeta AS pm_url ON p.ID = pm_url.post_id AND pm_url.meta_key = '_menu_item_url'
+        WHERE 
+            p.post_type = 'nav_menu_item'
+            AND tt.taxonomy = 'nav_menu'
+            AND t.name = 'Menu Principale'
+        ORDER BY 
+            p.ordering ASC
+     * 
+     * @return \yii\db\ActiveRecord
+     */
+    private function findMenu(){
+        $query = (new Query())
+            ->select([
+                'id' => 'p.ID',
+                'p.post_title', 
+                'p.ordering',
+                'pm_url.meta_value',
+                't.name',
+                'key_value' => "(SELECT CONCAT(GROUP_CONCAT(meta_key SEPARATOR '||'), '-', GROUP_CONCAT(meta_value SEPARATOR '||')) FROM tg_postmeta as pm_url_s WHERE pm_url_s.post_id = pm_url.post_id)"
+            ])
+            ->from(['p' => 'tg_posts'])
+            ->join("JOIN", "tg_term_relationships tr", "p.ID = tr.object_id")
+            ->join("JOIN", "tg_term_taxonomy tt", "tr.term_taxonomy_id = tt.term_id")
+            ->join("JOIN", "tg_terms t", "tt.term_id = t.id")
+            ->join("JOIN", "tg_postmeta pm_url", "p.ID = pm_url.post_id AND pm_url.meta_key = '_menu_item_url'")
+            ->where([
+                'p.post_type' => 'nav_menu_item',
+                'tt.taxonomy' => 'nav_menu',
+                't.name'      => 'Menu Principale'
+            ])
+            ->orderBy(['p.ordering' => SORT_ASC])
+            ->all();
+        
+        foreach ($query as $k => $q){
+            $q['key_value'] = [
+                'meta_key'   => explode("||", substr($q['key_value'], 0, strpos($q['key_value'], "-"))),
+                'meta_value' => explode("||", substr($q['key_value'], strpos($q['key_value'], "-")+1)),
+            ];
+            
+            $query[$k] = $q;
+        }
+        
+        return $query;
+    }
+    
+    /**
+     * Find all post
+     * @return type
+     * @throws NotFoundHttpException
+     */
+    private function findPosts(){
+        if (($model = Posts::find()->where(['post_type' => 'post'])->all()) !== null) {
+            return $model;
+        }
+        
+        throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
+    }
+    
+    /**
+     * Retrieves all categories
+     * 
+     * Query eseguita: SELECT t.id, t.name, tt.taxonomy FROM tg_terms t JOIN tg_term_taxonomy tt ON t.term_id = tt.id WHERE tt.taxonomy = 'category';
+     */
+    private function findCategories(){
+        $categories = (new Query())
+            ->select([
+                'id'        => 't.id',
+                'name'      => 't.name',
+                'taxonomy'  => 'tt.taxonomy'
+            ])
+            ->from(['t' => 'tg_terms'])
+            ->join("JOIN", "tg_term_taxonomy tt", "t.id = tt.term_id")
+            ->where(['tt.taxonomy' => 'category'])
+            ->all();
+        
+        return $categories;
+    }
+
+
+    /**
+     * Delete all item's menu
+     * 
+     * @return bool
+     */
+    private function deleteMenu(){
+        //DELETE FROM tg_posts WHERE post_type = "nav_menu_item";
+        //DELETE FROM tg_term_relationships WHERE object_id BETWEEN X and Y;
+        
+        //Ottengo gli ID
+        $ids = Posts::find()->where(['post_type' => 'nav_menu_item'])->select('id')->column();
+        
+        if(!empty($ids)){
+            if(Posts::deleteAll(['id' => $ids]) && TermRelationships::deleteAll(['object_id' => $ids])>0){
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    private function deleteCategories(){
+        //DELETE FROM tg_posts WHERE post_type = "nav_menu_item";
+        //DELETE FROM tg_term_relationships WHERE object_id BETWEEN X and Y;
+        
+        $subQuery = (new Query())
+                    ->select('id')
+                    ->from('tg_term_taxonomy')
+                    ->where(['taxonomy' => 'category'])
+                    ->andWhere(['<>', 'term_id', 1]);
+        
+        // 2. Eseguiamo la cancellazione nel modello TermRelationships
+        TermRelationships::deleteAll(['in', 'term_taxonomy_id', $subQuery]);
+        TermTaxonomy::deleteAll([
+            'and',
+            ['taxonomy' => 'category'],
+            ['<>', 'term_id', 1]
+        ]);
+        $idsToDelete = Terms::find()
+            ->alias('t')
+            ->select('t.id')
+            ->leftJoin(['tt' => TermTaxonomy::tableName()], 't.id = tt.term_id')
+            ->where(['tt.term_id' => null])
+            ->andWhere(['<>', 't.id', 1])
+            ->column();
+
+        // 2. Se ci sono ID, procedi alla cancellazione
+        if (!empty($idsToDelete)) {
+            Terms::deleteAll(['id' => $idsToDelete]);
+        }
+        
+        return true;
+    }
+}
