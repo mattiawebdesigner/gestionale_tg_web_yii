@@ -22,6 +22,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         </div>
                         <div>
                             <input data-name class="form-control" placeholder="<?= Yii::t('app', 'Categoria') ?>" type="text" />
+                            <textarea data-description class="form-control" placeholder="<?= Yii::t('app', 'Descrizione della categoria') ?>"></textarea>
                             <div data-error></div>
                         </div>
                     </div>
@@ -40,8 +41,10 @@ $this->params['breadcrumbs'][] = $this->title;
                         <div class="draggable-item" draggable="true"
                              data-input="<?= htmlspecialchars(
                                 json_encode([
-                                    'name'      => $category['name'],
-                                    'taxonomy'  => 'category',
+                                    'name'          => $category['name'],
+                                    'description'   => $category['description']??'',
+                                    'taxonomy'      => 'category',
+                                    'id'            => $category['id'],
                                 ])
                              ); ?>">
                             <?php if($category['id'] <> 1): ?>
@@ -55,12 +58,6 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
         </div>
     </div>
-    
-    <pre>
-        <?php
-        print_r($categories);
-        ?>
-    </pre>
 </div>
 
 <?php

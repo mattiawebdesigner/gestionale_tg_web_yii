@@ -13,17 +13,18 @@
         var _this = $(this);
         
         return _this.each((i, el)=>{
-            var _el             = $(el) ;
-            var _addBtn         = $("[data-add]",     _el);
-            var _categoryName   = $("[data-name]",    _el);
-            var _categoryError  = $("[data-error]",   _el);
-            var _categoryPaste  = $("[data-paste]",   _el);
-            var _draggableList  = $("#draggableList", _el);
-            var _dataSave       = $("[data-save]",    _el);
-            var _dataSuccess    = $("[data-success]", _el);
-            var _dataError      = $("[data-error]",   _el);
-            var csrfToken       = settings.csrfToken;
-            var ajaxUrl         = settings['ajax-url'];
+            var _el                     = $(el) ;
+            var _addBtn                 = $("[data-add]",           _el);
+            var _categoryName           = $("[data-name]",          _el);
+            var _categoryDescription   = $("[data-description]",    _el);
+            var _categoryError          = $("[data-error]",         _el);
+            var _categoryPaste          = $("[data-paste]",         _el);
+            var _draggableList          = $("#draggableList",       _el);
+            var _dataSave               = $("[data-save]",          _el);
+            var _dataSuccess            = $("[data-success]",       _el);
+            var _dataError              = $("[data-error]",         _el);
+            var csrfToken               = settings.csrfToken;
+            var ajaxUrl                 = settings['ajax-url'];
             
             _addBtn.on("click", ()=>{
                 let categoryName = _categoryName.val();
@@ -34,7 +35,7 @@
                 }else{
                     _categoryError.text("");
                     
-                    addItem(_categoryName, _categoryPaste);
+                    addItem(_categoryName, _categoryDescription, _categoryPaste);
                 }
             });
             
@@ -70,9 +71,7 @@
                     'data'  : {data : data},
                     
                     success: function (response) {
-                        if(response.success){
-                            console.log(response.x);
-                            
+                        if(response.success){                            
                             _dataSuccess.fadeIn(1000);
                             _dataSuccess.text(response.message);
                             setTimeout(()=>{
@@ -132,15 +131,19 @@
         /**
          * Aggiunge una nuova categoria
          * 
-         * @param {type} _name      Elemento contenente il nome della categoria
-         * @param {type} _container Elemento in cui incollare la nuova categoria
+         * @param {type} _name          Elemento contenente il nome della categoria
+         * @param {type} _description   Descrizione della categoria
+         * @param {type} _container     Elemento in cui incollare la nuova categoria
          */
-        function addItem(_name, _container){
+        function addItem(_name, _description, _container){
             //Compongo il JSON per permettere il salvataggio del menu
             //con tutte le informazioni necessarie
             let dataInputVal    = JSON.stringify({
                 name        : _name.val(),
-                taxonomy    : "category"
+                description : _description.val(),
+                taxonomy    : "category",
+                //default ID, used for auto_increment ID in MySQL
+                id          : 0
             });
             
             let trashContainer = document.createElement("div");
@@ -157,6 +160,9 @@
             elToAdd.append(trashContainer);
             
             _container.append(elToAdd);
+            
+            _name.val("");
+            _description.val("");
         }
     };
  

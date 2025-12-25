@@ -143,7 +143,6 @@ class TgSiteController extends Controller
                     
                     //Associo le informazioni al menu
                     $postMeta = new Postmeta();
-                    
                     $postMeta->post_id      = $postId;
                     $postMeta->meta_key     = "_menu_item_type";
                     $postMeta->meta_value   = $value['menu_item_type'];
@@ -227,14 +226,40 @@ class TgSiteController extends Controller
             $data = Yii::$app->request->post('data');
             
             if(!empty($data)){
-                $del = $this->deleteCategories();
+                //Delete all categories except the default category
+                $this->deleteCategories();
+                
+                //Add categories
+                foreach ($data as $k => $value){
+                    if($value['id'] == 1){continue;}
+                    
+                    $term = new Terms();
+                    $term->id = $value['id'];
+                    $term->name = $value['name'];
+                    $term->slug = str_replace(" ", "-", strtolower($value['name']));
+                    $term->save();
+                    
+                    $taxonomy = new TermTaxonomy();
+                    $taxonomy->term_id      = $term->id;
+                    $taxonomy->description  = $value['description'];
+                    $taxonomy->parent       = 0;
+                    $taxonomy->taxonomy     = $value['taxonomy'];
+                    $taxonomy->count        = 0;
+                    $taxonomy->save();
+                }
                 
                 return [
                     'success' => true,
                     'message' => Yii::t('app', 'Categoria salvata con successo!'),
-                    'x' => $del,
+                    'data'    => $data,
                 ];
             }
+            
+            return [
+                'success' => false,
+                'message' => Yii::t('app', 'Si è verificato un errore nel salvataggio delle categorie!'),
+                'data'    => $data,
+            ];
         }
         
         // Gestisci casi in cui la richiesta non è valida
@@ -381,24 +406,18 @@ class TgSiteController extends Controller
             ['taxonomy' => 'category'],
             ['<>', 'term_id', 1]
         ]);
-        
-        // 1. Costruiamo la sottoquery interna (SELECT t.term_id ...)
-        /*$subQuery = (new Query())
+        $idsToDelete = Terms::find()
+            ->alias('t')
             ->select('t.id')
-            ->from('tg_terms t')
-            ->leftJoin('tg_term_taxonomy tt', 't.id = tt.term_id')
-            ->where(['id', 'tt.term_id', null])
-            ->andWhere(['<>', 't.id', 1]);*/
-        $subQuery = (new Query())
-                    ->select('t.id')
-                    ->from(['t' => 'tg_terms'])
-                    ->leftJoin("tg_term_taxonomy tt", "t.id = tt.term_id")
-                    ->where(['id', 'tt.term_id', null])
-                    ->andWhere(['<>', 'term_id', 1]);
-        
-        // 2. Eseguiamo la cancellazione definitiva
-        // Yii2 gestirà automaticamente la necessità di isolare la sottoquery se necessario
-        Terms::deleteAll(['in', 'id', $subQuery]);
+            ->leftJoin(['tt' => TermTaxonomy::tableName()], 't.id = tt.term_id')
+            ->where(['tt.term_id' => null])
+            ->andWhere(['<>', 't.id', 1])
+            ->column();
+
+        // 2. Se ci sono ID, procedi alla cancellazione
+        if (!empty($idsToDelete)) {
+            Terms::deleteAll(['id' => $idsToDelete]);
+        }
         
         return true;
     }
