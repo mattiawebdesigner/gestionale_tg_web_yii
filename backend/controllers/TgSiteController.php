@@ -103,6 +103,55 @@ class TgSiteController extends Controller
     }
     
     /**
+     * Display and manage articles
+     * 
+     INSERT INTO `tg_posts` (
+    `post_author`, 
+    `post_date`, 
+    `post_date_gmt`, 
+    `post_content`, 
+    `post_title`, 
+    `post_status`, 
+    `comment_status`,
+    `post_name`, 
+    `post_modified`, 
+    `post_modified_gmt`, 
+    `post_type`,
+    `ordering`
+) VALUES (
+    1,                          -- ID Autore
+    NOW(),                      -- Data locale
+    UTC_TIMESTAMP(),            -- Data UTC
+    'Benvenuto in WordPress. Questo è il tuo primo articolo.', 
+    'Hello World!', 
+    'publish',                  -- Stato: Pubblicato
+    'open',                     -- Commenti abilitati
+    'hello-world',              -- Slug URL
+    NOW(), 
+    UTC_TIMESTAMP(), 
+    'post',                      -- Tipo di contenuto
+    1
+);
+-- 1. Recupera l'ID dell'articolo appena inserito e associalo alla categoria (ID 1)
+INSERT INTO `tg_term_relationships` (`object_id`, `term_taxonomy_id`)
+VALUES (LAST_INSERT_ID(), 1);
+
+-- 2. Aggiorna il conteggio degli articoli nella categoria (opzionale ma consigliato)
+UPDATE `tg_term_taxonomy` 
+SET `count` = `count` + 1 
+WHERE `id` = 1;
+     * 
+     * @return array
+     */
+    public function actionArticoli(){
+        //$categories = $this->findCategories();
+        
+        return $this->render("articoli",[
+            //'categories'    => $categories,
+        ]);
+    }
+    
+    /**
      * Get Ajax request to save menu
      * @return json
      */

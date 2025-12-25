@@ -1,5 +1,6 @@
 <?php
 $this->title = Yii::t('app', 'Categorie per gli articoli');
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Gestione sito'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="tgsite-categories">
