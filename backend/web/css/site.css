@@ -22,6 +22,7 @@ small{font-size: x-small;}
 .gap-1{gap: 1.5em;}
 
 .d-none-n-i{display: none;}
+.d-inline-block{display: inline-block;}
 
 :link, a, .dropdown-item:link, .dropdown-item:visited{color: var(--color-link-tg1);}
 .dropdown-item.active, .dropdown-item:active{color: white;}

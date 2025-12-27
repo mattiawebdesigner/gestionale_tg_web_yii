@@ -144,10 +144,10 @@ WHERE `id` = 1;
      * @return array
      */
     public function actionArticoli(){
-        //$categories = $this->findCategories();
+        $articles = $this->findArticles();
         
         return $this->render("articoli",[
-            //'categories'    => $categories,
+            'articles'    => $articles??null,
         ]);
     }
     
@@ -415,6 +415,20 @@ WHERE `id` = 1;
         
         return $categories;
     }
+    
+    /**
+     * Retrieves all articles.
+     * 
+     * Query eseguita: SELECT * FROM `tg_posts` WHERE `post_type` = 'post' ORDER BY `post_date` DESC;
+     */
+    private function findArticles(){
+        if(($posts = Posts::find()->where(['post_type' => 'post'])->all())){
+            return $posts;
+        }
+        
+        return false;
+    }
+
 
 
     /**

@@ -28,3 +28,32 @@
     color: darkred;
     text-align: center;
 }
+.comment-count-approved{
+    box-sizing: border-box;
+    display: block;
+    padding: 0 8px;
+    min-width: 24px;
+    height: 2em;
+    border-radius: 5px;
+    background-color: #646970;
+    color: #fff;
+    font-size: 11px;
+    line-height: 1.90909090;
+    text-align: center;
+}
+.comment-count-approved:after{
+   content: "";
+    display: block;
+    margin-left: 8px;
+    width: 0;
+    height: 0;
+    border-top: 5px solid #646970;
+    border-right: 5px solid transparent;
+}
+.column-author{width: 10%;}
+.column-categories,.column-data{width: 15%;}
+.column-comments{
+    width: 5.5em;
+    text-align: left;
+}
+tbody .column-data{font-size: 13px;}
