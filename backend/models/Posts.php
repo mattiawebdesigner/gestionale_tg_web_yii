@@ -24,6 +24,9 @@ use Yii;
  */
 class Posts extends \yii\db\ActiveRecord
 {
+    const STATUS_PUBLISHED  = "publish";
+    const STATUS_DRAFT      = "draft";
+    
     /**
      * {@inheritdoc}
      */
