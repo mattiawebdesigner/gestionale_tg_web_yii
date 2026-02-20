@@ -8,8 +8,6 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="body-content">
         <h1><?= $this->title ?></h1>
     </div>
-    
-    
 </div>
 
 <?php
