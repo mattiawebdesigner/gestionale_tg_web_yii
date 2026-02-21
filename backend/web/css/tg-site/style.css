@@ -11,7 +11,7 @@
     margin-bottom: 27px;
 }
 [class*="tgsite-"] [data-item-menu-error]{color: darkred;font-weight: 700;}
-[class*="tgsite-"] .draggable-item [data-delete-item]{
+[class*="tgsite-"] .draggable-item [data-delete-item], [class*="tgsite-"] .draggable-item [data-delete]{
     position: absolute;
     top: -13px;
     right: -13px;

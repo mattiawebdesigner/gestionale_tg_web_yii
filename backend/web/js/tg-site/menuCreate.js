@@ -1,13 +1,5 @@
 /**
- * Gestisce la creazione di un nuovo menu
- * 
- * Struttura:
- * <div id="menu-create" class="flex flex-row gap-1 flex-wrap">
- *      <div class="btn btn-success" data-menu-add>+</div>
- *      <div class="menu">
- *      </div>
- * </div>
- * 
+ * Gestisce la creazione di un nuovo menu * 
  * 
  * @param {type} $
  * @returns results
@@ -81,16 +73,9 @@
              * Salvo le voci di menu
             */
             _dataMenuSave.click(()=>{
-                var data = {
-                    "name": "John",
-                    "age": 30,
-                    "city": "New York",
-                    '_csrf': csrfToken
-                };
-                data = [];
+                var data = [];
                 
                 var _dataInput = $("[data-input]", _this);
-                var cont = 0;
                 for(let val of _dataInput){
                     data.push($(val).data("input"));
                 }
