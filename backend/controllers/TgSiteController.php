@@ -13,8 +13,6 @@ use yii\web\Response;
 use backend\models\Posts;
 use backend\models\Postmeta;
 use backend\models\TermRelationships;
-use backend\models\TermTaxonomy;
-use backend\models\Terms;
 
 /**
  * Site controller
@@ -74,7 +72,7 @@ class TgSiteController extends Controller
     }
     
     /**
-     * Display and manage menu
+     * Display menu manage page
      * 
      * @return array
      */
@@ -89,17 +87,8 @@ class TgSiteController extends Controller
         ]);
     }
     
-    /**
-     * Display and manage categories
-     * 
-     * @return array
-     */
     public function actionCategorie(){
-        $categories = $this->findCategories();
-        
-        return $this->render("categorie",[
-            'categories'    => $categories,
-        ]);
+        return $this->render("categorie");
     }
     
     /**
@@ -143,6 +132,7 @@ class TgSiteController extends Controller
                     
                     //Associo le informazioni al menu
                     $postMeta = new Postmeta();
+                    
                     $postMeta->post_id      = $postId;
                     $postMeta->meta_key     = "_menu_item_type";
                     $postMeta->meta_value   = $value['menu_item_type'];
@@ -205,68 +195,6 @@ class TgSiteController extends Controller
                 'message' => Yii::t('app', 'Richiesta non valida!'),
             ];
         }
-    }
-    
-    /**
-     * Get Ajax request to save categories
-     * @return json
-     * 
-     * INSERT INTO tg_terms (name, slug) VALUES ('Test', 'test');
-     * 
-     * INSERT INTO tg_term_taxonomy (term_id, taxonomy, description, parent, count) VALUES (LAST_INSERT_ID(), 'category', 'Descrizione della categoria Test', 0, 0);
-     * 
-     */
-    public function actionCategoriesSaveAjax(){
-        // Imposta il formato della risposta su JSON
-        Yii::$app->response->format = Response::FORMAT_JSON;
-        
-        if (Yii::$app->request->isPost && Yii::$app->request->isAjax) {
-            // Ottieni i dati POST
-            //$data = Yii::$app->request->post(); 
-            $data = Yii::$app->request->post('data');
-            
-            if(!empty($data)){
-                //Delete all categories except the default category
-                $this->deleteCategories();
-                
-                //Add categories
-                foreach ($data as $k => $value){
-                    if($value['id'] == 1){continue;}
-                    
-                    $term = new Terms();
-                    $term->id = $value['id'];
-                    $term->name = $value['name'];
-                    $term->slug = str_replace(" ", "-", strtolower($value['name']));
-                    $term->save();
-                    
-                    $taxonomy = new TermTaxonomy();
-                    $taxonomy->term_id      = $term->id;
-                    $taxonomy->description  = $value['description'];
-                    $taxonomy->parent       = 0;
-                    $taxonomy->taxonomy     = $value['taxonomy'];
-                    $taxonomy->count        = 0;
-                    $taxonomy->save();
-                }
-                
-                return [
-                    'success' => true,
-                    'message' => Yii::t('app', 'Categoria salvata con successo!'),
-                    'data'    => $data,
-                ];
-            }
-            
-            return [
-                'success' => false,
-                'message' => Yii::t('app', 'Si è verificato un errore nel salvataggio delle categorie!'),
-                'data'    => $data,
-            ];
-        }
-        
-        // Gestisci casi in cui la richiesta non è valida
-        return [
-            'success' => false,
-            'message' => Yii::t('app', 'Richiesta non valida!'),
-        ];
     }
     
     /**
@@ -335,45 +263,11 @@ class TgSiteController extends Controller
     }
     
     /**
-     * Find all post
-     * @return type
-     * @throws NotFoundHttpException
-     */
-    private function findPosts(){
-        if (($model = Posts::find()->where(['post_type' => 'post'])->all()) !== null) {
-            return $model;
-        }
-        
-        throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
-    }
-    
-    /**
-     * Retrieves all categories
-     * 
-     * Query eseguita: SELECT t.id, t.name, tt.taxonomy FROM tg_terms t JOIN tg_term_taxonomy tt ON t.term_id = tt.id WHERE tt.taxonomy = 'category';
-     */
-    private function findCategories(){
-        $categories = (new Query())
-            ->select([
-                'id'        => 't.id',
-                'name'      => 't.name',
-                'taxonomy'  => 'tt.taxonomy'
-            ])
-            ->from(['t' => 'tg_terms'])
-            ->join("JOIN", "tg_term_taxonomy tt", "t.id = tt.term_id")
-            ->where(['tt.taxonomy' => 'category'])
-            ->all();
-        
-        return $categories;
-    }
-
-
-    /**
      * Delete all item's menu
      * 
      * @return bool
      */
-    private function deleteMenu(){
+    public function deleteMenu(){
         //DELETE FROM tg_posts WHERE post_type = "nav_menu_item";
         //DELETE FROM tg_term_relationships WHERE object_id BETWEEN X and Y;
         
@@ -389,36 +283,16 @@ class TgSiteController extends Controller
         return false;
     }
     
-    private function deleteCategories(){
-        //DELETE FROM tg_posts WHERE post_type = "nav_menu_item";
-        //DELETE FROM tg_term_relationships WHERE object_id BETWEEN X and Y;
-        
-        $subQuery = (new Query())
-                    ->select('id')
-                    ->from('tg_term_taxonomy')
-                    ->where(['taxonomy' => 'category'])
-                    ->andWhere(['<>', 'term_id', 1]);
-        
-        // 2. Eseguiamo la cancellazione nel modello TermRelationships
-        TermRelationships::deleteAll(['in', 'term_taxonomy_id', $subQuery]);
-        TermTaxonomy::deleteAll([
-            'and',
-            ['taxonomy' => 'category'],
-            ['<>', 'term_id', 1]
-        ]);
-        $idsToDelete = Terms::find()
-            ->alias('t')
-            ->select('t.id')
-            ->leftJoin(['tt' => TermTaxonomy::tableName()], 't.id = tt.term_id')
-            ->where(['tt.term_id' => null])
-            ->andWhere(['<>', 't.id', 1])
-            ->column();
-
-        // 2. Se ci sono ID, procedi alla cancellazione
-        if (!empty($idsToDelete)) {
-            Terms::deleteAll(['id' => $idsToDelete]);
+    /**
+     * Find all post
+     * @return type
+     * @throws NotFoundHttpException
+     */
+    private function findPosts(){
+        if (($model = Posts::find()->where(['post_type' => 'post'])->all()) !== null) {
+            return $model;
         }
         
-        return true;
+        throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
     }
 }
