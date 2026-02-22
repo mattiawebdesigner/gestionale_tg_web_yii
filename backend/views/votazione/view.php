@@ -20,6 +20,7 @@ $cont = 0;
     <h1><?= Html::encode($this->title) ?></h1>
     
     <p> 
+        <?= Html::a(Yii::t('app', '<i class="fa-solid fa-user-plus"></i> Aggiungi un nuovo candidato'), ['add-candidato', 'id' => $votazione->id], ['class' => 'btn btn-success']) ?>
         <?= Html::a(Yii::t('app', '<i class="fa-solid fa-download"></i> Scarica soci con diritto di voto'), ['download-elenco-soci-voto', 'id' => $votazione->id], ['class' => 'btn btn-warning', 'target' => '_blank']) ?>
         <?= Html::a(Yii::t('app', '<i class="fa-solid fa-download"></i> Scarica scheda elettorale'), ['download-scheda', 'id' => $votazione->id], ['class' => 'btn btn-warning', 'target' => '_blank']) ?>
         <?= Html::a(Yii::t('app', '<i class="fa-solid fa-plus"></i> Aggiungi voto'), ['add-voto', 'id' => $votazione->id], ['class' => 'btn btn-success']) ?>
@@ -64,9 +65,6 @@ $cont = 0;
                         'title' => 'Risultati delle votazioni'),
                     )
             );
-        /*echo "<pre>";
-        print_r($rosa_eletti);
-        echo "</pre>";*/
         ?>
         
     <div class="eletti">

@@ -12,13 +12,7 @@ use Yii;
  * @property int $votazione_id
  */
 class SocioHasCandidato extends \yii\db\ActiveRecord
-{
-    
-    /**
-     * File da caricare
-     */
-    public $file;
-    
+{    
     /**
      * {@inheritdoc}
      */
@@ -34,7 +28,7 @@ class SocioHasCandidato extends \yii\db\ActiveRecord
     {
         return [
             [['socio_id', 'votazione_id'], 'required'],
-            [['socio_id', 'votazione_id'], 'int'],
+            [['socio_id', 'votazione_id'], 'integer'],
         ];
     }
 

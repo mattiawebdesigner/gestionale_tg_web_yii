@@ -10,6 +10,7 @@ use yii\filters\AccessControl;
 use kartik\mpdf\Pdf;
 use backend\models\Votazione;
 use backend\models\VotazioneSearch;
+use backend\models\SocioHasCandidato;
 
 /**
  * VerbaliController implements the CRUD actions for Verbali model.
@@ -420,6 +421,54 @@ CSS;
             'votazione'     => $votazione,
             'soci'          => $soci,
             'voto'          => $voto,
+        ]);
+    }
+    
+    /**
+     * Add new candidate to vote
+     * 
+     * @param type $id ID Votazione
+     * @return type
+     */
+    public function actionAddCandidato($id){
+        $model = $this->findVotazioneModel($id);
+        
+        if($this->request->isPost){            
+            $candidati = $this->request->post();
+            
+            //Remove candidate
+            $mancanti = array_diff(
+                    SocioHasCandidato::find()->select("socio_id")->where(['votazione_id' => $id])->column(), 
+                    $candidati['candidati']??[]
+            );
+            foreach ($mancanti as $id_){
+                SocioHasCandidato::find()->where(['socio_id' => $id_])->one()->delete();
+            }
+            
+            if(isset($candidati['candidati'])){
+                foreach ($candidati['candidati'] as $candidato){
+                    //Add new
+                    if(SocioHasCandidato::find()->where(['socio_id' => $candidato, 'votazione_id' => $model->id])->one() === null){
+                        $socioHasCandidato = new SocioHasCandidato();
+                        $socioHasCandidato->socio_id        = $candidato;
+                        $socioHasCandidato->votazione_id    = $model->id;
+
+                        $socioHasCandidato->save();
+                    }
+                }
+            }
+            
+            Yii::$app->session->setFlash("success", "Candidati modificati correttamente");
+            return $this->redirect(["votazione/add-candidato", 'id' => $id]);
+        }
+        
+        
+        $soci  = $this->getSociConDirittoDiVoto($id);
+        
+        return $this->render('add-candidato',[
+            'model'     => $model,
+            'soci'      => $soci,
+            'candidati' => SocioHasCandidato::find()->where(['votazione_id' => $id])->all(),
         ]);
     }
     
