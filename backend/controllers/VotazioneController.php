@@ -102,6 +102,11 @@ class VotazioneController extends Controller
          */
         $soci = $this->getSociConDirittoDiVoto($id);
         
+        if(empty($soci)){
+            Yii::$app->session->setFlash("error", "Non sono presenti soci per l'anno selezionato");
+            return $this->redirect(["votazione/view", 'id' => $id]);
+        }
+        
        $out = "OUT";
         
         $cssInline = <<<CSS
@@ -224,6 +229,11 @@ CSS;
          * Elenco dei soci in regola
          */
         $soci = $this->getSociConDirittoDiVoto($id);
+        
+        if(empty($soci)){
+            Yii::$app->session->setFlash("error", "Non sono presenti soci per l'anno selezionato");
+            return $this->redirect(["votazione/view", 'id' => $id]);
+        }
         
         $cssInline = <<<CSS
             table{
@@ -419,13 +429,26 @@ CSS;
      * @return
      */
     public function getSociConDirittoDiVoto($id){
-        return $soci = (new \yii\db\Query())
+        $soci = [];
+        
+        $votazione = $this->findVotazioneModel($id);
+        $soci = json_decode($votazione->info);
+        //Get all date
+        $data = [];
+        foreach($soci as $k => $v){
+            $data[] = $v->data;
+        }
+        rsort($data);//DESC order
+        //Date used to select adult members
+        $data = $data[0];
+        
+        return (new \yii\db\Query())
                 ->select("{{%socio_anno_sociale}}.*, {{%soci}}.*")
                 ->from('{{%socio_anno_sociale}}')
                 ->innerJoin('{{%soci}}', '{{%soci}}.id = {{%socio_anno_sociale}}.socio')
-                ->where(["anno" => (new \yii\db\Query())->select('anno')->from('{{%votazione}}')->where(['id' => $id])->one()])
-                ->andWhere(["validita" => 'si'])
-                ->andWhere(['>', 'DATEDIFF(NOW(), soci.data_di_nascita)' , 365*18])//calcolo se sono maggiorenni
+                ->where(["{{%socio_anno_sociale}}.anno" => $this->findVotazioneModel($id)->anno])
+                ->andWhere(["validita" => "si"])
+                ->andWhere(['<=', '{{%soci}}.data_di_nascita', new \yii\db\Expression("DATE_SUB('$data', INTERVAL 18 YEAR)")])
                 ->orderBy(['cognome' => 'ASC', 'nome' => 'ASC'])
                 ->all();
     }
