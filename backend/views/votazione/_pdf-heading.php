@@ -2,7 +2,7 @@
     <tr>
         <td style="text-align: center;">
             <strong>TEATRALMENTE GIOIA A.P.S.</strong> <br /><br />
-            <img src="https://www.teatralmentegioia.it/tg/wp-content/uploads/2021/08/logo.png" />
+            <img src="<?= Yii::$app->params['logo'] ?>" />
         </td>
     </tr>
 </table>
