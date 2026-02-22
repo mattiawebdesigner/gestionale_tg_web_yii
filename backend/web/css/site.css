@@ -26,6 +26,10 @@ small{font-size: x-small;}
 :link, a, .dropdown-item:link, .dropdown-item:visited{color: var(--color-link-tg1);}
 .dropdown-item.active, .dropdown-item:active{color: white;}
 
+#mainmenu-collapse .nav > .nav-item.show .dropdown-menu.show{
+    display: flex;
+}
+
 body{
     /*background: url(.);
     background-size: contain;
