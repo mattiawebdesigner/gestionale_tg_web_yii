@@ -1,5 +1,7 @@
 <?php
 return ['label' => 'Magazzino', 'url' => '#', 'items' => [
-    ['label' => 'Prodotti', 'url' => ['/prodotto/index']],
-    ['label' => 'Categorie', 'url' => ['/categorie/index']],
+    "<div class='menu-item'>",
+        ['label' => 'Prodotti', 'url' => ['/prodotto/index']],
+        ['label' => 'Categorie', 'url' => ['/categorie/index']],
+    "</div>"
 ]];

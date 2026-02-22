@@ -1,6 +1,7 @@
 <?php
 $menuItemsSocio = [
     ['label' => Yii::t('app', 'Area socio'), 'url' => '#', 'items' => [
+        "<div class='menu-item'>",
             //Soci
             ['label' => Yii::t('app', 'Trasparenza'), 'url' => ['/rendiconto/socio-view']],
             '<hr />',
@@ -13,6 +14,7 @@ $menuItemsSocio = [
             ['label' => Yii::t('app', 'Il Materiale'), 'url' => ['/prodotto/index-socio']],
             '<hr />',
             ['label' => Yii::t('app', 'Votazioni'), 'url' => ['/votazione/index-socio']],
+        "</div>"
         ]
     ],
 ];
