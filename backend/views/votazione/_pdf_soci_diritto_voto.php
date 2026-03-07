@@ -1,6 +1,4 @@
 <?php
-use yii\helpers\Html;
-
 $this->title = "test";
 ?>
 <h1><?= Yii::t('app', 'Elenco soci con diritto di voto') ?></h1>

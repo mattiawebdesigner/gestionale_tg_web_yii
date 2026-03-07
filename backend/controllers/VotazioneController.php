@@ -10,6 +10,7 @@ use yii\filters\AccessControl;
 use kartik\mpdf\Pdf;
 use backend\models\Votazione;
 use backend\models\VotazioneSearch;
+use backend\models\SocioHasCandidato;
 
 /**
  * VerbaliController implements the CRUD actions for Verbali model.
@@ -101,6 +102,11 @@ class VotazioneController extends Controller
          * Elenco dei soci in regola
          */
         $soci = $this->getSociConDirittoDiVoto($id);
+        
+        if(empty($soci)){
+            Yii::$app->session->setFlash("error", "Non sono presenti soci per l'anno selezionato");
+            return $this->redirect(["votazione/view", 'id' => $id]);
+        }
         
        $out = "OUT";
         
@@ -224,6 +230,11 @@ CSS;
          * Elenco dei soci in regola
          */
         $soci = $this->getSociConDirittoDiVoto($id);
+        
+        if(empty($soci)){
+            Yii::$app->session->setFlash("error", "Non sono presenti soci per l'anno selezionato");
+            return $this->redirect(["votazione/view", 'id' => $id]);
+        }
         
         $cssInline = <<<CSS
             table{
@@ -414,18 +425,79 @@ CSS;
     }
     
     /**
+     * Add new candidate to vote
+     * 
+     * @param type $id ID Votazione
+     * @return type
+     */
+    public function actionAddCandidato($id){
+        $model = $this->findVotazioneModel($id);
+        
+        if($this->request->isPost){            
+            $candidati = $this->request->post();
+            
+            //Remove candidate
+            $mancanti = array_diff(
+                    SocioHasCandidato::find()->select("socio_id")->where(['votazione_id' => $id])->column(), 
+                    $candidati['candidati']??[]
+            );
+            foreach ($mancanti as $id_){
+                SocioHasCandidato::find()->where(['socio_id' => $id_])->one()->delete();
+            }
+            
+            if(isset($candidati['candidati'])){
+                foreach ($candidati['candidati'] as $candidato){
+                    //Add new
+                    if(SocioHasCandidato::find()->where(['socio_id' => $candidato, 'votazione_id' => $model->id])->one() === null){
+                        $socioHasCandidato = new SocioHasCandidato();
+                        $socioHasCandidato->socio_id        = $candidato;
+                        $socioHasCandidato->votazione_id    = $model->id;
+
+                        $socioHasCandidato->save();
+                    }
+                }
+            }
+            
+            Yii::$app->session->setFlash("success", "Candidati modificati correttamente");
+            return $this->redirect(["votazione/add-candidato", 'id' => $id]);
+        }
+        
+        
+        $soci  = $this->getSociConDirittoDiVoto($id);
+        
+        return $this->render('add-candidato',[
+            'model'     => $model,
+            'soci'      => $soci,
+            'candidati' => SocioHasCandidato::find()->where(['votazione_id' => $id])->all(),
+        ]);
+    }
+    
+    /**
      * Restituisce tutti i soci con diritto di voto
      * 
      * @return
      */
     public function getSociConDirittoDiVoto($id){
-        return $soci = (new \yii\db\Query())
+        $soci = [];
+        
+        $votazione = $this->findVotazioneModel($id);
+        $soci = json_decode($votazione->info);
+        //Get all date
+        $data = [];
+        foreach($soci as $k => $v){
+            $data[] = $v->data;
+        }
+        rsort($data);//DESC order
+        //Date used to select adult members
+        $data = $data[0];
+        
+        return (new \yii\db\Query())
                 ->select("{{%socio_anno_sociale}}.*, {{%soci}}.*")
                 ->from('{{%socio_anno_sociale}}')
                 ->innerJoin('{{%soci}}', '{{%soci}}.id = {{%socio_anno_sociale}}.socio')
-                ->where(["anno" => (new \yii\db\Query())->select('anno')->from('{{%votazione}}')->where(['id' => $id])->one()])
-                ->andWhere(["validita" => 'si'])
-                ->andWhere(['>', 'DATEDIFF(NOW(), soci.data_di_nascita)' , 365*18])//calcolo se sono maggiorenni
+                ->where(["{{%socio_anno_sociale}}.anno" => $this->findVotazioneModel($id)->anno])
+                ->andWhere(["validita" => "si"])
+                ->andWhere(['<=', '{{%soci}}.data_di_nascita', new \yii\db\Expression("DATE_SUB('$data', INTERVAL 18 YEAR)")])
                 ->orderBy(['cognome' => 'ASC', 'nome' => 'ASC'])
                 ->all();
     }

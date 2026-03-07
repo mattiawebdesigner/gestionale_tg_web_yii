@@ -48,7 +48,7 @@ return ['label' => 'Segreteria', 'url' => '#', 'items' => [
             //Votazioni
             "<div class='menu-item'>",
                 ['label' => Yii::t('app', 'Votazioni')],
-                //['label' => Yii::t('app', 'Genera elenco soci aventi diritto al voto'), 'url' => ['/soci/elenco-votazioni']],
+                ['label' => Yii::t('app', 'Soci con diritto di voto'), 'url' => ['/votazione/elenco-votazioni']],
                 ['label' => Yii::t('app', 'Gestione delle votazioni'), 'url' => ['/votazione/gestione-votazioni']],
             "</div>",
         ]];
