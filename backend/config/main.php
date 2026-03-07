@@ -15,6 +15,10 @@ return [
     'components' => [
         'request' => [
             'csrfParam' => '_csrf-backend',
+            // AGGIUNGI QUESTO PER LEGGERE JSON IN INPUT
+            'parsers' => [
+                'application/json' => 'yii\web\JsonParser',
+            ],
         ],
         'authManager' => [
             'class' => 'yii\rbac\DbManager',
@@ -42,14 +46,15 @@ return [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
-        /*
+        
         'urlManager' => [
-            'enablePrettyUrl' => true,
-            'showScriptName' => false,
+            /*'enablePrettyUrl' => true,
+            'showScriptName' => false,*/
             'rules' => [
+                ['class' => 'yii\rest\UrlRule', 'controller' => 'post'],
             ],
         ],
-        */
+        
     ],
     'params' => $params,
 ];

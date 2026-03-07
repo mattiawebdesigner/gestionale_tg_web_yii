@@ -1,0 +1,11 @@
+RewriteEngine on
+
+# Importante: definisci la Base se sei in una sottocartella
+RewriteBase /crm/api/web/
+
+# Se il file o la directory esistono fisicamente, usali
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Altrimenti, manda tutto a index.php
+RewriteRule . index.php
