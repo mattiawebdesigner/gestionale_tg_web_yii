@@ -9,11 +9,12 @@ $params = array_merge(
 return [
     'id' => 'app-api',
     'basePath' => dirname(__DIR__),
-    'controllerNamespace' => 'api\controllers', // Assicurati che sia api\controllers
+    'controllerNamespace' => 'api\controllers',
     'bootstrap' => ['log'],
     'components' => [
         'request' => [
             'csrfParam' => '_csrf-api',
+            'baseUrl' => '/crm/api/web',
             'parsers' => [
                 'application/json' => 'yii\web\JsonParser',
             ]
@@ -30,12 +31,8 @@ return [
             'loginUrl' => null,
         ],
         'urlManager' => [
-            /*'enablePrettyUrl' => true,
-            'enableStrictParsing' => true,
-            'showScriptName' => false,*/
-            'rules' => [
-                ['class' => 'yii\rest\UrlRule', 'controller' => 'v1/post'],
-            ],
+            'enablePrettyUrl' => false, // Disabilitato
+            'showScriptName' => true,   // Obbligatorio se prettyUrl è false
         ],
     ],
 ];

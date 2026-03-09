@@ -1,0 +1,6 @@
+RewriteEngine on
+
+# Impedisce il loop: se la richiesta è già puntata a /web/, non fare nulla
+RewriteCond %{REQUEST_URI} !^/crm/api/web/
+# Reindirizza tutto ciò che arriva a /crm/api/ verso /crm/api/web/
+RewriteRule ^(.*)$ web/$1 [L]
