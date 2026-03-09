@@ -3,10 +3,10 @@
 namespace common\models;
 
 use Yii;
-use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
+use yii\db\Expression;
 
 /**
  * User model
@@ -19,9 +19,10 @@ use yii\web\IdentityInterface;
  * @property string $email
  * @property string $auth_key
  * @property integer $status
- * @property integer $created_at
- * @property integer $updated_at
+ * @property integer $data_di_registrazione
+ * @property integer $data_ultima_modifica
  * @property string $password write-only password
+ * @property string $access_token
  */
 class User extends ActiveRecord implements IdentityInterface
 {
@@ -44,7 +45,17 @@ class User extends ActiveRecord implements IdentityInterface
     public function behaviors()
     {
         return [
-            TimestampBehavior::className(),
+            [
+                // La classe del comportamento deve essere TimestampBehavior
+                'class' => TimestampBehavior::class,
+
+                // Qui specifichiamo i nomi delle TUE colonne
+                'createdAtAttribute' => 'data_di_registrazione',
+                'updatedAtAttribute' => 'data_ultima_modifica',
+
+                // Importante: se le colonne sono DATETIME, serve questo:
+                'value' => new Expression('NOW()'),
+            ],
         ];
     }
 
@@ -65,14 +76,6 @@ class User extends ActiveRecord implements IdentityInterface
     public static function findIdentity($id)
     {
         return static::findOne(['id' => $id, 'status' => self::STATUS_ACTIVE]);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public static function findIdentityByAccessToken($token, $type = null)
-    {
-        throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
     }
 
     /**
@@ -115,6 +118,23 @@ class User extends ActiveRecord implements IdentityInterface
             'verification_token' => $token,
             'status' => self::STATUS_INACTIVE
         ]);
+    }
+    
+    
+    /**
+     * {@inheritdoc}
+     * 
+     * Questo metodo serve a Yii2 per riconoscere l'utente nelle chiamate API successive
+     */
+    public static function findIdentityByAccessToken($token, $type = null)
+    {
+        return static::findOne(['access_token' => $token]);
+    }
+
+    // Funzione per creare un nuovo token
+    public function generateAccessToken()
+    {
+        $this->access_token = \Yii::$app->security->generateRandomString() . '_' . time();
     }
 
     /**
