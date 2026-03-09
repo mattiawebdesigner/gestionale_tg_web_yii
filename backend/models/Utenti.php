@@ -84,4 +84,36 @@ class Utenti extends \yii\db\ActiveRecord
     {
         return new UtentiQuery(get_called_class());
     }
+    
+    // Definiamo quali campi restituire nel JSON
+    public function fields()
+    {
+        return [
+            'id',
+            'nome',
+            'cognome',
+            'indirizzo',
+            'email',
+            'status',
+            'data_di_registrazione' => function ($model) {
+                return date('d/m/Y H:i', strtotime($model->data_di_registrazione));
+            },
+            'data_ultima_modifica' => function ($model) {
+                return date('d/m/Y H:i', strtotime($model->data_ultima_modifica));
+            },
+            'socio_id'
+        ];
+        /*return [
+            'id',
+            'username',
+            'email',
+            'nome_completo' => function ($model) {
+                return $model->nome . ' ' . $model->cognome;
+            },
+            'stato' => 'status',
+            'creato_il' => function ($model) {
+                return date('d/m/Y H:i', $model->created_at);
+            },
+        ];*/
+    }
 }
