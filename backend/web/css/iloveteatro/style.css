@@ -193,6 +193,7 @@ header .pittogramma img{
 #mainmenu .dropdown.nav-item > div{
     position: relative;
     background-color: #2c3338;
+    flex-direction: column;
 }
 #mainmenu .dropdown.nav-item > div a{
     color: rgba(240,246,252,.7);
