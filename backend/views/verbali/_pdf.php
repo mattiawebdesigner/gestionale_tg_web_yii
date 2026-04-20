@@ -54,7 +54,9 @@ $odg = explode("\n", $model->ordine_del_giorno);
 
 <?php if($allegati <> null) : ?>
     <?php foreach($allegati as $allegato) : ?>        
-        <?php if(end(explode(".", $allegato->allegato) ) <> "pdf") : ?>
+        <?php
+            $file = explode(".", $allegato->allegato);
+            if(end($file) <> "pdf") : ?>
             <pagebreak />
             <img src="https://www.teatralmentegioia.it/crm/backend/web/allegati/1642430456-sfondo.png"
                  style="width: 100%;max-height: 100%;" />

@@ -468,11 +468,22 @@ CSS;
             ]
         ]);
         
+        
         foreach ($allegati as $allegato){
-            
-            if(end(explode(".", $allegato->allegato) ) === "pdf"){
-                $pdf->addPdfAttachment(Yii::$app->params['backendWebInternalPath'].$allegato->allegato);
+            $file = Yii::$app->params['backendWebInternalPath'].$allegato->allegato;
+            $mpdf = $pdf->getApi();
+            $pageCount = $mpdf->setSourceFile($file);
+            for ($i=1; $i<=$pageCount; $i++) {
+                $import_page = $mpdf->importPage($i);
+                $size = $mpdf->getTemplateSize($import_page);
+                
+                $mpdf->AddPage($size['orientation'], $size['width'], $size['height']);
+                $mpdf->useTemplate($import_page);
             }
+            
+            /*if(end($file) === "pdf"){
+                $pdf->addPdfAttachment(Yii::$app->params['backendWebInternalPath'].$allegato->allegato);
+            }*/
         }
         
         // return the pdf output as per the destination setting
