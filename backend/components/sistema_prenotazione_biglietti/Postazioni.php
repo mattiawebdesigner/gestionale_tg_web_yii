@@ -435,6 +435,7 @@ class Postazioni{
      * Numero di ticket totali, in base al tipo
      * (pagati, non pagati, crediti, ecc).
      * 
+     * @param string $prenotazioni Prenotazioni effettuate
      * @param int $state Stato del posto (STATO_PAYED, ecc)
      * @return int Numero totale di ticket trovati
      */
