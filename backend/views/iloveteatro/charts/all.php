@@ -8,6 +8,10 @@ $this->title = Yii::t('app', 'Grafico generale di vendita')
     'tot' => $totalPlace,
 ]) ?>
 </h3>
+<h3><?= Yii::t('app', 'Totale ticket:{tot}',[
+    'tot' => $totalTicket,
+]) ?>
+</h3>
 <h3>
     <?= Yii::t('app', 'Totale abbonamenti: {tot}',[
         'tot' => $subscription,
