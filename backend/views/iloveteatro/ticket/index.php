@@ -22,6 +22,10 @@ $this->title = Yii::t('app', 'Ticket');
             ['class' => 'btn btn-info']) ?>
     </p>
     
+    <!--<pre>
+        <?php print_r($s_tot) ?>
+    </pre>-->
+    
     
     <div id="album" class="programmazione-index">
         <div class="container">
