@@ -211,7 +211,7 @@ CSS;
             $votazione->load($this->request->post());
             $votazione->info = json_encode($this->request->post("Votazione", "[]")['info']);
             
-            if($votazione->save()){
+            if($votazione->save()){            
                 return $this->redirect(['update', 'id' => $votazione->id]);
             }
         }
