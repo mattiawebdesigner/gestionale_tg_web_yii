@@ -211,7 +211,7 @@ CSS;
             $votazione->load($this->request->post());
             $votazione->info = json_encode($this->request->post("Votazione", "[]")['info']);
             
-            if($votazione->save()){
+            if($votazione->save()){            
                 return $this->redirect(['update', 'id' => $votazione->id]);
             }
         }
@@ -500,68 +500,6 @@ CSS;
                 ->andWhere(['<=', '{{%soci}}.data_di_nascita', new \yii\db\Expression("DATE_SUB('$data', INTERVAL 18 YEAR)")])
                 ->orderBy(['cognome' => 'ASC', 'nome' => 'ASC'])
                 ->all();
-    }
-    
-    //APP
-    
-
-    /**
-     * Usato per l'APP Android e iOS.
-     * 
-     * Elenco delle votazione (per i soci).
-     *
-     * @return string
-     */
-    public function actionIndexSocioApp()
-    {
-        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        
-        return Votazione::find()->orderBy(['anno' => SORT_DESC])->all();
-    }
-    
-    /**
-     * Usato per l'app Android e iOS.
-     * Restituisce i dati di una votazione
-     * 
-     * @param type $id
-     */
-    public function actionViewSocioApp($id){
-        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        
-        $votazione          = $this->findVotazioneModel($id);
-        $soci               = $this->getSociConDirittoDiVoto($id);
-        $votazione_has_voti = $soci = (new \yii\db\Query())
-                            ->select("*, COUNT(*) tot_voti")
-                            ->from('{{%votazione_has_voti}} vhv')
-                            ->innerJoin('{{%voti}} v', 'vhv.id_voto = v.id')
-                            ->innerJoin('{{%soci}} s', 's.id = v.id_socio')
-                            ->where(['vhv.id_votazione' => $id])
-                            ->groupBy('v.id_socio')
-                            ->all();
-        $rosa_eletti    = $soci = (new \yii\db\Query())
-                            ->select("*, COUNT(*) tot_voti")
-                            ->from('{{%votazione_has_voti}} vhv')
-                            ->innerJoin('{{%voti}} v', 'vhv.id_voto = v.id')
-                            ->innerJoin('{{%soci}} s', 's.id = v.id_socio')
-                            ->where(['vhv.id_votazione' => $id])
-                            ->groupBy('v.id_socio')
-                            ->orderBy("tot_voti DESC")
-                            ->limit(5)
-                            ->all();
-        
-        return [[
-            'votazione_has_voti'    => $votazione_has_voti,
-            'votazione'             => $votazione,
-            'soci'                  => $soci,
-            'rosa_eletti'           => $rosa_eletti,
-        ]];
-        
-        /*return $this->render('view-socio',[
-            'votazione'             => $votazione,
-            'soci'                  => $soci,
-            'votazione_has_voti'    => $votazione_has_voti,
-            'rosa_eletti'           => $rosa_eletti,
-        ]);*/
     }
     
     /**

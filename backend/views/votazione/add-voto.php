@@ -46,19 +46,21 @@ $info = json_decode($votazione->info);
     <p></p>
     
     <?php $form = ActiveForm::begin(); ?>
-        
+    <div class="flex flex-wrap gap-1">
         <?php foreach ($soci as $k => $v) : ?>
-            <div><strong><?= $v['cognome']." ".$v['nome'] ?></strong></div>
-            <div class="flex">
-                <?= $form->field($voto, 'n_scheda[]')->textInput(['required']) ?>
-                <?= $form->field($voto, 'id_socio[]')->textInput(['type' => 'hidden', 'value' => $v['id']])->label(false) ?>
+            <div>
+                <div><strong><?= $v['cognome']." ".$v['nome'] ?></strong></div>
+                <div class="flex">
+                    <?= $form->field($voto, 'n_scheda[]')->textInput(['required']) ?>
+                    <?= $form->field($voto, 'id_socio[]')->textInput(['type' => 'hidden', 'value' => $v['id']])->label(false) ?>
+                </div>
             </div>
         <?php endforeach; ?>
+    </div>
         
-        <div class="form-group">
-            <?= Html::submitButton('<i class="far fa-save"></i> '.Yii::t('app', 'Salva votazione'), ['class' => 'btn btn-success']) ?>
-        </div>
-
+    <div class="form-group">
+        <?= Html::submitButton('<i class="far fa-save"></i> '.Yii::t('app', 'Salva votazione'), ['class' => 'btn btn-success']) ?>
+    </div>
     <?php ActiveForm::end(); ?>
     
 </div>

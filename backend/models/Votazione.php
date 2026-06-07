@@ -28,7 +28,8 @@ class Votazione extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['anno', 'data_creazione'], 'number'],
+            [['anno'], 'number'],
+            [['data_creazione'], 'string'],
             [['anno', 'info'], 'required'],
             [['info', 'luogo'], 'string', 'max' => 255],
         ];

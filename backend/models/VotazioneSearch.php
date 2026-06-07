@@ -46,6 +46,11 @@ class VotazioneSearch extends Votazione
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'sort' => [
+                'defaultOrder' => [
+                    'anno' => SORT_DESC,
+                ],
+            ]
         ]);
 
         $this->load($params);
