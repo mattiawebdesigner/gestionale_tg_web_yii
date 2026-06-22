@@ -28,6 +28,7 @@ small{font-size: x-small;}
 
 #mainmenu-collapse .nav > .nav-item.show .dropdown-menu.show{
     display: flex;
+    flex-wrap: wrap;
 }
 
 body{
@@ -155,6 +156,7 @@ a.desc:after {
     padding-top: 7px;
     color: rgba(255, 255, 255, 0.5);
 }
+.navbar{max-height: 100%;overflow-y: auto;}
 .navbar .navbar-brand img{width: 25px;}
 
 @media(max-width:767px) {
