@@ -156,7 +156,6 @@ a.desc:after {
     padding-top: 7px;
     color: rgba(255, 255, 255, 0.5);
 }
-.navbar{max-height: 100%;overflow-y: auto;}
 .navbar .navbar-brand img{width: 25px;}
 
 @media(max-width:767px) {
@@ -286,4 +285,7 @@ a.desc:after {
     .container, .container-sm, .container-md, .container-lg, .container-xl {
         max-width: 90%;
     }
+}
+@media (max-width: 800px){
+    .navbar{max-height: 100%;overflow-y: auto;}
 }
